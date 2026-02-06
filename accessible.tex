@@ -1,0 +1,260 @@
+\DocumentMetadata{
+  pdfstandard=A-2u,
+  lang=en-US,
+  tagging=on
+}
+
+\documentclass[frame-title-arg]{ltx-talk}
+
+\usepackage{booktabs,xcolor}
+\usepackage{fancyvrb}
+% \usepackage{enumitem,icomma}
+
+\usepackage{xcolor}
+
+% Define useful colors
+\colorlet{AccessibleRed}{red!80!black}
+\colorlet{AccessibleGreen}{green!60!black}
+\definecolor{AltYellow}{RGB}{255,245,170} % soft yellow highlight
+
+\newcommand{\AltBox}[1]{%
+  {\setlength{\fboxsep}{0pt}%
+   \colorbox{AltYellow}{\texttt{#1}}}%
+}
+
+\newcommand\tb[1]{\textcolor{blue}{#1}}
+\newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}
+\newcommand\tg[1]{\textcolor{AccessibleGreen}{#1}}
+\newcommand\ty[1]{\textcolor{yellow}{#1}}
+
+% Underline links
+\urlstyle{same}
+\usepackage[normalem]{ulem}
+\newcommand{\hrefu}[2]{\href{#1}{\uline{#2}}}
+\newcommand{\urlu}[1]{\uline{\url{#1}}}
+
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=AccessibleGreen,
+  urlcolor=AccessibleGreen,
+  citecolor=AccessibleGreen
+    }
+
+% Make headers of new slides level 2, to stop accessibility checker complaining
+\tagpdfsetup{role / new-tag = frametitle / H2}
+
+% Stop accessibility checker complaining about math
+\tagpdfsetup{math/alt/use}
+
+% Put page number on all but first slide
+\makeatletter
+\renewcommand\@framenumber{%
+  \ifnum\value{page}=1\relax
+    % title page: no number
+  \else
+    \hfill\arabic{frame}% right-aligned
+  \fi
+}
+\makeatother
+
+% Format slide titles: left-justified, large and blue
+\EditInstance{frametitle}{header}{
+  font  = \LARGE\raggedright,
+  color = blue
+}
+
+% Format page number
+\EditInstance{footer}{std}{
+  color         = black,
+  font          = \tiny,
+  left-hspace   = 0.9cm,
+  right-hspace  = 0.5cm,
+  separator     = \hfill,
+  element-order = {framenumber},
+}
+
+% Font setup. This combination ensures that numerical digits look the same in both math and text mode
+\setmainfont{Lato}[
+  Ligatures=TeX,
+  Numbers={Lining,Monospaced}
+]
+\setsansfont{Lato}[
+  Ligatures=TeX,
+  Numbers={Lining,Monospaced}
+]
+
+\setmathfont{LeteSansMath.otf}
+
+\title{\textcolor{blue}{Accessible Slides in LaTeX}}
+\author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
+\institute{\small UC Berkeley}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}{}
+    \maketitle
+\end{frame}
+\setcounter{frame}{0}
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+
+\begin{itemize}
+
+\item On January 8, 2026, we were notified by campus that, beginning in April 2026,
+
+  \begin{quotation}
+    \color{blue}
+``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
+\end{quotation}
+
+\item Many of us use Beamer to create teaching slides.
+
+\item {\color{AccessibleRed}But Beamer is not \textbf{and never will be}  compatible with these requirements.}
+
+\item Fortunately, the \LaTeX\ community is developing a \hrefu{https://latex3.github.io/tagging-project/}{Beamer replacement} that
+\begin{enumerate}
+\item Generates accessible output,
+\item Requires little modification to existing Beamer source, and
+\item Requires \emph{no} manual processing of the resulting PDF file.
+\end{enumerate}
+\begin{itemize}
+\item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
+\end{itemize}
+
+\bigskip
+
+\item You can use {\color{blue}this presentation} as a template for modifying your own work.
+  \begin{itemize}
+  \item Contains math, text, graphics, and tables.
+  \item Scores a perfect 100\% from the bCourses accessibility checker, Ally.
+  \item \tr{It's easy!} Most of the work is just editing the preamble.
+
+  \end{itemize}
+  
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{The basics}
+  \begin{itemize}
+  \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
+  \item So \textbf{\color{blue}existing source files don't need a lot of editing.}
+  \item Here's some gratuitous  $\mathit{math}$ for the accessibility checker.
+  \end{itemize}
+  
+\vspace*{0.25in}
+    
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\ttfamily\small
+\textbackslash begin\{frame\}\{The basics\}\\
+\textbackslash begin\{itemize\}\\
+\textbackslash item Slides are put inside a \textbackslash texttt\{frame\} environment, just like in Beamer.\\
+\textbackslash item So \textbackslash textbf\{\textbackslash color\{blue\}existing source files don't need a lot of editing.\}\\
+\textbackslash item Here's some gratuitous  \$\textbackslash mathit\{math\}\$ for the accessibility checker.\\
+\textbackslash end\{itemize\}\\
+\textbackslash end\{frame\}
+\end{minipage}
+}
+
+\vspace*{0.25in}
+
+\begin{itemize}
+\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (this really bothers me\ldots)
+    \begin{itemize}
+    \item {\color{AccessibleRed} Text:}  \$1234567890\%.
+    \item {\color{AccessibleRed} Math:}  $\$1234567890\%.$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame*}{Example figure}
+
+\vspace*{.2in}
+
+\begin{itemize}
+\item Including figures is the same as in Beamer (e.g., using \texttt{\textbackslash includegraphics}),
+but you need to provide a \tr{text description}.
+
+\vspace*{0.25in}
+
+\fbox{%
+  \ttfamily\small
+  \textbackslash includegraphics[height=.4\textbackslash textheight,%
+  \AltBox{alt=\{A capybara\}}%
+  ]\{capybara.jpg\}%
+}
+
+\end{itemize}
+
+\vspace*{0.25in}
+
+\centering
+\includegraphics[height=.5\textheight, alt={A capybara}]{capybara.jpg}
+
+\end{frame*}
+
+\begin{frame}{Example table}
+
+ \begin{itemize}
+  \item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment), but you need to specify the \tr{title rows}. E.g,
+
+\vspace*{0.25in}
+    
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\ttfamily\small
+\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
+\textbackslash begin\{tabular\}\{ccccrcccr\} \\
+$\cdots$ \\
+\textbackslash end\{tabular\}
+\end{minipage}
+}
+
+\end{itemize}
+
+\vspace*{0.25in}
+  
+\begin{center}\footnotesize
+\tagpdfsetup{table/header-rows={1,2,3}}
+  \begin{tabular}{ccccrcccr}
+  \toprule
+  & & & & \multicolumn{1}{c}{Days} & Days in & & & \\
+Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
+  date &   expiry date & $DF_\text{pay}$ & rate & \multicolumn{1}{c}{expiry} & period &      $T_\text{expiry}$ &    $\Delta$ &        \multicolumn{1}{c}{Caplet} \\
+\midrule
+  2004/12/01 &          ---        &  0.99550 & 0.01790 & 0 &  91 & 0.00000 &  0.25278 &  --- \hspace*{0.15in}\\
+  2005/03/01 & 2004/11/29 &  0.99008 &  0.02188 & 89   &  90 & 0.24384 &  0.25000 & 1,178.77\\
+  2005/06/01 & 2005/02/25 &  0.98401 & 0.02413 & 177 &  92 & 0.48493 &  0.25556 & 4,844.73\\
+  2005/09/01 & 2005/05/27 &  0.97733 & 0.02675 & 268 &  92 & 0.73425 &  0.25556 &10,016.71\\
+  \bottomrule
+\end{tabular}  
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+  \begin{itemize}
+  \item \tr{Migrating Beamer-based materials to make them accessible is quite easy.} \\[2ex]
+  \item Let me know if you have any suggestions for improvement: \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+  \end{itemize}
+\end{frame}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-command-extra-options: "-interaction=nonstopmode"
+%%% TeX-master: t
+%%% eval: (setq org-format-latex-header "\\documentclass[10pt]{RSorg}\\pagestyle{empty}")
+%%% eval: '(hide-latex-preamble)
+%%% eval: (outline-hide-body)
+%%% End:
