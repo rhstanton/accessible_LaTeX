@@ -230,7 +230,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{This template}
+\begin{frame}{This project}
 
 \begin{itemize}
 \item You can use {\color{blue}this presentation} as a template for modifying your own work.
@@ -238,7 +238,7 @@
   \item Contains math, text, graphics, and tables.
   \item Scores a perfect 100\% from the bCourses accessibility checker, Ally.
   \item \tr{It's easy!} Most of the work is just editing the preamble.
-  \end{itemize}
+    \end{itemize}
 
 \bigskip
 
@@ -272,13 +272,39 @@
   \item \textbf{After installation}: Run \texttt{tlmgr update --all} to get latest updates
   \end{itemize}
 
-\bigskip
-
-\item \textbf{\tb{Set compiler to} \tg{LuaLaTeX}} (\textbf{not} \tr{pdfLaTeX}) in your editor preferences
-
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}{Important workflow change: Use LuaLaTeX}
+  \begin{itemize}
+  \item \tr{You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.org/help/documentation/pdftex-a.pdf}{pdfLaTeX} to \hrefu{http://www.luatex.org/}{LuaLaTeX}.}
+    
+  \item \tb{Why switch to LuaLaTeX?}
+    \begin{enumerate}
+    \item \textbf{Automatic MathML:} LuaLaTeX automatically generates \hrefu{https://www.w3.org/Math/}{MathML} (Mathematical Markup Language), making math accessible to screen readers without extra work.
+    \item \textbf{Easier workflow:} While pdfLaTeX has partial support, it requires manually providing MathML files for each equation—tedious and error-prone.
+    \item \textbf{Modern Fonts:} LuaLaTeX handles OpenType fonts (like Lato) natively, essential for proper Unicode support.
+    \item \textbf{Full UTF-8:} Complete support for international characters and screen readers.
+    \end{enumerate}
+      
+  \item \tb{How to switch:}
+    \begin{itemize}
+    \item Command line: \texttt{lualatex myfile.tex}
+    \item Most LaTeX editors: Select ``LuaLaTeX'' from the compiler menu
+%    \item Overleaf: Set compiler to ``LuaLaTeX'' in the menu
+    \end{itemize}
+
+% \item \tb{TeX version requirements:}
+%     \begin{itemize}
+%     \item \tg{Minimum:} TeX Live 2023 (late 2023, with \texttt{tlmgr update --all})
+%     \item \tg{Recommended:} TeX Live 2024 or later
+%     \item \tr{Will NOT work:} TeX Live 2022 or earlier
+%     \end{itemize}
+      
+    
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{The basics}
   \begin{itemize}
@@ -310,36 +336,6 @@
     \item {\color{AccessibleRed} Text:}  \$1234567890\%.
     \item {\color{AccessibleRed} Math:}  $\$1234567890\%.$
     \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Important workflow change: Use LuaLaTeX}
-  \begin{itemize}
-  \item \tr{You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.org/help/documentation/pdftex-a.pdf}{pdfLaTeX} to \hrefu{http://www.luatex.org/}{LuaLaTeX}.}
-    
-  \item \tb{Why switch to LuaLaTeX?}
-    \begin{enumerate}
-    \item \textbf{Automatic MathML:} LuaLaTeX automatically generates \hrefu{https://www.w3.org/Math/}{MathML} (Mathematical Markup Language), making math accessible to screen readers without extra work.
-    \item \textbf{Easier workflow:} While pdfLaTeX has partial support, it requires manually providing MathML files for each equation—tedious and error-prone.
-    \item \textbf{Modern Fonts:} LuaLaTeX handles OpenType fonts (like Lato) natively, essential for proper Unicode support.
-    \item \textbf{Full UTF-8:} Complete support for international characters and screen readers.
-    \end{enumerate}
-      
-  \item \tb{How to switch:}
-    \begin{itemize}
-    \item Command line: \texttt{lualatex myfile.tex}
-    \item Most LaTeX editors: Select ``LuaLaTeX'' from the compiler menu
-    \item Overleaf: Set compiler to ``LuaLaTeX'' in the menu
-    \end{itemize}
-
-\item \tb{TeX version requirements:}
-    \begin{itemize}
-    \item \tg{Minimum:} TeX Live 2023 (late 2023, with \texttt{tlmgr update --all})
-    \item \tg{Recommended:} TeX Live 2024 or later
-    \item \tr{Will NOT work:} TeX Live 2022 or earlier
-    \end{itemize}
-      
-    
   \end{itemize}
 \end{frame}
 
