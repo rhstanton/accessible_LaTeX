@@ -1,0 +1,87 @@
+name: Accessibility Issue
+description: Report an accessibility problem with the generated PDFs
+title: "[A11y]: "
+labels: ["accessibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us maintain high accessibility standards! Please provide details about the accessibility issue.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Accessibility Issue Description
+      description: What accessibility problem did you encounter?
+      placeholder: Describe the issue
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: wcag-criterion
+    attributes:
+      label: WCAG Criterion (if known)
+      description: Which WCAG guideline does this relate to?
+      options:
+        - Perceivable (images, audio, video)
+        - Operable (keyboard, navigation)
+        - Understandable (readable, predictable)
+        - Robust (compatible with assistive tech)
+        - Not sure
+  
+  - type: dropdown
+    id: assistive-tech
+    attributes:
+      label: Assistive Technology Used
+      description: What tool did you use to identify this issue?
+      options:
+        - Screen reader (JAWS, NVDA, VoiceOver, etc.)
+        - Canvas/bCourses Ally checker
+        - PDF accessibility checker
+        - Keyboard-only navigation
+        - Other
+        - Not applicable
+    validations:
+      required: true
+  
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Accessible Behavior
+      description: What should happen to be fully accessible?
+    validations:
+      required: true
+  
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+    validations:
+      required: true
+  
+  - type: input
+    id: ally-score
+    attributes:
+      label: Ally Accessibility Score
+      description: If using Canvas/bCourses Ally, what score did you get?
+      placeholder: "e.g., 85%"
+  
+  - type: textarea
+    id: code-example
+    attributes:
+      label: LaTeX Code Example
+      description: If applicable, provide the minimal LaTeX code that produces the accessibility issue
+      render: latex
+  
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: If you have ideas for how to fix this, please share
+  
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other details about the accessibility issue

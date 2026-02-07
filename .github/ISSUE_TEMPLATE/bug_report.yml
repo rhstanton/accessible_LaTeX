@@ -1,0 +1,94 @@
+name: Bug Report
+description: Report a problem with the template
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please provide as much detail as possible.
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of what the bug is
+      placeholder: Tell us what went wrong
+    validations:
+      required: true
+  
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Open accessible.tex
+        2. Modify line X to...
+        3. Compile with LuaLaTeX
+        4. See error
+    validations:
+      required: true
+  
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+    validations:
+      required: true
+  
+  - type: input
+    id: texlive-version
+    attributes:
+      label: TeX Live Version
+      description: Output of `tlmgr --version`
+      placeholder: "e.g., TeX Live 2024"
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: engine
+    attributes:
+      label: LaTeX Engine
+      description: Which engine are you using?
+      options:
+        - LuaLaTeX
+        - pdfLaTeX
+        - XeLaTeX
+        - Other
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - macOS
+        - Windows
+        - Linux
+        - Other
+    validations:
+      required: true
+  
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Messages / Logs
+      description: Please copy and paste any relevant error messages or log output
+      render: shell
+  
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here

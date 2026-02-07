@@ -1,0 +1,38 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex.gz(busy)
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# Build directory and all contents
+build/
+
+# Auto-generated files
+auto/
+*.el
+*-luamml-mathml.html
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.dir-locals.el
+*~
+\#*\#
+.\#*
+
+# GitHub Copilot instructions (keep local only)
+.github/copilot-instructions.md
+
+# But DO keep the main PDF in the root for easy viewing
+!accessible.pdf
