@@ -223,7 +223,7 @@
 \end{enumerate}
 \begin{itemize}
 \item Part of the \hrefu{https://latex3.github.io/tagging-project/}{LaTeX Tagging Project}
-\item Included in TeX Live 2023+ (no separate installation needed)
+\item Requires LaTeX kernel 2025-11-01 (get via \texttt{tlmgr update --all})
 \item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
 \end{itemize}
 
@@ -245,6 +245,37 @@
 \item The template is available at: \\
   \urlu{https://github.com/rhstanton/accessible_LaTeX}
   
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\tr{\textbf{IMPORTANT}: Overleaf does \textbf{NOT} currently work}}
+
+\begin{itemize}
+\item \texttt{ltx-talk} requires LaTeX kernel \tg{2025-11-01}
+\item As of February 7, 2026, Overleaf is using LaTeX kernel \tr{2025-06-01}
+  \item \tb{\textbf{So you must compile locally}}
+  
+\bigskip
+
+\item \textbf{\tb{Installing TeX Live (Free)}}
+  \begin{itemize}
+  \item \textbf{Windows}: Download TeX Live from \urlu{https://tug.org/texlive/}
+    \begin{itemize}
+    \item Run the installer (\textasciitilde4 GB download)
+    \item Choose a TeX editor: TeXworks (included) or TeXstudio
+    \end{itemize}
+  \item \textbf{Mac}: Download MacTeX from \urlu{https://tug.org/mactex/}
+    \begin{itemize}
+    \item Install the .pkg file (\textasciitilde5 GB download)
+    \item Includes TeXShop editor
+    \end{itemize}
+  \item \textbf{After installation}: Run \texttt{tlmgr update --all} to get latest updates
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{\tb{Set compiler to} \tg{LuaLaTeX}} (\textbf{not} \tr{pdfLaTeX}) in your editor preferences
+
 \end{itemize}
 \end{frame}
 
