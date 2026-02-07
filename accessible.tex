@@ -28,9 +28,9 @@
 % - LaTeX Engine: LuaLaTeX strongly recommended (this template requires it)
 %   * pdfLaTeX has partial support but requires manual MathML files
 %   * XeLaTeX does NOT support accessibility tagging
-% - TeX Distribution: TeX Live 2023+ (TeX Live 2024 recommended)
+% - TeX Distribution: TeX Live 2023 or later with all packages updated
 %   * TeX Live 2022 or earlier will NOT work
-%   * If using 2023, run: tlmgr update --all
+%   * Update using TeX Live Manager (Windows) or TeX Live Utility (Mac)
 \documentclass[frame-title-arg]{ltx-talk}
 
 % ======================================================================
@@ -73,7 +73,7 @@
 \newcommand\tb[1]{\textcolor{blue}{#1}}                       % Blue text
 \newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}     % Red text (accessible)
 \newcommand\tg[1]{\textcolor{AccessibleGreen}{#1}} % Green text (accessible)
-\newcommand\ty[1]{\textcolor{yellow}{#1}}                   % Yellow text
+% Note: Plain yellow fails WCAG contrast requirements - use AltYellow for backgrounds only
 
 % ======================================================================
 % CUSTOM COMMANDS FOR HIGHLIGHTED CODE
@@ -159,6 +159,8 @@
 % - Lining + Monospaced numbers make digits look the same in text and math
 % - LeteSansMath matches the Lato sans-serif style
 % - This creates visual consistency that improves readability
+%
+% These fonts are included in modern TeX distributions (TeX Live 2023+)
 
 \setmainfont{Lato}[
   Ligatures=TeX,
@@ -230,10 +232,10 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{This project}
+\begin{frame}{This template}
 
 \begin{itemize}
-\item You can use {\color{blue}this presentation} as a template for modifying your own work.
+\item You can use {\color{blue}this template} for modifying your own work.
   \begin{itemize}
   \item Contains math, text, graphics, and tables.
   \item Scores a perfect 100\% from the bCourses accessibility checker, Ally.
@@ -342,6 +344,11 @@
   \end{itemize}
 \end{frame}
 
+% ======================================================================
+% NOTE: frame* (with asterisk) creates an UNNUMBERED slide
+% Use frame* when you don't want the slide number to increment
+% (e.g., for subsidiary slides or examples that break up the flow)
+% ======================================================================
 \begin{frame*}{Figures}
 
 \vspace*{.2in}
@@ -399,9 +406,9 @@ but you need to provide a \tr{text description}.
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
-  \color{blue} & \color{blue} & \color{blue} & \color{blue} & \color{blue}\multicolumn{1}{c}{Days} & \color{blue}Days in & \color{blue} & \color{blue} & \color{blue}\\
-\color{blue}Payment & \color{blue}Caplet & \color{blue} & \color{blue}Forward & \color{blue}\multicolumn{1}{c}{to} & \color{blue}accrual & \color{blue} & \color{blue}\\
-  \color{blue}date & \color{blue}expiry date & \color{blue}$DF_\text{pay}$ & \color{blue}rate & \color{blue}\multicolumn{1}{c}{expiry} & \color{blue}period & \color{blue}$T_\text{expiry}$ & \color{blue}$\Delta$ & \color{blue}\multicolumn{1}{c}{Caplet} \\
+  \color{blue} & \color{blue} & \color{blue} & \color{blue} & \multicolumn{1}{c}{\color{blue}Days} & \color{blue}Days in & \color{blue} & \color{blue} & \color{blue}\\
+\color{blue}Payment & \color{blue}Caplet & \color{blue} & \color{blue}Forward & \multicolumn{1}{c}{\color{blue}to} & \color{blue}accrual & \color{blue} & \color{blue}\\
+  \color{blue}date & \color{blue}expiry date & \color{blue}$DF_\text{pay}$ & \color{blue}rate & \multicolumn{1}{c}{\color{blue}expiry} & \color{blue}period & \color{blue}$T_\text{expiry}$ & \color{blue}$\Delta$ & \multicolumn{1}{c}{\color{blue}Caplet} \\
 \midrule
   \color{AccessibleGreen}2004/12/01 & \color{AccessibleGreen}--- & \color{AccessibleGreen}0.99550 & \color{AccessibleGreen}0.01790 & \color{AccessibleGreen}0 & \color{AccessibleGreen}91 & \color{AccessibleGreen}0.00000 & \color{AccessibleGreen}0.25278 & \color{AccessibleGreen}--- \hspace*{0.15in}\\
   \color{AccessibleGreen}2005/03/01 & \color{AccessibleGreen}2004/11/29 & \color{AccessibleGreen}0.99008 & \color{AccessibleGreen}0.02188 & \color{AccessibleGreen}89 & \color{AccessibleGreen}90 & \color{AccessibleGreen}0.24384 & \color{AccessibleGreen}0.25000 & \color{AccessibleGreen}1,178.77\\
@@ -453,18 +460,16 @@ but you need to provide a \tr{text description}.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Conclusions}
+\begin{frame}{Getting started}
   \begin{itemize}
-  \item \tr{Migrating Beamer-based materials to make them accessible is quite easy.}
+  \item \tb{\textbf{Follow these steps to migrate your Beamer slides:}}
   
   \bigskip
-  \item \tb{Next steps:}
     \begin{enumerate}
     \item Install TeX Live locally (Overleaf doesn't work yet)
     \item Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
     \item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
-    \item Copy the preamble to your existing Beamer files
-    \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
+    \item Copy the preamble (everything before \texttt{\textbackslash begin\{document\}}) to your Beamer files
     \item Add \texttt{alt} text to images and \texttt{table/header-rows} to tables
     \item Set your compiler to LuaLaTeX
     \item Compile and test!
