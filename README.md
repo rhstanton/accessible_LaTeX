@@ -25,9 +25,10 @@ This project provides a working template for migrating existing Beamer-based tea
 
 As of April 2026, the updated requirements of the ADA mandate that digital course materials, including those in password-protected course sites, must comply with accessibility standards ([WCAG 2.1 Level AA](https://www.w3.org/WAI/standards-guidelines/wcag/)). 
 
-**The problem**: Beamer is not and never will be compatible with these requirements.
+**The problem**: Beamer is not **and never will be** compatible with these requirements.
 
 **The solution**: The LaTeX community has developed a [Beamer replacement](https://latex3.github.io/tagging-project/) that:
+
 - ✅ Generates accessible output
 - ✅ Requires minimal modification to existing Beamer source
 - ✅ Requires no manual processing of the resulting PDF file
@@ -35,6 +36,7 @@ As of April 2026, the updated requirements of the ADA mandate that digital cours
 ## Features
 
 This template demonstrates:
+
 - **Accessible images** with alt text
 - **Accessible tables** with properly tagged header rows
 - **Accessible math** with MathML output
@@ -77,6 +79,7 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
 - **Will NOT work**: TeX Live 2022 or earlier
 
 **Why these versions?** The accessibility features require:
+
 - Modern LaTeX kernel with `\DocumentMetadata` support (added in 2023)
 - Updated `tagpdf` package integrated into the kernel
 - `ltx-talk` document class dependencies
@@ -100,6 +103,7 @@ lualatex accessible.tex
 ```
 
 Or configure your LaTeX editor:
+
 - **TeXShop**: Select "LuaLaTeX" from the typeset menu
 - **TeXworks**: Select "LuaLaTeX" from the dropdown
 - **VS Code with LaTeX Workshop**: Add LuaLaTeX recipe (see extension docs)
@@ -125,11 +129,20 @@ Every document must start with:
 
 ### 3. Tables with Header Rows
 ```latex
+% For a table with 1 header row:
+\tagpdfsetup{table/header-rows={1}}
+
+% For a table with 2 header rows:
+\tagpdfsetup{table/header-rows={1,2}}
+
+% For a table with 3 header rows:
 \tagpdfsetup{table/header-rows={1,2,3}}
+
 \begin{tabular}{ccc}
   % table content
 \end{tabular}
 ```
+**Note**: List ALL header row numbers. If your header spans 2 rows, you must use `{1,2}`, not just `{1}`.
 
 ### 4. Accessible Math
 ```latex
@@ -141,6 +154,7 @@ Every document must start with:
 The good news: **Most of your existing Beamer code works as-is!**
 
 Key changes needed:
+
 1. Update the document preamble (use this template's preamble)
 2. Change document class from `beamer` to `ltx-talk`
 3. Add `alt` text to all images
@@ -149,13 +163,42 @@ Key changes needed:
 
 See [`accessible.tex`](accessible.tex) for a complete working example with inline code examples.
 
+## Common Pitfalls
+
+### Color Contrast
+
+One of the most frequent accessibility failures involves insufficient color contrast. WCAG 2.1 Level AA requires:
+
+- **Normal text**: Minimum contrast ratio of 4.5:1 against the background
+- **Large text** (18pt+, or 14pt+ bold): Minimum contrast ratio of 3:1 against the background
+
+**Common mistakes:**
+
+- Using light colors on white backgrounds (e.g., `yellow`, `cyan`)
+- Using bright red or green without darkening (standard `red` and `green` can be borderline)
+- Relying solely on color to convey information (must also use text, symbols, or patterns)
+
+**Solutions:**
+
+- Use darker versions of problematic colors: `red!80!black`, `green!40!black`
+- Standard `blue` is typically fine and meets WCAG requirements
+- Test color combinations with a [contrast checker](https://webaim.org/resources/contrastchecker/)
+- Always provide text labels or patterns in addition to color coding
+
+**Example from this template:**
+```latex
+\definecolor{AccessibleRed}{named}{red!80!black}
+\definecolor{AccessibleGreen}{named}{green!40!black}
+```
+
+This template includes pre-tested accessible colors that meet WCAG requirements.
+
 ## File Structure
 
 - `accessible.tex` - Main template file with examples and extensive comments
 - `accessible.pdf` - Pre-compiled example output (view without compiling)
 - `capybara.jpg` - Sample image used in the template
 - `.latexmkrc` - Configuration for latexmk build tool
-- `.github/copilot-instructions.md` - GitHub Copilot configuration for this project
 - `build/` - Build artifacts (PDF, HTML with MathML)
 - `auto/` - Auto-generated auxiliary files
 
@@ -168,6 +211,7 @@ See [`accessible.tex`](accessible.tex) for a complete working example with inlin
 ## Testing Accessibility
 
 To verify your slides meet accessibility requirements:
+
 1. Upload your PDF to Canvas/bCourses
 2. Check the Ally accessibility score (should be 100%)
 3. Use a screen reader to test navigation
@@ -178,23 +222,28 @@ To verify your slides meet accessibility requirements:
 ### Common Issues
 
 **"Undefined control sequence \DocumentMetadata"**
+
 - Your TeX distribution is too old (pre-2023)
 - Solution: Upgrade to TeX Live 2023 or later, or run `tlmgr update --all`
 
 **"Font not found" errors**
+
 - If using TeX Live 2023+, fonts should be included
 - Solution: The font configuration is optional - you can comment out or remove the `\setmainfont`, `\setsansfont`, and `\setmathfont` lines. Accessibility will still work fine.
 
 **Compilation takes a long time**
+
 - LuaLaTeX is slower than pdfLaTeX (this is normal)
 - First compilation generates MathML files
 - Subsequent compilations are faster
 
 **"ltx-talk.cls not found"**
+
 - Your TeX distribution doesn't include ltx-talk
 - Solution: Upgrade to TeX Live 2023 or later
 
 **Math doesn't render correctly**
+
 - Make sure you're using LuaLaTeX, not pdfLaTeX or XeLaTeX
 - Check that `\tagpdfsetup{math/alt/use}` is in your preamble
 
@@ -238,6 +287,7 @@ A: Check that all images have `alt` text, all tables have `table/header-rows` sp
 This template is released into the **public domain** under the [CC0 1.0 Universal (CC0 1.0) Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 
 You are free to:
+
 - Use this template for any purpose (academic, commercial, personal)
 - Modify and adapt it to your needs
 - Distribute it to others

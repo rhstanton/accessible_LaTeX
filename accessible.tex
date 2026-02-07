@@ -230,7 +230,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Using this template}
+\begin{frame}{This template}
 
 \begin{itemize}
 \item You can use {\color{blue}this presentation} as a template for modifying your own work.
@@ -274,7 +274,7 @@
 \vspace*{0.25in}
 
 \begin{itemize}
-\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peeve\ldots)
+\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peave\ldots)
     \begin{itemize}
     \item {\color{AccessibleRed} Text:}  \$1234567890\%.
     \item {\color{AccessibleRed} Math:}  $\$1234567890\%.$
@@ -288,25 +288,26 @@
     
   \item \tb{Why switch to LuaLaTeX?}
     \begin{enumerate}
-    \item \textbf{Automatic MathML:} LuaLaTeX automatically generates \hrefu{https://www.w3.org/Math/}{MathML} (Mathematical Markup Language) for equations, making math accessible to screen readers without extra work.
+    \item \textbf{Automatic MathML:} LuaLaTeX automatically generates \hrefu{https://www.w3.org/Math/}{MathML} (Mathematical Markup Language), making math accessible to screen readers without extra work.
     \item \textbf{Easier workflow:} While pdfLaTeX has partial support, it requires manually providing MathML files for each equation—tedious and error-prone.
     \item \textbf{Modern Fonts:} LuaLaTeX handles OpenType fonts (like Lato) natively, essential for proper Unicode support.
     \item \textbf{Full UTF-8:} Complete support for international characters and screen readers.
     \end{enumerate}
-    
-  \item \tb{TeX Version Requirements:}
-    \begin{itemize}
-    \item \tg{Minimum:} TeX Live 2023 (late 2023, with \texttt{tlmgr update --all})
-    \item \tg{Recommended:} TeX Live 2024 or later
-    \item \tr{Will NOT work:} TeX Live 2022 or earlier
-    \end{itemize}
-    
+      
   \item \tb{How to switch:}
     \begin{itemize}
     \item Command line: \texttt{lualatex myfile.tex}
     \item Most LaTeX editors: Select ``LuaLaTeX'' from the compiler menu
     \item Overleaf: Set compiler to ``LuaLaTeX'' in the menu
     \end{itemize}
+
+\item \tb{TeX version requirements:}
+    \begin{itemize}
+    \item \tg{Minimum:} TeX Live 2023 (late 2023, with \texttt{tlmgr update --all})
+    \item \tg{Recommended:} TeX Live 2024 or later
+    \item \tr{Will NOT work:} TeX Live 2022 or earlier
+    \end{itemize}
+      
     
   \end{itemize}
 \end{frame}
@@ -340,7 +341,9 @@ but you need to provide a \tr{text description}.
 \begin{frame}{Tables}
 
  \begin{itemize}
-  \item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment), but you need to specify the \tr{title rows}. E.g,
+  \item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment), but you need to specify the \tr{header rows}.
+  \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, \texttt{\{1,2,3\}} for 3 rows, etc.
+  \item Example (table with 3 header rows):
 
 \vspace*{0.25in}
     
@@ -376,7 +379,7 @@ Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
 
 \end{frame}
 
-\begin{frame}{Common Pitfalls to Avoid}
+\begin{frame}{Common pitfalls}
   \begin{itemize}
   \item \tr{Forgetting alt text for images}
     \begin{itemize}
@@ -386,14 +389,25 @@ Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
     
   \item \tr{Not specifying table header rows}
     \begin{itemize}
-    \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}} before each data table
-    \item Forget this and screen readers can't navigate your tables properly
+    \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table
+    \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 header rows, etc.
+%   \item Must list \emph{all} header rows — \texttt{\{1\}} won't work if header spans 2 rows!
+%    \item Forget this and screen readers can't navigate your tables properly
     \end{itemize}
     
+  \item \tr{Insufficient color contrast}
+    \begin{itemize}
+    \item WCAG 2.1 requires 4.5:1 contrast ratio for normal text
+    \item Avoid light colors: \texttt{yellow}, \texttt{cyan} fail contrast requirements
+    \item Darken \texttt{red} and \texttt{green}: use \texttt{red!80!black}, \texttt{green!40!black}
+    \item Standard \texttt{blue} is fine and meets WCAG requirements
+    \item Test with a contrast checker: \urlu{https://webaim.org/resources/contrastchecker/}
+    \end{itemize}
+
   \item \tr{Using the wrong compiler}
     \begin{itemize}
-    \item Make sure your editor is set to LuaLaTeX, not pdfLaTeX
-    \item Check this \emph{every time} you open the project
+    \item Make sure your editor is set to use \tg{LuaLaTeX}, not \tr{pdfLaTeX}
+%    \item Check this \emph{every time} you open the project
     \end{itemize}
     
   \item \tr{Old TeX distribution}
@@ -401,6 +415,7 @@ Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
     \item TeX Live 2022 or earlier won't work
     \item Run \texttt{tlmgr update --all} if using TeX Live 2023
     \end{itemize}
+    
   \end{itemize}
 \end{frame}
 
