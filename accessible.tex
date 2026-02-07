@@ -223,7 +223,7 @@
 \end{enumerate}
 \begin{itemize}
 \item Part of the \hrefu{https://latex3.github.io/tagging-project/}{LaTeX Tagging Project}
-\item Requires LaTeX kernel 2025-11-01 (get via \texttt{tlmgr update --all})
+\item Requires LaTeX kernel 2025-11-01 (update packages using TeX Live Manager or TeX Live Utility)
 \item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
 \end{itemize}
 
@@ -263,14 +263,19 @@
     \begin{itemize}
     \item Run the installer (\textasciitilde4 GB download)
     \item Choose a TeX editor: TeXworks (included) or TeXstudio
+    \item \textbf{Update}: Use \tg{TeX Live Manager} GUI from Start menu
     \end{itemize}
   \item \textbf{Mac}: Download MacTeX from \urlu{https://tug.org/mactex/}
     \begin{itemize}
     \item Install the .pkg file (\textasciitilde5 GB download)
     \item Includes TeXShop editor
+    \item \textbf{Update}: Use \tg{TeX Live Utility} app (in Applications folder)
     \end{itemize}
-  \item \textbf{After installation}: Run \texttt{tlmgr update --all} to get latest updates
   \end{itemize}
+  
+\bigskip
+
+\item \textbf{\tb{Important:}} After installation, update all packages using the GUI updater shown above
 
 \end{itemize}
 \end{frame}
@@ -292,15 +297,14 @@
     \begin{itemize}
     \item Command line: \texttt{lualatex myfile.tex}
     \item Most LaTeX editors: Select ``LuaLaTeX'' from the compiler menu
-%    \item Overleaf: Set compiler to ``LuaLaTeX'' in the menu
     \end{itemize}
 
-% \item \tb{TeX version requirements:}
-%     \begin{itemize}
-%     \item \tg{Minimum:} TeX Live 2023 (late 2023, with \texttt{tlmgr update --all})
-%     \item \tg{Recommended:} TeX Live 2024 or later
-%     \item \tr{Will NOT work:} TeX Live 2022 or earlier
-%     \end{itemize}
+\item \tb{TeX version requirements:}
+    \begin{itemize}
+    \item \tg{Minimum:} TeX Live 2023 or later with all packages updated
+    \item \tg{Critical:} Must have LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
+    \item \tr{Will NOT work:} TeX Live 2022 or earlier, or Overleaf (as of Feb 2026)
+    \end{itemize}
       
     
   \end{itemize}
@@ -331,7 +335,7 @@
 \vspace*{0.25in}
 
 \begin{itemize}
-\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peave\ldots)
+\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peeve\ldots)
     \begin{itemize}
     \item {\color{AccessibleRed} Text:}  \$1234567890\%.
     \item {\color{AccessibleRed} Math:}  $\$1234567890\%.$
@@ -367,39 +371,43 @@ but you need to provide a \tr{text description}.
 
 \begin{frame}{Tables}
 
- \begin{itemize}
-  \item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment), but you need to specify the \tr{header rows}.
-  \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, \texttt{\{1,2,3\}} for 3 rows, etc.
-  \item Example (table with 3 header rows):
-
-\vspace*{0.25in}
+\begin{itemize}
+\item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment).
+\item  Also need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc. E.g.,
+% \item Example (table with 3 header rows):
+  
+\vspace*{0.15in}
     
 \fbox{%
 \begin{minipage}{0.95\linewidth}
 \ttfamily\small
 \AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
 \textbackslash begin\{tabular\}\{ccccrcccr\} \\
-$\cdots$ \\
+\textbackslash toprule \\
+\textrm{\color{blue}\small $\leftarrow$ 3 header rows} \\
+\textbackslash midrule \\
+\textrm{\color{AccessibleGreen}\small $\leftarrow$ data rows} \\
+\textbackslash bottomrule \\
 \textbackslash end\{tabular\}
 \end{minipage}
 }
 
 \end{itemize}
 
-\vspace*{0.25in}
+\vspace*{0.15in}
   
 \begin{center}\footnotesize
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
-  & & & & \multicolumn{1}{c}{Days} & Days in & & & \\
-Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
-  date &   expiry date & $DF_\text{pay}$ & rate & \multicolumn{1}{c}{expiry} & period &      $T_\text{expiry}$ &    $\Delta$ &        \multicolumn{1}{c}{Caplet} \\
+  \color{blue} & \color{blue} & \color{blue} & \color{blue} & \color{blue}\multicolumn{1}{c}{Days} & \color{blue}Days in & \color{blue} & \color{blue} & \color{blue}\\
+\color{blue}Payment & \color{blue}Caplet & \color{blue} & \color{blue}Forward & \color{blue}\multicolumn{1}{c}{to} & \color{blue}accrual & \color{blue} & \color{blue}\\
+  \color{blue}date & \color{blue}expiry date & \color{blue}$DF_\text{pay}$ & \color{blue}rate & \color{blue}\multicolumn{1}{c}{expiry} & \color{blue}period & \color{blue}$T_\text{expiry}$ & \color{blue}$\Delta$ & \color{blue}\multicolumn{1}{c}{Caplet} \\
 \midrule
-  2004/12/01 &          ---        &  0.99550 & 0.01790 & 0 &  91 & 0.00000 &  0.25278 &  --- \hspace*{0.15in}\\
-  2005/03/01 & 2004/11/29 &  0.99008 &  0.02188 & 89   &  90 & 0.24384 &  0.25000 & 1,178.77\\
-  2005/06/01 & 2005/02/25 &  0.98401 & 0.02413 & 177 &  92 & 0.48493 &  0.25556 & 4,844.73\\
-  2005/09/01 & 2005/05/27 &  0.97733 & 0.02675 & 268 &  92 & 0.73425 &  0.25556 &10,016.71\\
+  \color{AccessibleGreen}2004/12/01 & \color{AccessibleGreen}--- & \color{AccessibleGreen}0.99550 & \color{AccessibleGreen}0.01790 & \color{AccessibleGreen}0 & \color{AccessibleGreen}91 & \color{AccessibleGreen}0.00000 & \color{AccessibleGreen}0.25278 & \color{AccessibleGreen}--- \hspace*{0.15in}\\
+  \color{AccessibleGreen}2005/03/01 & \color{AccessibleGreen}2004/11/29 & \color{AccessibleGreen}0.99008 & \color{AccessibleGreen}0.02188 & \color{AccessibleGreen}89 & \color{AccessibleGreen}90 & \color{AccessibleGreen}0.24384 & \color{AccessibleGreen}0.25000 & \color{AccessibleGreen}1,178.77\\
+  \color{AccessibleGreen}2005/06/01 & \color{AccessibleGreen}2005/02/25 & \color{AccessibleGreen}0.98401 & \color{AccessibleGreen}0.02413 & \color{AccessibleGreen}177 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.48493 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}4,844.73\\
+  \color{AccessibleGreen}2005/09/01 & \color{AccessibleGreen}2005/05/27 & \color{AccessibleGreen}0.97733 & \color{AccessibleGreen}0.02675 & \color{AccessibleGreen}268 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.73425 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}10,016.71\\
   \bottomrule
 \end{tabular}  
 \end{center}
@@ -440,7 +448,7 @@ Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
   \item \tr{Old TeX distribution}
     \begin{itemize}
     \item TeX Live 2022 or earlier won't work
-    \item Run \texttt{tlmgr update --all} if using TeX Live 2023
+    \item Update packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
     \end{itemize}
     
   \end{itemize}
@@ -453,6 +461,8 @@ Payment    & Caplet & & Forward & \multicolumn{1}{c}{to} & accrual & & \\
   \bigskip
   \item \tb{Next steps:}
     \begin{enumerate}
+    \item Install TeX Live locally (Overleaf doesn't work yet)
+    \item Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
     \item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
     \item Copy the preamble to your existing Beamer files
     \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}

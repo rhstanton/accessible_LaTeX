@@ -19,7 +19,7 @@ This project provides a working template for migrating existing Beamer-based tea
 - **Beamer-compatible syntax**: Uses familiar `\begin{frame}...\end{frame}` syntax to minimize migration effort
 - **Part of the LaTeX Tagging Project**: Actively maintained and developed alongside the core LaTeX accessibility infrastructure
 - **Automatic tagging**: Handles document structure, headings, lists, and other elements automatically
-- **Requires LaTeX kernel 2025-11-01**: Available via `tlmgr update --all` on TeX Live 2023/2024 installations
+- **Requires LaTeX kernel 2025-11-01**: Update your TeX Live installation to get this (see installation instructions below)
 
 ## Why does this exist?
 
@@ -49,13 +49,13 @@ This template demonstrates:
 
 ### Requirements
 
-- **LaTeX Distribution**: TeX Live 2023 or later (TeX Live 2024 strongly recommended)
+- **LaTeX Distribution**: TeX Live 2023 or later
 - **LaTeX Engine**: LuaLaTeX (strongly recommended - see below)
-- **Fonts**: Lato and LeteSansMath.otf (optional - included in TeX Live 2023+)
+- **Fonts**: Lato and LeteSansMath.otf (optional - included in TeX Live)
 
 **⚠️ Important**: This template does NOT currently work on Overleaf. You must install and compile locally.
 
-**Note on fonts**: The font configuration in this template is **optional** and purely for visual consistency. The accessibility features work with any font. Lato and LeteSansMath.otf are included in TeX Live 2023+, so if you have a modern TeX distribution, they're already installed.
+**Note on fonts**: The font configuration in this template is **optional** and purely for visual consistency. The accessibility features work with any font. Lato and LeteSansMath.otf are included in modern TeX distributions.
 
 ### Installing TeX Live Locally
 
@@ -64,12 +64,15 @@ If you don't have TeX Live installed:
 - **Windows**: Download and install [TeX Live](https://tug.org/texlive/) (~4 GB)
   - Includes TeXworks editor
   - Alternative editors: [TeXstudio](https://www.texstudio.org/)
+  - **Update packages**: Use **TeX Live Manager** GUI from the Start menu
   
 - **Mac**: Download and install [MacTeX](https://tug.org/mactex/) (~5 GB)
   - Includes TeXShop editor
   - Alternatively, use [Homebrew](https://brew.sh/): `brew install --cask mactex`
+  - **Update packages**: Use **TeX Live Utility** app from the Applications folder
 
-- **After installation**: Run `tlmgr update --all` in your terminal to get the latest package updates (including the November 2025 kernel required by `ltx-talk`)
+- **After installation**: Update all packages using the GUI updater shown above to get the latest updates (including the November 2025 kernel required by `ltx-talk`)
+  - Advanced users can use command line: `tlmgr update --all`
 
 #### Why LuaLaTeX?
 
@@ -89,8 +92,11 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
 
 #### TeX Version Requirements
 
-- **Minimum**: TeX Live 2023 or 2024 **with updates applied**
-  - **Critical**: Run `tlmgr update --all` to get **LaTeX kernel 2025-11-01** (required by `ltx-talk`)
+- **Minimum**: TeX Live 2023 or later **with updates applied**
+  - **Critical**: Update all packages to get **LaTeX kernel 2025-11-01** (required by `ltx-talk`)
+    - **Windows**: Use TeX Live Manager GUI from Start menu
+    - **Mac**: Use TeX Live Utility app from Applications folder
+    - **Command line**: `tlmgr update --all`
   - Without this kernel update, `ltx-talk` will not work
 - **Will NOT work**: 
   - TeX Live 2022 or earlier
@@ -131,7 +137,7 @@ Or configure your LaTeX editor:
 
 **This template does NOT currently work on Overleaf.** The `ltx-talk` class requires LaTeX kernel 2025-11-01, but as of February 2026, Overleaf has not yet updated to this version.
 
-**You must compile locally** using TeX Live 2023+ (with `tlmgr update --all`) or TeX Live 2024+.
+**You must compile locally** using an up-to-date TeX Live installation (see installation instructions above).
 
 See the "Installing LaTeX Locally" section in the slides ([accessible.pdf](accessible.pdf)) for installation instructions for Windows and Mac.
 
@@ -249,11 +255,11 @@ To verify your slides meet accessibility requirements:
 **"Undefined control sequence \DocumentMetadata"**
 
 - Your TeX distribution is too old (pre-2023)
-- Solution: Upgrade to TeX Live 2023 or later, or run `tlmgr update --all`
+- Solution: Upgrade to TeX Live 2023 or later and update all packages (use TeX Live Manager on Windows or TeX Live Utility on Mac)
 
 **"Font not found" errors**
 
-- If using TeX Live 2023+, fonts should be included
+- If using a modern TeX distribution, fonts should be included
 - Solution: The font configuration is optional - you can comment out or remove the `\setmainfont`, `\setsansfont`, and `\setmathfont` lines. Accessibility will still work fine.
 
 **Compilation takes a long time**
@@ -287,13 +293,13 @@ A: Yes, but you'll need to manually create MathML files for every equation. LuaL
 A: Most Beamer code works with minimal changes. See the "Migrating from Beamer" section above.
 
 **Q: Do I need to install any packages?**
-A: No separate package installation needed, but you must have TeX Live 2023 or 2024 **with updates applied** via `tlmgr update --all` to get the LaTeX kernel 2025-11-01 required by `ltx-talk`.
+A: No separate package installation needed, but you must have an up-to-date TeX Live installation (2023 or later) with LaTeX kernel 2025-11-01 required by `ltx-talk`. Update using TeX Live Manager (Windows) or TeX Live Utility (Mac).
 
 **Q: Can I use my own fonts?**
 A: Yes! The font configuration is optional. Just remove or modify the `\setmainfont`, `\setsansfont`, and `\setmathfont` commands in the preamble.
 
 **Q: Does this work on Overleaf?**
-A: **Not currently.** The `ltx-talk` class requires LaTeX kernel 2025-11-01, but as of February 2026, Overleaf has not yet updated to this version. You must compile locally using TeX Live 2023+ (with `tlmgr update --all`) or TeX Live 2024+. See installation instructions for [Windows](https://tug.org/texlive/) and [Mac](https://tug.org/mactex/).
+A: **Not currently.** The `ltx-talk` class requires LaTeX kernel 2025-11-01, but as of February 2026, Overleaf has not yet updated to this version. You must compile locally using an up-to-date TeX Live installation. See installation instructions for [Windows](https://tug.org/texlive/) and [Mac](https://tug.org/mactex/).
 
 **Q: How do I check my TeX Live version?**
 A: Run `tlmgr --version` in your terminal.
