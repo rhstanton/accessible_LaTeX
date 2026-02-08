@@ -18,6 +18,7 @@ When reporting issues, please include:
 ### Suggesting Features
 
 We welcome suggestions for:
+
 - New accessibility features or examples
 - Better documentation or explanations
 - Migration patterns from Beamer to ltx-talk
@@ -40,6 +41,7 @@ Please check existing issues first to avoid duplicates.
 ### Accessibility Requirements
 
 **All changes MUST maintain**:
+
 - ✅ WCAG 2.1 Level AA compliance
 - ✅ 100% Ally accessibility score
 - ✅ PDF/A-2u standard compliance
@@ -77,6 +79,7 @@ This is a **teaching template**. Code should:
 
 #### Colors
 All colors must maintain sufficient contrast:
+
 - **Text on background**: Minimum 4.5:1 ratio
 - **Large text (18pt+)**: Minimum 3:1 ratio
 - Test with [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)

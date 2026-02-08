@@ -66,11 +66,13 @@ lualatex accessible.tex
 ```
 
 **Environment:**
+
 - OS: 
 - TeX Live Version: 
 - LaTeX Engine: LuaLaTeX
 
 **Accessibility Testing:**
+
 - [ ] Checked with Canvas/bCourses Ally (if available)
 - [ ] Verified with PDF accessibility checker
 - [ ] Tested with screen reader (specify which one): 

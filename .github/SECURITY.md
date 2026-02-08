@@ -52,6 +52,7 @@ When using this template:
 ## Notes
 
 This template generates PDFs locally on your machine and does not:
+
 - Collect or transmit data
 - Connect to external services
 - Execute arbitrary code beyond standard LaTeX compilation
