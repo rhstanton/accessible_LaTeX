@@ -130,28 +130,6 @@ Or configure your LaTeX editor:
 - **VS Code with LaTeX Workshop**: Add LuaLaTeX recipe (see extension docs)
 - **Emacs/AUCTeX**: See local variables at end of .tex file
 
-### Using Overleaf
-
-**✅ You CAN use this template on Overleaf!** The `ltx-talk` class requires a very recent version of TeX Live, which is available through Overleaf's **Labs program** (not in the standard Overleaf environment).
-
-#### Setup Steps:
-
-1. **Join Overleaf Labs**: 
-   - Visit the [Overleaf Labs participation page](https://www.overleaf.com/labs/participate)
-   - Opt in to the Overleaf Labs program
-   - Enable **"Rolling TeX Live releases"**
-
-2. **Configure your project**:
-   - In your project settings, change **TeX Live version** to **"Rolling TeXLive (labs)"** (at the bottom of the list)
-   - Change your project's **Compiler** to **LuaLaTeX**
-
-#### Additional Resources:
-
-- [Overleaf TeX Live 2025 announcement](https://www.overleaf.com/blog/tex-live-2025-is-now-available)
-- [Creating accessible PDFs in LaTeX on Overleaf](https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs)
-
-**Note**: If you prefer local compilation, see the "Installing TeX Live Locally" section below.
-
 ## Key Accessibility Features
 
 ### 1. Document Metadata
