@@ -7,7 +7,14 @@ A template for creating **accessible presentation slides** in LaTeX that comply 
 
 ## What is this?
 
-This project provides a working template for migrating existing Beamer-based teaching materials to the new `ltx-talk` document class, which generates fully accessible PDF presentations. The template achieves a **100% accessibility score** from the bCourses (Canvas) Ally accessibility checker.
+This is an experiment exploring what's possible with the LaTeX Tagging Project's `ltx-talk` class. It serves multiple purposes:
+
+1. **Sample presentation** - A working example with math, text, graphics, and tables you can copy and adapt
+2. **Documentation** - The slides and this README explain what you need to do, plus heavily commented code showing how each part works
+3. **Quick migration path** - Copy the preamble to your Beamer files for (almost) plug-and-play conversion (manual tagging of figures and tables still required)
+4. **Guidance** - Advice on accessibility considerations to keep in mind
+
+The template achieves a **100% accessibility score** from the bCourses (Canvas) Ally accessibility checker.
 
 **📄 [View the example PDF](accessible.pdf)** to see the template output without compiling.
 
@@ -207,8 +214,8 @@ One of the most frequent accessibility failures involves insufficient color cont
 
 **Example from this template:**
 ```latex
-\definecolor{AccessibleRed}{named}{red!80!black}
-\definecolor{AccessibleGreen}{named}{green!40!black}
+\colorlet{AccessibleRed}{red!80!black}
+\colorlet{AccessibleGreen}{green!40!black}
 ```
 
 This template includes pre-tested accessible colors that meet WCAG requirements.

@@ -164,8 +164,6 @@
 % - Lining + Monospaced numbers make digits look the same in text and math
 % - LeteSansMath matches the Lato sans-serif style
 % - This creates visual consistency that improves readability
-%
-% These fonts are included in modern TeX distributions (TeX Live 2023+)
 
 \setmainfont{Lato}[
   Ligatures=TeX,
@@ -237,20 +235,31 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{This template}
+\begin{frame}{What is this project?}
 
 \begin{itemize}
-\item You can use {\color{blue}this template} for modifying your own work.
+\item An experiment exploring the \LaTeX\ Tagging Project's \texttt{ltx-talk} class
   \begin{itemize}
-  \item Contains math, text, graphics, and tables.
-  \item Scores a perfect 100\% from the bCourses accessibility checker, Ally.
-  \item \tr{It's easy!} Most of the work is just editing the preamble.
-    \end{itemize}
+  \item \tg{Contains:} Sample slides with math, text, graphics, and tables
+  \item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
+  \end{itemize}
 
 \bigskip
 
-\item The template is available at: \\
-  \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\item \tb{How to use it:}
+  \begin{enumerate}
+  \item \textbf{As a sample:} Working example you can copy and adapt for your slides
+  \item \textbf{As documentation:} The slides and README explain what you need to do, plus heavily commented code
+  \item \textbf{For quick migration:} Copy the preamble to your Beamer files for (almost) plug-and-play conversion
+    \begin{itemize}
+    \item \tr{Still required:} Manual tagging of figures (\texttt{alt=\{...\}}) and tables (\texttt{header-rows})
+    \end{itemize}
+  \item \textbf{For guidance:} Advice on accessibility considerations to keep in mind
+  \end{enumerate}
+
+\bigskip
+
+\item Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
   
 \end{itemize}
 \end{frame}
