@@ -83,7 +83,6 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
   - Without this kernel update, `ltx-talk` will not work
 - **Will NOT work**: 
   - TeX Live 2022 or earlier
-  - Overleaf (as of February 2026 - they haven't updated to kernel 2025-11-01 yet)
 
 **Why these versions?** The accessibility features require:
 
