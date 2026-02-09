@@ -1,0 +1,349 @@
+% ======================================================================
+% DOCUMENT METADATA - REQUIRED FOR ACCESSIBILITY
+% ======================================================================
+% This MUST be the first thing in your document, before \documentclass
+% It configures the PDF for accessibility compliance
+\DocumentMetadata{
+  pdfstandard=A-2u,    % PDF/A-2u format (archival standard with Unicode support)
+  lang=en-US,               % Document language (required for screen readers)
+  tagging=on                  % Enable PDF tagging (required for accessibility)
+}
+
+% CRITICAL REQUIREMENTS:
+% - LaTeX Engine: LuaLaTeX strongly recommended (this template requires it)
+%   * pdfLaTeX has partial support but requires manual MathML files
+%   * XeLaTeX does NOT support accessibility tagging
+% - TeX Distribution: TeX Live 2023 or later with all packages updated
+%   * TeX Live 2022 or earlier will NOT work
+%   * Update using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+% - Overleaf: YES, this works on Overleaf via Overleaf Labs program
+%   * Opt in at: https://www.overleaf.com/labs/participate
+%   * Enable "Rolling TeX Live releases"
+%   * Select "Rolling TeXLive (labs)" in project settings
+%   * Set Compiler to LuaLaTeX
+\documentclass{article}
+
+% ======================================================================
+% PACKAGE IMPORTS
+% ======================================================================
+
+\usepackage{versionPO}
+
+\usepackage[margin=1in]{geometry}%
+\usepackage{fontspec}       % Font selection for LuaLaTeX (provides \setmainfont, \setsansfont)
+\usepackage{unicode-math}   % Unicode math fonts (provides \setmathfont + automatic MathML)
+\usepackage{graphicx}       % Graphics support (for \includegraphics)
+\usepackage{booktabs}       % Professional-quality tables
+\usepackage{xcolor}         % Color support (needed for accessibility-friendly colors)
+\usepackage{fancyvrb}       % Enhanced verbatim environment
+\usepackage[normalem]{ulem} % Underline support (normalem prevents emphasis from being underlined)
+
+% ======================================================================
+% ACCESSIBILITY CONFIGURATION
+% ======================================================================
+% Configure PDF tagging for accessibility compliance
+
+% Enable automatic alt text generation for math equations
+% This helps screen readers interpret mathematical content
+\tagpdfsetup{math/alt/use}
+
+% ======================================================================
+% COLOR DEFINITIONS
+% ======================================================================
+% Define colors with sufficient contrast for WCAG 2.1 Level AA compliance
+% All colors should have at least 4.5:1 contrast ratio with white background
+
+\colorlet{AccessibleRed}{red!80!black}      % Darker red for better contrast
+\colorlet{AccessibleGreen}{green!40!black}  % Darker green for WCAG AA compliance (4.5:1 contrast)
+\definecolor{AltYellow}{RGB}{255,245,170}   % Soft yellow for highlighting code
+
+% ======================================================================
+% CUSTOM COMMANDS FOR TEXT COLORS
+% ======================================================================
+% Shortcuts for commonly used colors in teaching materials
+% Use these to maintain consistent, accessible colors throughout your slides
+
+\newcommand\tb[1]{\textcolor{blue}{#1}}                       % Blue text
+\newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}     % Red text (accessible)
+\newcommand\tg[1]{\textcolor{AccessibleGreen}{#1}} % Green text (accessible)
+% Note: Plain yellow fails WCAG contrast requirements - use AltYellow for backgrounds only
+
+% ======================================================================
+% CUSTOM COMMANDS FOR HIGHLIGHTED CODE
+% ======================================================================
+% \AltBox highlights code snippets with yellow background
+% Useful for drawing attention to required accessibility changes in examples
+
+\newcommand{\AltBox}[1]{%
+  {\setlength{\fboxsep}{0pt}%
+   \colorbox{AltYellow}{\texttt{#1}}}%
+}
+
+% ======================================================================
+% HYPERLINK CONFIGURATION
+% ======================================================================
+% Links should be both colored AND underlined for accessibility
+% Color alone is not sufficient (fails WCAG guidelines)
+
+\usepackage{url,hyperref}
+\urlstyle{same}  % URLs use the same font as surrounding text
+
+% Custom commands for underlined hyperlinks
+\newcommand{\hrefu}[2]{\href{#1}{\uline{#2}}}  % Hyperlink with underline
+\newcommand{\urlu}[1]{\uline{\url{#1}}}        % URL with underline
+
+% Set link colors (same color for consistency)
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=AccessibleGreen,   % Internal links (TOC, references)
+  urlcolor=AccessibleGreen,    % External URLs
+  citecolor=AccessibleGreen    % Citations
+}
+
+% ======================================================================
+% DOCUMENT INFORMATION
+% ======================================================================
+% Define title, author, and date for article class
+
+\title{\Large \textbf{Accessible Documents in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.1}
+\author{Richard Stanton \\ \small UC Berkeley \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
+\date{\today}
+
+% ======================================================================
+% BEGIN DOCUMENT
+% ======================================================================
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+On January 8, 2026, we were notified by campus that, beginning in April 2026,
+  \begin{quotation}
+    \color{blue}
+``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
+\end{quotation}
+Many of us use LaTeX/Beamer to create teaching slides and other course materials. But Beamer is not \textbf{and never will be}  compatible with these requirements. Fortunately, the \LaTeX\ Project team has created \texttt{ltx-talk}, a \hrefu{https://latex3.github.io/tagging-project/}{purpose-built accessible presentation class} that:
+\begin{enumerate}
+\item Generates accessible output meeting WCAG 2.1 Level AA standards,
+\item Requires little modification to existing Beamer source (uses same \texttt{frame} syntax), and
+\item Requires \emph{no} manual processing of the resulting PDF file.
+\end{enumerate}
+\begin{itemize}
+\item Part of the \hrefu{https://latex3.github.io/tagging-project/}{LaTeX Tagging Project}
+\item Requires LaTeX kernel 2025-11-01 (update packages using TeX Live Manager or TeX Live Utility)
+\item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
+\end{itemize}
+
+\section{What is this project?}
+
+This project began as an experiment exploring the \LaTeX\ Tagging Project's \texttt{ltx-talk} class
+  \begin{itemize}
+  \item \tg{Contains:} Sample slides with math, text, graphics, and tables
+  \item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
+  \end{itemize}
+\textbf{How to use it:}
+  \begin{enumerate}
+  \item \textbf{As a sample:} Working example you can copy and adapt for your slides
+  \item \textbf{As documentation:} The slides and README explain what you need to do, plus heavily commented code
+  \item \textbf{For quick migration:} Copy the preamble to your Beamer files for (almost) plug-and-play conversion
+    \begin{itemize}
+    \item \tr{Still required:} Manual tagging of figures (\texttt{alt=\{...\}}) and tables (\texttt{header-rows})
+    \end{itemize}
+  \item \textbf{For guidance:} Advice on accessibility considerations to keep in mind
+  \end{enumerate}
+Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
+  
+
+
+\section{Important workflow change: Use LuaLaTeX}
+You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.org/help/documentation/pdftex-a.pdf}{pdfLaTeX} to \hrefu{http://www.luatex.org/}{LuaLaTeX}.
+\begin{enumerate}
+\item \textbf{Automatic MathML:} LuaLaTeX automatically generates \hrefu{https://www.w3.org/Math/}{MathML} (Mathematical Markup Language), making math accessible to screen readers without extra work.
+\item \textbf{Easier workflow:} While pdfLaTeX has partial support, it requires manually providing MathML files for each equation—tedious and error-prone.
+\end{enumerate}
+\textit{Also provides modern font support and full UTF-8 compatibility.} \\
+\textbf{How to switch:}
+    \begin{itemize}
+    \item Command line: \texttt{lualatex myfile.tex}
+    \item Most LaTeX editors: Select ``LuaLaTeX'' from the compiler menu
+    \end{itemize}
+\textbf{TeX version requirements:}
+    \begin{itemize}
+    \item \tg{Minimum:} TeX Live 2023 or later with all packages updated
+    \item \tg{Critical:} Must have LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
+    \item \tg{Overleaf:} Use Rolling TeXLive (labs) - see next slides for setup options
+    \item \tr{Will NOT work:} TeX Live 2022 or earlier
+    \end{itemize}
+
+\section{You \textbf{CAN} use Overleaf (with special setup)}
+
+\texttt{ltx-talk} requires a very recent TeX Live version. This is available through Overleaf's \tb{Labs program} (not standard Overleaf). To use this:
+\begin{enumerate}
+\item \textbf{Join Overleaf Labs}: 
+  \begin{itemize}
+  \item Visit \urlu{https://www.overleaf.com/labs/participate}
+  \item Opt in and enable ``Rolling TeX Live releases''
+  \end{itemize}
+\item \textbf{Configure project}:
+  \begin{itemize}
+  \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
+  \item Set Compiler to \tg{LuaLaTeX}
+  \end{itemize}
+\end{enumerate}
+\textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
+
+
+
+\section{The basics}
+
+\begin{itemize}
+  \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
+  \item So \textbf{\color{blue}existing source files don't need a lot of editing.}
+  \item Here's some gratuitous  $\mathit{math}$ for the accessibility checker.
+  \end{itemize}
+
+\section{Figures}
+
+When including a figure, you need to provide a \tr{text description}:\\
+
+\noindent \fbox{%
+  \ttfamily\small
+  \textbackslash includegraphics[height=.4\textbackslash textheight,%
+  \AltBox{alt=\{A capybara\}}%
+  ]\{capybara.jpg\}%
+}
+
+\begin{figure}[htbp]
+  \begin{center}
+\includegraphics[height=.5\textheight, alt={A capybara}]{capybara.jpg}
+\end{center}
+\caption{A picture of a capybara}
+\end{figure}
+
+\section{Tables}
+
+When including a table, you need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc. E.g.,\\
+    
+\noindent \fbox{%
+\begin{minipage}{0.95\linewidth}
+\ttfamily\small
+\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
+\textbackslash begin\{tabular\}\{ccccrcccr\} \\
+\textbackslash toprule \\
+\textrm{\color{blue}\small $\leftarrow$ 3 header rows} \\
+\textbackslash midrule \\
+\textrm{\color{AccessibleGreen}\small $\leftarrow$ data rows} \\
+\textbackslash bottomrule \\
+\textbackslash end\{tabular\}
+\end{minipage}
+}
+
+\begin{table}[htbp]
+\begin{center}\footnotesize
+\tagpdfsetup{table/header-rows={1,2,3}}
+  \begin{tabular}{ccccrcccr}
+  \toprule
+  \color{blue} & \color{blue} & \color{blue} & \color{blue} & \multicolumn{1}{c}{\color{blue}Days} & \color{blue}Days in & \color{blue} & \color{blue} & \color{blue}\\
+\color{blue}Payment & \color{blue}Caplet & \color{blue} & \color{blue}Forward & \multicolumn{1}{c}{\color{blue}to} & \color{blue}accrual & \color{blue} & \color{blue}\\
+  \color{blue}date & \color{blue}expiry date & \color{blue}$DF_\text{pay}$ & \color{blue}rate & \multicolumn{1}{c}{\color{blue}expiry} & \color{blue}period & \color{blue}$T_\text{expiry}$ & \color{blue}$\Delta$ & \multicolumn{1}{c}{\color{blue}Caplet} \\
+\midrule
+  \color{AccessibleGreen}2004/12/01 & \color{AccessibleGreen}--- & \color{AccessibleGreen}0.99550 & \color{AccessibleGreen}0.01790 & \color{AccessibleGreen}0 & \color{AccessibleGreen}91 & \color{AccessibleGreen}0.00000 & \color{AccessibleGreen}0.25278 & \color{AccessibleGreen}--- \hspace*{0.15in}\\
+  \color{AccessibleGreen}2005/03/01 & \color{AccessibleGreen}2004/11/29 & \color{AccessibleGreen}0.99008 & \color{AccessibleGreen}0.02188 & \color{AccessibleGreen}89 & \color{AccessibleGreen}90 & \color{AccessibleGreen}0.24384 & \color{AccessibleGreen}0.25000 & \color{AccessibleGreen}1,178.77\\
+  \color{AccessibleGreen}2005/06/01 & \color{AccessibleGreen}2005/02/25 & \color{AccessibleGreen}0.98401 & \color{AccessibleGreen}0.02413 & \color{AccessibleGreen}177 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.48493 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}4,844.73\\
+  \color{AccessibleGreen}2005/09/01 & \color{AccessibleGreen}2005/05/27 & \color{AccessibleGreen}0.97733 & \color{AccessibleGreen}0.02675 & \color{AccessibleGreen}268 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.73425 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}10,016.71\\
+  \bottomrule
+\end{tabular}  
+\end{center}
+\caption{A table}
+\end{table}
+
+\section{Common pitfalls}
+  \begin{itemize}
+  \item \tr{Forgetting alt text for images}
+    \begin{itemize}
+    \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
+    \item Even decorative images need alt text (use \texttt{alt=\{decorative\}})
+    \end{itemize}
+    
+  \item \tr{Not specifying table header rows}
+    \begin{itemize}
+    \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table
+    \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 header rows, etc.
+%   \item Must list \emph{all} header rows — \texttt{\{1\}} won't work if header spans 2 rows!
+%    \item Forget this and screen readers can't navigate your tables properly
+    \end{itemize}
+    
+  \item \tr{Insufficient color contrast}
+    \begin{itemize}
+    \item WCAG 2.1 requires 4.5:1 contrast ratio for normal text
+    \item Avoid light colors: \texttt{yellow}, \texttt{cyan} fail contrast requirements
+    \item Darken \texttt{red} and \texttt{green}: use \texttt{red!80!black}, \texttt{green!40!black}
+    \item Standard \texttt{blue} is fine and meets WCAG requirements
+    \item Test with a contrast checker: \urlu{https://webaim.org/resources/contrastchecker/}
+    \end{itemize}
+
+  \item \tr{Using the wrong compiler}
+    \begin{itemize}
+    \item Make sure your editor is set to use \tg{LuaLaTeX}, not \tr{pdfLaTeX}
+%    \item Check this \emph{every time} you open the project
+    \end{itemize}
+    
+  \item \tr{Old TeX distribution}
+    \begin{itemize}
+    \item TeX Live 2022 or earlier won't work
+    \item Update packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+    \end{itemize}
+    
+  \end{itemize}
+
+
+\section{Getting started}
+\textbf{Follow these steps to migrate your Beamer slides:}
+  
+  \begin{enumerate}
+  \item Use Overleaf Labs (see setup slide) OR install TeX Live locally
+  \item If local: Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+  \item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
+  \item Copy the preamble (everything before \texttt{\textbackslash begin\{document\}}) to your Beamer files
+  \item Add \texttt{alt} text to images and \texttt{table/header-rows} to tables
+  \item Set your compiler to LuaLaTeX
+  \item Compile and test!
+  \end{enumerate}
+Questions or suggestions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+
+\end{document}
+
+% ======================================================================
+% EMACS/AUCTEX LOCAL VARIABLES (Optional - for Emacs users only)
+% ======================================================================
+% The section below configures Emacs/AUCTeX to use the correct LaTeX engine
+% and options when compiling this file from within Emacs.
+%
+% If you use Emacs/AUCTeX: These settings ensure LuaLaTeX is used automatically
+% If you use a different editor: You can safely ignore or delete this section
+%
+% Key settings explained:
+%   - TeX-engine: luatex           -> Forces LuaLaTeX (STRONGLY RECOMMENDED!)
+%   - TeX-command-extra-options    -> Adds -interaction=nonstopmode flag
+%   - TeX-master: t                -> This file is its own master document
+%   - eval: commands               -> Custom Emacs functions for this file
+%
+% IMPORTANT: This template requires LuaLaTeX for automatic MathML generation
+% Using pdflatex will require manual MathML files (tedious and error-prone)
+%
+% For other editors (TeXShop, TeXworks, Overleaf, VS Code, etc.):
+% Configure them manually to use LuaLaTeX with -interaction=nonstopmode
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-command-extra-options: "-interaction=nonstopmode"
+%%% TeX-master: t
+%%% eval: (setq-local TeX-command-list (cons '("LatexMk (build)" "latexmk -lualatex -interaction=nonstopmode -file-line-error -synctex=1 -shell-escape -outdir=build %s" TeX-run-TeX nil t :help "Run LatexMk with LuaLaTeX") (remove-if (lambda (x) (equal (car x) "LatexMk (build)")) TeX-command-list)))
+%%% eval: (setq org-format-latex-header "\\documentclass[10pt]{RSorg}\\pagestyle{empty}")
+%%% eval: '(hide-latex-preamble)
+%%% eval: (outline-hide-body)
+%%% End:
