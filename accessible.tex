@@ -31,6 +31,11 @@
 % - TeX Distribution: TeX Live 2023 or later with all packages updated
 %   * TeX Live 2022 or earlier will NOT work
 %   * Update using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+% - Overleaf: YES, this works on Overleaf via Overleaf Labs program
+%   * Opt in at: https://www.overleaf.com/labs/participate
+%   * Enable "Rolling TeX Live releases"
+%   * Select "Rolling TeXLive (labs)" in project settings
+%   * Set Compiler to LuaLaTeX
 \documentclass[frame-title-arg]{ltx-talk}
 
 % ======================================================================
@@ -179,7 +184,7 @@
 % Define title, author, institution, and date
 % These work just like in Beamer
 
-\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.0}
+\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.1}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
 \institute{\small UC Berkeley}
 \date{\today}
@@ -250,39 +255,6 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{\tr{\textbf{IMPORTANT}: Overleaf does \textbf{NOT} currently work}}
-
-\begin{itemize}
-\item \texttt{ltx-talk} requires LaTeX kernel \tg{2025-11-01}
-\item As of February 7, 2026, Overleaf is using LaTeX kernel \tr{2025-06-01}
-  \item \tb{\textbf{So you must compile locally}}
-  
-\bigskip
-
-\item \textbf{\tb{Installing TeX Live (Free)}}
-  \begin{itemize}
-  \item \textbf{Windows}: Download TeX Live from \urlu{https://tug.org/texlive/}
-    \begin{itemize}
-    \item Run the installer (\textasciitilde4 GB download)
-    \item Choose a TeX editor: TeXworks (included) or TeXstudio
-    \item \textbf{Update}: Use \tg{TeX Live Manager} GUI from Start menu
-    \end{itemize}
-  \item \textbf{Mac}: Download MacTeX from \urlu{https://tug.org/mactex/}
-    \begin{itemize}
-    \item Install the .pkg file (\textasciitilde5 GB download)
-    \item Includes TeXShop editor
-    \item \textbf{Update}: Use \tg{TeX Live Utility} app (in Applications folder)
-    \end{itemize}
-  \end{itemize}
-  
-\bigskip
-
-\item \textbf{\tb{Important:}} After installation, update all packages using the GUI updater shown above
-
-\end{itemize}
-\end{frame}
-
-
 \begin{frame}{Important workflow change: Use LuaLaTeX}
   \begin{itemize}
   \item \tr{You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.org/help/documentation/pdftex-a.pdf}{pdfLaTeX} to \hrefu{http://www.luatex.org/}{LuaLaTeX}.}
@@ -304,11 +276,41 @@
     \begin{itemize}
     \item \tg{Minimum:} TeX Live 2023 or later with all packages updated
     \item \tg{Critical:} Must have LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
-    \item \tr{Will NOT work:} TeX Live 2022 or earlier, or Overleaf (as of Feb 2026)
+    \item \tg{Overleaf:} Use Rolling TeXLive (labs) - see next slides for setup options
+    \item \tr{Will NOT work:} TeX Live 2022 or earlier
     \end{itemize}
       
     
   \end{itemize}
+\end{frame}
+
+\begin{frame}{\tb{You \textbf{CAN} use Overleaf (with special setup)}}
+
+\begin{itemize}
+\item \texttt{ltx-talk} requires a very recent TeX Live version
+\item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
+  
+\bigskip
+
+\item \textbf{\tb{Using Overleaf (2 steps)}}
+  \begin{enumerate}
+  \item \textbf{Join Overleaf Labs}: 
+    \begin{itemize}
+    \item Visit \urlu{https://www.overleaf.com/labs/participate}
+    \item Opt in and enable ``Rolling TeX Live releases''
+    \end{itemize}
+  \item \textbf{Configure project}:
+    \begin{itemize}
+    \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
+    \item Set Compiler to \tg{LuaLaTeX}
+    \end{itemize}
+  \end{enumerate}
+  
+\bigskip
+
+\item \textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
+
+\end{itemize}
 \end{frame}
 
 \begin{frame}{The basics}
@@ -466,8 +468,8 @@ but you need to provide a \tr{text description}.
   
   \bigskip
     \begin{enumerate}
-    \item Install TeX Live locally (Overleaf doesn't work yet)
-    \item Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+    \item Use Overleaf Labs (see setup slide) OR install TeX Live locally
+    \item If local: Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
     \item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
     \item Copy the preamble (everything before \texttt{\textbackslash begin\{document\}}) to your Beamer files
     \item Add \texttt{alt} text to images and \texttt{table/header-rows} to tables

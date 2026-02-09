@@ -1,4 +1,4 @@
-# Accessible LaTeX Slides Template (v1.0)
+# Accessible LaTeX Slides Template (v1.1)
 
 A template for creating **accessible presentation slides** in LaTeX that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
 
@@ -53,28 +53,11 @@ This template demonstrates:
 - **LaTeX Engine**: LuaLaTeX (strongly recommended - see below)
 - **Fonts**: Lato and LeteSansMath.otf (optional - included in TeX Live)
 
-**⚠️ Important**: This template does NOT currently work on Overleaf. You must install and compile locally.
-
 **Note on fonts**: The font configuration in this template is **optional** and purely for visual consistency. The accessibility features work with any font. Lato and LeteSansMath.otf are included in modern TeX distributions.
 
-### Installing TeX Live Locally
+**✅ Overleaf Support**: You **can** use this template on Overleaf, but it requires special setup through the **Overleaf Labs program**. See the "Using Overleaf" section below for detailed instructions.
 
-If you don't have TeX Live installed:
-
-- **Windows**: Download and install [TeX Live](https://tug.org/texlive/) (~4 GB)
-  - Includes TeXworks editor
-  - Alternative editors: [TeXstudio](https://www.texstudio.org/)
-  - **Update packages**: Use **TeX Live Manager** GUI from the Start menu
-  
-- **Mac**: Download and install [MacTeX](https://tug.org/mactex/) (~5 GB)
-  - Includes TeXShop editor
-  - Alternatively, use [Homebrew](https://brew.sh/): `brew install --cask mactex`
-  - **Update packages**: Use **TeX Live Utility** app from the Applications folder
-
-- **After installation**: Update all packages using the GUI updater shown above to get the latest updates (including the November 2025 kernel required by `ltx-talk`)
-  - Advanced users can use command line: `tlmgr update --all`
-
-#### Why LuaLaTeX?
+### Why LuaLaTeX?
 
 LuaLaTeX is **strongly recommended** for full accessibility features:
 
@@ -90,7 +73,7 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
 
 **XeLaTeX**: Does NOT support the tagging features and should not be used.
 
-#### TeX Version Requirements
+### TeX Version Requirements
 
 - **Minimum**: TeX Live 2023 or later **with updates applied**
   - **Critical**: Update all packages to get **LaTeX kernel 2025-11-01** (required by `ltx-talk`)
@@ -110,14 +93,29 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
 
 If you're using an older TeX distribution, you **must upgrade** before using this template.
 
-### Using this template
+### Using Overleaf
 
-1. **Clone or download** this repository
-2. **Copy** `accessible.tex` as a starting point for your slides
-3. **Modify** the content, keeping the accessibility features intact
-4. **Compile** with LuaLaTeX
+**✅ You CAN use this template on Overleaf!** The `ltx-talk` class requires a very recent version of TeX Live, which is available through Overleaf's **Labs program** (not in the standard Overleaf environment).
 
-### Compilation
+#### Setup Steps:
+
+1. **Join Overleaf Labs**: 
+   - Visit the [Overleaf Labs participation page](https://www.overleaf.com/labs/participate)
+   - Opt in to the Overleaf Labs program
+   - Enable **"Rolling TeX Live releases"**
+
+2. **Configure your project**:
+   - In your project settings, change **TeX Live version** to **"Rolling TeXLive (labs)"** (at the bottom of the list)
+   - Change your project's **Compiler** to **LuaLaTeX**
+
+#### Additional Resources:
+
+- [Overleaf TeX Live 2025 announcement](https://www.overleaf.com/blog/tex-live-2025-is-now-available)
+- [Creating accessible PDFs in LaTeX on Overleaf](https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs)
+
+### Installing TeX Live Locally
+
+If you prefer to compile locally or don't want to use Overleaf:
 
 **This template requires LuaLaTeX** for automatic MathML generation and full accessibility support.
 
@@ -133,13 +131,27 @@ Or configure your LaTeX editor:
 - **VS Code with LaTeX Workshop**: Add LuaLaTeX recipe (see extension docs)
 - **Emacs/AUCTeX**: See local variables at end of .tex file
 
-### ⚠️ Important: Overleaf Not Currently Supported
+### Using Overleaf
 
-**This template does NOT currently work on Overleaf.** The `ltx-talk` class requires LaTeX kernel 2025-11-01, but as of February 2026, Overleaf has not yet updated to this version.
+**✅ You CAN use this template on Overleaf!** The `ltx-talk` class requires a very recent version of TeX Live, which is available through Overleaf's **Labs program** (not in the standard Overleaf environment).
 
-**You must compile locally** using an up-to-date TeX Live installation (see installation instructions above).
+#### Setup Steps:
 
-See the "Installing LaTeX Locally" section in the slides ([accessible.pdf](accessible.pdf)) for installation instructions for Windows and Mac.
+1. **Join Overleaf Labs**: 
+   - Visit the [Overleaf Labs participation page](https://www.overleaf.com/labs/participate)
+   - Opt in to the Overleaf Labs program
+   - Enable **"Rolling TeX Live releases"**
+
+2. **Configure your project**:
+   - In your project settings, change **TeX Live version** to **"Rolling TeXLive (labs)"** (at the bottom of the list)
+   - Change your project's **Compiler** to **LuaLaTeX**
+
+#### Additional Resources:
+
+- [Overleaf TeX Live 2025 announcement](https://www.overleaf.com/blog/tex-live-2025-is-now-available)
+- [Creating accessible PDFs in LaTeX on Overleaf](https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs)
+
+**Note**: If you prefer local compilation, see the "Installing TeX Live Locally" section below.
 
 ## Key Accessibility Features
 
@@ -299,7 +311,7 @@ A: No separate package installation needed, but you must have an up-to-date TeX 
 A: Yes! The font configuration is optional. Just remove or modify the `\setmainfont`, `\setsansfont`, and `\setmathfont` commands in the preamble.
 
 **Q: Does this work on Overleaf?**
-A: **Not currently.** The `ltx-talk` class requires LaTeX kernel 2025-11-01, but as of February 2026, Overleaf has not yet updated to this version. You must compile locally using an up-to-date TeX Live installation. See installation instructions for [Windows](https://tug.org/texlive/) and [Mac](https://tug.org/mactex/).
+A: **Yes!** You need to use Overleaf's **Labs program** with **Rolling TeX Live releases**. See the "Using Overleaf" section above for detailed setup instructions. Alternatively, you can compile locally - see installation instructions for [Windows](https://tug.org/texlive/) and [Mac](https://tug.org/mactex/).
 
 **Q: How do I check my TeX Live version?**
 A: Run `tlmgr --version` in your terminal.
