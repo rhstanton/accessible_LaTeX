@@ -51,7 +51,7 @@ Both templates serve multiple purposes:
 
 Both templates achieve a **100% accessibility score** from the bCourses (Canvas) Ally accessibility checker.
 
-**📄 View example PDFs** in the repository to see the template outputs without compiling.
+**📄 View example PDFs**: [Slides PDF](accessible_slides.pdf) | [Article PDF](accessible_article.pdf)
 
 ### The LaTeX Tagging Project: Common Foundation
 
