@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v1.1)
+# Accessible LaTeX Templates (v1.2)
 
 Templates for creating **accessible LaTeX documents** (both slides and articles) that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
 
@@ -30,6 +30,8 @@ Templates for creating **accessible LaTeX documents** (both slides and articles)
 - Or use Overleaf Labs with Rolling TeXLive
 
 **That's it!** See below for complete details, examples, and migration guides.
+
+📊 **[View example slides PDF](accessible_slides.pdf)** to see the template output.
 
 ---
 
