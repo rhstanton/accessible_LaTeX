@@ -28,6 +28,8 @@
 % ======================================================================
 
 \usepackage{versionPO}
+\usepackage[margin=1in]{geometry}%
+
 
 \usepackage[margin=1in]{geometry}%
 \usepackage{fontspec}       % Font selection for LuaLaTeX (provides \setmainfont, \setsansfont)
@@ -92,13 +94,12 @@
 \newcommand{\hrefu}[2]{\href{#1}{\uline{#2}}}  % Hyperlink with underline
 \newcommand{\urlu}[1]{\uline{\url{#1}}}        % URL with underline
 
-% Set link colors (same color for consistency)
-
+% Set link colors (blue for consistency with heading color in slides)
 \hypersetup{
   colorlinks=true,
-  linkcolor=AccessibleGreen,   % Internal links (TOC, references)
-  urlcolor=AccessibleGreen,    % External URLs
-  citecolor=AccessibleGreen    % Citations
+  linkcolor=blue,   % Internal links (TOC, references)
+  urlcolor=blue,    % External URLs
+  citecolor=blue    % Citations
 }
 
 % ======================================================================
@@ -106,8 +107,8 @@
 % ======================================================================
 % Define title, author, and date for article class
 
-\title{\Large \textbf{Accessible Documents in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.1}
-\author{Richard Stanton \\ \small UC Berkeley \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
+\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.1}
+\author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu} \\ UC Berkeley}
 \date{\today}
 
 % ======================================================================
@@ -120,43 +121,122 @@
 
 \section{Introduction}
 
-On January 8, 2026, we were notified by campus that, beginning in April 2026,
-  \begin{quotation}
-    \color{blue}
-``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
+On January 8, 2026, we were notified by campus that, beginning in April 2026:
+\begin{quotation}
+  \color{blue}
+  ``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
 \end{quotation}
-Many of us use LaTeX/Beamer to create teaching slides and other course materials. But Beamer is not \textbf{and never will be}  compatible with these requirements. Fortunately, the \LaTeX\ Project team has created \texttt{ltx-talk}, a \hrefu{https://latex3.github.io/tagging-project/}{purpose-built accessible presentation class} that:
+
+\noindent Many of us use \LaTeX\ to create teaching materials---both slides and documents. Standard \LaTeX\ (including Beamer) does not automatically generate accessible PDFs.
+
+\subsection{The Good News}
+
+{\color{blue}\textbf{Most requirements are the SAME}} whether you're creating slides or articles:
 \begin{enumerate}
-\item Generates accessible output meeting WCAG 2.1 Level AA standards,
-\item Requires little modification to existing Beamer source (uses same \texttt{frame} syntax), and
-\item Requires \emph{no} manual processing of the resulting PDF file.
+\item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
+\item Tag figures with alt text
+\item Tag table header rows
+\item Use accessible colors
+\item Compile with LuaLaTeX for automatic MathML
 \end{enumerate}
+
+\subsection{What's Different}
+
+\textbf{For articles:} {\color{AccessibleGreen}Keep using your existing class!}
+\begin{itemize}
+\item No need to change \texttt{\textbackslash documentclass\{article\}}
+\item Just add the common requirements above
+\end{itemize}
+
+\textbf{For slides:} Use the new \texttt{ltx-talk} class (replaces Beamer)
+\begin{itemize}
+\item Same \texttt{frame} syntax as Beamer
+\item Handles slide-specific tagging automatically
+\end{itemize}
+
+\subsection{Key Requirements}
+
 \begin{itemize}
 \item Part of the \hrefu{https://latex3.github.io/tagging-project/}{LaTeX Tagging Project}
 \item Requires LaTeX kernel 2025-11-01 (update packages using TeX Live Manager or TeX Live Utility)
 \item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
 \end{itemize}
 
+
 \section{What is this project?}
 
-This project began as an experiment exploring the \LaTeX\ Tagging Project's \texttt{ltx-talk} class
-  \begin{itemize}
-  \item \tg{Contains:} Sample slides with math, text, graphics, and tables
-  \item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
-  \end{itemize}
-\textbf{How to use it:}
-  \begin{enumerate}
-  \item \textbf{As a sample:} Working example you can copy and adapt for your slides
-  \item \textbf{As documentation:} The slides and README explain what you need to do, plus heavily commented code
-  \item \textbf{For quick migration:} Copy the preamble to your Beamer files for (almost) plug-and-play conversion
-    \begin{itemize}
-    \item \tr{Still required:} Manual tagging of figures (\texttt{alt=\{...\}}) and tables (\texttt{header-rows})
-    \end{itemize}
-  \item \textbf{For guidance:} Advice on accessibility considerations to keep in mind
-  \end{enumerate}
-Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
-  
+This project explores accessible \LaTeX\ document creation using the \LaTeX\ Tagging Project's infrastructure. It provides:
 
+\begin{itemize}
+\item \tg{Two complete templates:}
+  \begin{itemize}
+  \item \texttt{accessible\_article.tex} --- Standard documents using \texttt{article} class (this file!)
+  \item \texttt{accessible\_slides.tex} --- Presentation slides using \texttt{ltx-talk}
+  \end{itemize}
+\item \tg{Contains:} Working examples with math, text, graphics, and tables
+\item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
+\end{itemize}
+
+\subsection{How to use it}
+
+\begin{enumerate}
+\item \textbf{As a sample:} Working examples you can copy and adapt
+\item \textbf{As documentation:} Heavily commented code explaining each accessibility feature
+\item \textbf{For quick migration:} 
+  \begin{itemize}
+  \item \tb{Articles:} Add \texttt{\textbackslash DocumentMetadata} and accessibility tags to your existing documents
+  \item \tb{Slides:} Copy the preamble from \texttt{accessible\_slides.tex} to your Beamer files
+  \end{itemize}
+\item \textbf{For guidance:} Learn accessibility best practices for \LaTeX
+\end{enumerate}
+
+\noindent Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
+
+\section{Common requirements for ALL documents}
+
+Whether you're creating slides or articles, these requirements are \tb{the same}:
+
+\subsection{1. Document Metadata (Goes FIRST)}
+
+Every accessible document \tr{must} begin with \texttt{\textbackslash DocumentMetadata} \emph{before} \texttt{\textbackslash documentclass}:
+
+{\ttfamily\small
+\textbackslash DocumentMetadata\{\\[0.5ex]
+\hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.5in}\% PDF/A-2u format\\[0.5ex]
+\hspace*{0.2in}lang=en-US,\hspace*{0.7in}\% Language for screen readers\\[0.5ex]
+\hspace*{0.2in}tagging=on\hspace*{0.8in}\% Enable PDF tagging\\[0.5ex]
+\}
+}
+
+\subsection{2. Automatic MathML}
+
+Add this to your preamble (after loading packages):
+
+{\ttfamily\small
+\textbackslash tagpdfsetup\{math/alt/use\}
+}
+
+\noindent This enables automatic MathML generation for equations (requires LuaLaTeX).
+
+\subsection{3. Accessible Colors}
+
+Use colors with sufficient contrast. WCAG 2.1 Level AA requires 4.5:1 contrast ratio:
+
+{\ttfamily\small
+\textbackslash colorlet\{AccessibleRed\}\{red!80!black\}\hspace*{0.3in}\% Darker red\\[0.5ex]
+\textbackslash colorlet\{AccessibleGreen\}\{green!40!black\}\% Darker green\\[0.5ex]
+\% Standard blue is fine as-is
+}
+
+\subsection{4. LuaLaTeX Compilation}
+
+Compile with LuaLaTeX (not pdfLaTeX or XeLaTeX):
+\begin{itemize}
+\item \textbf{Why?} Automatic MathML generation, full Unicode support
+\item \textbf{How?} Command line: \texttt{lualatex filename.tex}
+\item \textbf{Editors:} Select ``LuaLaTeX'' from compiler menu
+\end{itemize}
+  
 
 \section{Important workflow change: Use LuaLaTeX}
 You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.org/help/documentation/pdftex-a.pdf}{pdfLaTeX} to \hrefu{http://www.luatex.org/}{LuaLaTeX}.
@@ -174,40 +254,87 @@ You'll need to change your LaTeX compiler from \hrefu{https://www.latex-project.
     \begin{itemize}
     \item \tg{Minimum:} TeX Live 2023 or later with all packages updated
     \item \tg{Critical:} Must have LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
-    \item \tg{Overleaf:} Use Rolling TeXLive (labs) - see next slides for setup options
+    \item \tg{Overleaf:} Use Rolling TeXLive (labs) - see next section
     \item \tr{Will NOT work:} TeX Live 2022 or earlier
     \end{itemize}
 
-\section{You \textbf{CAN} use Overleaf (with special setup)}
+\section{You \textbf{CAN} use Overleaf (for both slides and articles)}
 
-\texttt{ltx-talk} requires a very recent TeX Live version. This is available through Overleaf's \tb{Labs program} (not standard Overleaf). To use this:
+Both \texttt{ltx-talk} slides and accessible article documents require a very recent TeX Live version with LaTeX kernel 2025-11-01. This is available through Overleaf's \tb{Labs program} (not in standard Overleaf).
+
+\subsection{Setup Steps}
+
 \begin{enumerate}
 \item \textbf{Join Overleaf Labs}: 
   \begin{itemize}
   \item Visit \urlu{https://www.overleaf.com/labs/participate}
-  \item Opt in and enable ``Rolling TeX Live releases''
+  \item Opt in to the program and enable ``Rolling TeX Live releases''
   \end{itemize}
-\item \textbf{Configure project}:
+\item \textbf{Configure your project}:
   \begin{itemize}
-  \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
+  \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (at bottom of version list)
   \item Set Compiler to \tg{LuaLaTeX}
   \end{itemize}
 \end{enumerate}
-\textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
+
+\subsection{Additional Resources}
+\begin{itemize}
+\item \urlu{https://www.overleaf.com/blog/tex-live-2025-is-now-available}
+\item \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
+\end{itemize}
 
 
 
-\section{The basics}
+
+\section{The basics: Using the article class}
+
+\subsection{Key Difference from Slides}
+
+With the \texttt{article} class (and other standard classes like \texttt{report} or \texttt{book}), you \tb{do NOT need to change your document class}. You only need to:
+
+\begin{enumerate}
+\item Add \texttt{\textbackslash DocumentMetadata} at the very beginning (before \texttt{\textbackslash documentclass})
+\item Tag figures and tables (see sections below)
+\item Compile with LuaLaTeX
+\end{enumerate}
+
+\subsection{Standard LaTeX Works}
 
 \begin{itemize}
-  \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
-  \item So \textbf{\color{blue}existing source files don't need a lot of editing.}
-  \item Here's some gratuitous  $\mathit{math}$ for the accessibility checker.
-  \end{itemize}
+\item Use standard \LaTeX\ environments: \texttt{section}, \texttt{subsection}, \texttt{itemize}, \texttt{enumerate}, etc.
+\item {\color{blue}\textbf{Existing article source files require minimal editing}}
+\item Math works seamlessly: Here's some gratuitous $\mathit{math}$ for the accessibility checker
+\end{itemize}
+
+\subsection{Example Code}
+
+The basic structure looks like this:
+
+{\ttfamily\small
+\textbackslash DocumentMetadata\{\\
+\hspace*{0.2in}pdfstandard=A-2u,\\
+\hspace*{0.2in}lang=en-US,\\
+\hspace*{0.2in}tagging=on\\
+\}\\
+\textbackslash documentclass\{article\}\\
+\textbackslash usepackage\{fontspec\}\\
+\textbackslash usepackage\{unicode-math\}\\
+\textbackslash usepackage\{graphicx\}\\
+...\\
+\textbackslash begin\{document\}\\
+...\\
+\textbackslash end\{document\}
+}
+
+
 
 \section{Figures}
 
-When including a figure, you need to provide a \tr{text description}:\\
+When including a figure, you \tr{must provide alt text} describing the image for screen readers. This is \emph{required} for accessibility compliance.
+
+\subsection{How to Add Alt Text}
+
+Add the \texttt{alt} parameter to \texttt{\textbackslash includegraphics}:\\
 
 \noindent \fbox{%
   \ttfamily\small
@@ -216,6 +343,8 @@ When including a figure, you need to provide a \tr{text description}:\\
   ]\{capybara.jpg\}%
 }
 
+\subsection{Example}
+
 \begin{figure}[htbp]
   \begin{center}
 \includegraphics[height=.5\textheight, alt={A capybara}]{capybara.jpg}
@@ -223,9 +352,21 @@ When including a figure, you need to provide a \tr{text description}:\\
 \caption{A picture of a capybara}
 \end{figure}
 
+
 \section{Tables}
 
-When including a table, you need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc. E.g.,\\
+When including a table, you \tr{must specify which rows are headers}. Screen readers use this information to help users navigate table content.
+
+\subsection{How to Tag Table Headers}
+
+Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{before} the \texttt{tabular} environment:
+\begin{itemize}
+\item Use \texttt{\{1\}} for 1 header row
+\item Use \texttt{\{1,2\}} for 2 header rows  
+\item Use \texttt{\{1,2,3\}} for 3 header rows, etc.
+\end{itemize}
+
+\subsection{Example: Table with 3 Header Rows}
     
 \noindent \fbox{%
 \begin{minipage}{0.95\linewidth}
@@ -259,6 +400,7 @@ When including a table, you need to specify \tr{header rows}.  Use \texttt{\{1\}
 \end{center}
 \caption{A table}
 \end{table}
+
 
 \section{Common pitfalls}
   \begin{itemize}
@@ -301,18 +443,47 @@ When including a table, you need to specify \tr{header rows}.  Use \texttt{\{1\}
 
 
 \section{Getting started}
-\textbf{Follow these steps to migrate your Beamer slides:}
+
+\subsection{For Beamer Slides Migration}
+
+\textbf{Follow these steps to convert Beamer slides to accessible ltx-talk slides:}
   
-  \begin{enumerate}
-  \item Use Overleaf Labs (see setup slide) OR install TeX Live locally
-  \item If local: Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
-  \item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
-  \item Copy the preamble (everything before \texttt{\textbackslash begin\{document\}}) to your Beamer files
-  \item Add \texttt{alt} text to images and \texttt{table/header-rows} to tables
-  \item Set your compiler to LuaLaTeX
-  \item Compile and test!
-  \end{enumerate}
-Questions or suggestions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+\begin{enumerate}
+\item Use Overleaf Labs (see setup above) OR install/update TeX Live locally
+\item If local: Update all packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
+\item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\item Copy the preamble from \texttt{accessible\_slides.tex} (everything before \texttt{\textbackslash begin\{document\}}) to your Beamer files
+\item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
+\item Add \texttt{alt} text to all images
+\item Add \texttt{table/header-rows} tags to all tables
+\item Set your compiler to LuaLaTeX
+\item Compile and test!
+\end{enumerate}
+
+\subsection{For Article Documents}
+
+\textbf{Follow these steps to make existing article documents accessible:}
+
+\begin{enumerate}
+\item Use Overleaf Labs OR install/update TeX Live locally (same as above)
+\item Download this template from \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\item Add \texttt{\textbackslash DocumentMetadata} block at the very beginning of your document (see \texttt{accessible\_article.tex} for example)
+\item Add \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} to your preamble
+\item Add \texttt{alt} text to all images
+\item Add \texttt{table/header-rows} tags to all tables
+\item Switch to \texttt{fontspec} and \texttt{unicode-math} packages (instead of \texttt{fontenc} and traditional font packages)
+\item Set your compiler to LuaLaTeX
+\item Compile and test!
+\end{enumerate}
+
+\bigskip
+
+\noindent Questions or suggestions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+\begin{comment}
+
+
+
+\end{comment}
 
 \end{document}
 
@@ -343,7 +514,7 @@ Questions or suggestions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.st
 %%% TeX-command-extra-options: "-interaction=nonstopmode"
 %%% TeX-master: t
 %%% eval: (setq-local TeX-command-list (cons '("LatexMk (build)" "latexmk -lualatex -interaction=nonstopmode -file-line-error -synctex=1 -shell-escape -outdir=build %s" TeX-run-TeX nil t :help "Run LatexMk with LuaLaTeX") (remove-if (lambda (x) (equal (car x) "LatexMk (build)")) TeX-command-list)))
-%%% eval: (setq org-format-latex-header "\\documentclass[10pt]{RSorg}\\pagestyle{empty}")
+%%% eval: (setq org-format-latex-header "\documentclass[10pt]{RSorg}\pagestyle{empty}")
 %%% eval: '(hide-latex-preamble)
 %%% eval: (outline-hide-body)
 %%% End:
