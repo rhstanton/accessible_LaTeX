@@ -31,7 +31,7 @@ Templates for creating **accessible LaTeX documents** (both slides and articles)
 
 **That's it!** See below for complete details, examples, and migration guides.
 
-📊 **[View example slides PDF](accessible_slides.pdf)** to see the template output.
+📊 **[View example slides PDF](accessible_slides.pdf)** for template output and detailed migration guidance.
 
 ---
 

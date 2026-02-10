@@ -192,7 +192,7 @@
 % Define title, author, institution, and date
 % These work just like in Beamer
 
-\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.1}
+\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.2}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
 \institute{\small UC Berkeley}
 \date{\today}
@@ -235,56 +235,6 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Converting to accessible LaTeX is straightforward}
-
-\begin{itemize}
-\item {\color{AccessibleGreen}\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
-\item {\color{AccessibleGreen}\textbf{The changes are minimal}} and follow consistent patterns
-
-\bigskip
-
-\item Six common requirements for both slides and articles:
-  \begin{enumerate}
-  \item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
-  \item Enable math accessibility: \texttt{\textbackslash tagpdfsetup\{math/alt/use\}}
-  \item Tag images with alt text: \texttt{alt=\{description\}}
-  \item Tag table header rows: \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}
-  \item Use accessible colors (sufficient contrast)
-  \item Compile with LuaLaTeX (automatic MathML generation)
-  \end{enumerate}
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}{What's different by document type}
-
-\begin{itemize}
-\item \textbf{For articles:} {\color{AccessibleGreen}Keep using your existing class!}
-  \begin{itemize}
-  \item No need to change \texttt{\textbackslash documentclass\{article\}}
-  \item Just add the common requirements (previous slide)
-  \item Works with \texttt{article}, \texttt{report}, \texttt{book}, etc.
-  \end{itemize}
-
-\bigskip
-
-\item \textbf{For slides:} Use the new \texttt{ltx-talk} class (replaces Beamer)
-  \begin{itemize}
-  \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{ltx-talk}
-  \item \tr{Similar} \texttt{frame} syntax, but \tr{themes/templates don't work}
-  \item You'll need to recreate styling using standard LaTeX packages
-  \item Handles slide-specific tagging automatically
-  \item Part of the \hrefu{https://latex3.github.io/tagging-project/}{LaTeX Tagging Project}
-  \end{itemize}
-
-\bigskip
-
-\item Both require LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
-\item See \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{latest detailed instructions}
-
-\end{itemize}
-\end{frame}
-
 \begin{frame}{What is this project?}
 
 \begin{itemize}
@@ -313,6 +263,81 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Converting to accessible LaTeX: Overview}
+
+\begin{itemize}
+\item {\color{AccessibleGreen}\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
+\item {\color{AccessibleGreen}\textbf{The changes are minimal}} and follow consistent patterns
+
+\bigskip
+
+\item \textbf{Common requirements} (both slides \& articles):
+  \begin{itemize}
+  \item Add document metadata and enable PDF tagging
+  \item Tag images with alt text; tag table headers
+  \item Use accessible colors; compile with LuaLaTeX
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Key difference:}
+  \begin{itemize}
+  \item Articles: {\color{AccessibleGreen}Keep your existing class!} Just add accessibility features
+  \item Slides: Switch to \texttt{ltx-talk} (similar syntax, but recreate styling)
+  \end{itemize}
+
+\bigskip
+
+\item Both require LaTeX kernel 2025-11-01 (see next slides for details)
+\item {\color{blue}See ``Getting started'' slides at end for detailed steps}
+\item \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{LaTeX Tagging Project documentation}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{TeX version requirements (both slides and articles)}
+
+\begin{itemize}
+\item \tg{Minimum:} TeX Live 2023 or later with all packages updated
+\item \tg{Critical:} Must have LaTeX kernel 2025-11-01
+  \begin{itemize}
+  \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
+  \item Or use Overleaf Labs (see next slide)
+  \end{itemize}
+\item \tr{Will NOT work:} TeX Live 2022 or earlier
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\tb{You \textbf{CAN} use Overleaf (both slides and articles)}}
+
+\begin{itemize}
+\item \texttt{ltx-talk} requires a very recent TeX Live version
+\item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
+  
+\bigskip
+
+\item \textbf{\tb{Using Overleaf (2 steps)}}
+  \begin{enumerate}
+  \item \textbf{Join Overleaf Labs}: 
+    \begin{itemize}
+    \item Visit \urlu{https://www.overleaf.com/labs/participate}
+    \item Opt in and enable ``Rolling TeX Live releases''
+    \end{itemize}
+  \item \textbf{Configure project}:
+    \begin{itemize}
+    \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
+    \item Set Compiler to \tg{LuaLaTeX}
+    \end{itemize}
+  \end{enumerate}
+  
+\bigskip
+
+\item \textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
+
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Common requirements (1/4): Document Metadata}
 
 \begin{itemize}
@@ -330,8 +355,8 @@
 \ttfamily\small
 \textbackslash DocumentMetadata\{\\[0.5ex]
 \hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
-\hspace*{0.2in}lang=en-US,\hspace*{0.55in}\% Language for screen readers\\[0.5ex]
-\hspace*{0.2in}tagging=on\hspace*{0.65in}\% Enable PDF tagging\\[0.5ex]
+\hspace*{0.2in}lang=en-US,\hspace*{0.73in}\% Language for screen readers\\[0.5ex]
+\hspace*{0.2in}tagging=on\hspace*{0.8in}\% Enable PDF tagging\\[0.5ex]
 \}
 \end{minipage}
 }
@@ -424,49 +449,6 @@
   \item Command line: \texttt{lualatex filename.tex}
   \item Most editors: Select ``LuaLaTeX'' from compiler menu
   \end{itemize}
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}{TeX version requirements (both slides and articles)}
-
-\begin{itemize}
-\item \tg{Minimum:} TeX Live 2023 or later with all packages updated
-\item \tg{Critical:} Must have LaTeX kernel 2025-11-01
-  \begin{itemize}
-  \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
-  \item Or use Overleaf Labs (see next slides)
-  \end{itemize}
-\item \tr{Will NOT work:} TeX Live 2022 or earlier
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}{\tb{You \textbf{CAN} use Overleaf (both slides and articles)}}
-
-\begin{itemize}
-\item \texttt{ltx-talk} requires a very recent TeX Live version
-\item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
-  
-\bigskip
-
-\item \textbf{\tb{Using Overleaf (2 steps)}}
-  \begin{enumerate}
-  \item \textbf{Join Overleaf Labs}: 
-    \begin{itemize}
-    \item Visit \urlu{https://www.overleaf.com/labs/participate}
-    \item Opt in and enable ``Rolling TeX Live releases''
-    \end{itemize}
-  \item \textbf{Configure project}:
-    \begin{itemize}
-    \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
-    \item Set Compiler to \tg{LuaLaTeX}
-    \end{itemize}
-  \end{enumerate}
-  
-\bigskip
-
-\item \textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
 
 \end{itemize}
 \end{frame}
