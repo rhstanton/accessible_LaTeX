@@ -3,6 +3,7 @@
 Templates for creating **accessible LaTeX documents** (both slides and articles) that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
 
 **Author**: Richard Stanton, UC Berkeley  
+**Date**: Feb 10, 2026  
 **Repository**: https://github.com/rhstanton/accessible_LaTeX
 
 ---
