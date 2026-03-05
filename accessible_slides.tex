@@ -209,8 +209,9 @@
 % Define title, author, institution, and date
 % These work just like in Beamer
 
-\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.3}
-\author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
+% Keep metadata fields simple; render rich title-page content manually below.
+\title{Accessible Slides in LaTeX}
+\author{Richard Stanton}
 \institute{\small UC Berkeley}
 \date{\today}
 
@@ -223,14 +224,19 @@
 % ======================================================================
 % TITLE SLIDE
 % ======================================================================
-% Create the title slide using \maketitle, just like in Beamer
-% The empty {} means this frame has no title
-% Reset the frame counter to 0 so numbering starts at 1 on the next slide
+% Build the title slide manually so all links/details stay on page 1
+% without triggering title-structure tagging warnings.
 
-\begin{frame}{}
-    \maketitle
-\end{frame}
-\setcounter{frame}{0}
+\begin{frame*}{}
+  \centering
+  {\LARGE\textcolor{blue}{Accessible Slides in LaTeX}}\\[0.5\baselineskip]
+  {\normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX}}\\[1.0\baselineskip]
+  {\large Version 1.3}\\[1.0\baselineskip]
+  {\normalsize Richard Stanton}\\[0.25\baselineskip]
+  {\normalsize \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}\\[0.75\baselineskip]
+  {\small UC Berkeley}\\[0.25\baselineskip]
+  {\small \today}
+\end{frame*}
 
 \section{Introduction}
 
@@ -484,7 +490,8 @@
 \fbox{%
 \begin{minipage}{0.9\linewidth}
 \ttfamily\small
-python strip\_af.py build/accessible\_slides.pdf build/accessible\_slides.noaf.pdf
+python strip\_af.py build/accessible\_slides.pdf \\
+build/accessible\_slides.noaf.pdf
 \end{minipage}
 }
 
@@ -588,7 +595,7 @@ but you need to provide a \tr{text description}.
 
 \vspace*{0.15in}
   
-\begin{center}\footnotesize
+\begin{center}\scriptsize
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
