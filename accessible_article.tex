@@ -161,8 +161,8 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 \subsection{Converting to accessible LaTeX: Overview}
 
 \begin{itemize}
-\item {\color{AccessibleGreen}\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
-\item {\color{AccessibleGreen}\textbf{The changes are minimal}} and follow consistent patterns
+\item \tg{\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
+\item \tg{\textbf{The changes are minimal}} and follow consistent patterns
 \end{itemize}
 
 \bigskip
@@ -476,6 +476,37 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
     \end{itemize}
     
   \end{itemize}
+
+
+\section{Validator-specific notes}
+
+\noindent \textbf{Not all validator warnings indicate real problems.} Some are \textit{validator bugs}:
+
+  \begin{itemize}
+  \item \textbf{Acrobat: ``Lbl and LBody -- Failed''} 
+    \begin{itemize}
+    \item Appears around figure captions, section numbers, table captions
+    \item \tg{This is a validator bug}, not a source error
+    \item The \texttt{<Lbl>} tag is correctly used for numbering
+    \item Acrobat's checker incorrectly expects it only in lists
+    \item \textbf{Safe to ignore} -- your PDF structure is correct
+    \item References:
+      \begin{itemize}
+      \item LaTeX developer Ulrike Fischer: ``Adobe doesn't like the (valid) use of Lbl for the section numbers, complain to them that they should correct their checker.'' (\urlu{https://tex.stackexchange.com/a/709655/2388})
+      \item Adobe Community expert Philip Kiff: ``<Lbl> is getting flagged as an error by Acrobat Pro DC by mistake... you could just ignore this error and wait until Acrobat fixes their built-in tester.''
+      \end{itemize}
+    \end{itemize}
+    
+  \item \textbf{PAC: ``Table header cell has no associated subcells''}
+    \begin{itemize}
+    \item Often a validator interpretation issue
+    \item Verify your \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} is correct
+    \item PAC may not fully handle attribute-class form for table scope
+    \item Known behavior: \urlu{https://github.com/latex3/tagging-project/issues/1056}
+    \end{itemize}
+  \end{itemize}
+
+\noindent \textbf{Recommendation:} Use multiple validators (Ally, veraPDF, PAC) and compare findings. No single checker catches everything, and each may have quirks.
 
 
 \section{Getting started: Common steps for both}

@@ -56,6 +56,29 @@
 %   * Set Compiler to LuaLaTeX
 \documentclass[frame-title-arg]{ltx-talk}
 
+
+\ExplSyntaxOn
+\AtBeginDocument{
+  % Replace ltx-talk’s default section-title tagging with “do nothing”
+  % (Stops Acrobat complaining about empty H1 tags in sections)
+  %
+  % Problem: ltx-talk uses \section for structural organization in slides,
+  %          but section titles are often empty (just organizational markers).
+  %          PDF validators like Acrobat complain about H1 tags with no text.
+  %
+  % Solution: Disable tagging for section titles; use H1 for frame titles instead.
+  %          Frame titles always have content (they're the slide titles).
+  %
+  % Technical details:
+  % - \NewTaggingSocketPlug creates a "none" plug that does nothing
+  % - \AssignTaggingSocketPlug applies it to the talk/sec/title socket
+  % - This prevents empty H1 tags from being generated for \section commands
+  % - Frame titles become H1 instead (see \tagpdfsetup below)
+  \NewTaggingSocketPlug { talk / sec / title } { none } { }
+  \AssignTaggingSocketPlug { talk / sec / title } { none }
+}
+\ExplSyntaxOff
+
 % ======================================================================
 % PACKAGE IMPORTS
 % ======================================================================
@@ -69,9 +92,12 @@
 % ======================================================================
 % Configure PDF tagging for accessibility compliance
 
-% Tag frame titles as H2 headings for proper document structure
-% Screen readers use heading levels to navigate documents
-\tagpdfsetup{role / new-tag = frametitle / H2}
+% Tag frame titles as H1 headings for proper document structure
+% This works together with the section title fix above:
+% - Sections are used for organization but don't create tags
+% - Frame titles become H1 (the top-level heading in the document)
+% - Screen readers use heading levels to navigate slides
+\tagpdfsetup{role / new-tag = frametitle / H1}
 
 % ======================================================================
 % COLOR DEFINITIONS
@@ -693,6 +719,7 @@ but you need to provide a \tr{text description}.
   \item \tb{Ally} (built into bCourses)
   \item \tb{veraPDF} (open-source PDF conformance validator, \urlu{https://verapdf.org/})
   \item \tb{PAC} (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/})
+  \item \tb{Adobe Acrobat}.
   \end{itemize}
 \end{itemize}
 
@@ -725,22 +752,27 @@ python strip\_af.py build/accessible\_slides.pdf
 \begin{frame}{Validator-specific notes}
   \begin{itemize}
   
-  \item \textbf{PAC table warning (known behavior)}
+  \item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
     \begin{itemize}
-    \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
-    \item This behavior is documented by the LaTeX Tagging Project: \urlu{https://github.com/latex3/tagging-project/issues/1056}
+    \item Appears around figure captions, section numbers, table captions
+    \item \tg{This is an Acrobat bug}, not a source error -- \tb{safe to ignore}
+    \item The \texttt{<Lbl>} tag is correctly used for numbering
+    \item Acrobat's checker incorrectly expects it only in lists
+    \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
     \end{itemize}
 
-  \item \textbf{When this warning appears}
+  \item \textbf{PAC: ``Table header cell has no associated subcells''}
     \begin{itemize}
-    \item First confirm source markup is correct (especially \texttt{table/header-rows})
-    \item Keep the source tagging and document the validator warning
-    \item Report minimal reproductions to tool vendors when possible
+    \item Often a validator interpretation issue, not a source error
+    \item Verify \texttt{table/header-rows} is correct first
+    \item PAC may not fully handle attribute-class form for table scope
+    \item Reference: \urlu{https://github.com/latex3/tagging-project/issues/1056}
     \end{itemize}
 
-  \item \textbf{Interpretation tip}
+  \item \textbf{Bottom line}
     \begin{itemize}
-    \item Treat one-tool warnings as signals to investigate, not automatic proof of source errors
+    \item Use multiple validators (Ally, veraPDF, PAC) and compare findings
+    \item Treat one-tool warnings as signals to investigate, not proof of errors
     \end{itemize}
   \end{itemize}
 \end{frame}

@@ -362,10 +362,28 @@ No additional tagging needed! Standard sectioning commands (`\section`, `\subsec
 
 #### For Slides Only (ltx-talk)
 
+**1. Configure frame titles as H1 headings:**
 ```latex
-% Tag frame titles as H2 headings
-\tagpdfsetup{role / new-tag = frametitle / H2}
+% Tag frame titles as H1 headings
+\tagpdfsetup{role / new-tag = frametitle / H1}
 ```
+
+**2. Prevent empty H1 tag warnings from `\section` commands:**
+
+ltx-talk uses `\section` for structural organization, but section titles in slides are often empty (just organizational markers). PDF validators like Acrobat complain about H1 tags with no text content.
+
+Solution: Disable tagging for section titles by adding this to your preamble:
+
+```latex
+\ExplSyntaxOn
+\AtBeginDocument{
+  \NewTaggingSocketPlug { talk / sec / title } { none } { }
+  \AssignTaggingSocketPlug { talk / sec / title } { none }
+}
+\ExplSyntaxOff
+```
+
+This prevents empty H1 tags while keeping frame titles as H1 (which always have content).
 
 ## Migrating Your Existing LaTeX Files
 
@@ -519,9 +537,11 @@ To verify your slides meet accessibility requirements:
 - A practical workflow is to run more than one checker and compare findings.
 
 **Checkers used so far:**
+
 - Ally (built into bCourses)
 - veraPDF (open-source PDF conformance validator)
 - PAC (PDF Accessibility Checker)
+- Adobe Acrobat
 
 ## Optional Validator Cleanup Step: `strip_af.py`
 
@@ -541,6 +561,9 @@ python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf
 - This is often a validator interpretation issue, not necessarily a source-tagging error.
 - PAC may report `Table header cell has no associated subcells` even when header tagging is correct.
 - Known behavior reference: <https://github.com/latex3/tagging-project/issues/1056>.
+- **Acrobat may report `Lbl and LBody - Failed` errors** around figure captions, section numbers, or other numbered elements. This is a **validator bug**, not a source error. The `<Lbl>` tag is validly used for numbering (not just lists), but Acrobat's checker incorrectly expects `<LBody>` to accompany it. See references:
+  - LaTeX developer Ulrike Fischer: "Adobe doesn't like the (valid) use of Lbl for the section numbers, complain to them that they should correct their checker." ([source](https://tex.stackexchange.com/a/709655/2388))
+  - Adobe Community expert Philip Kiff: "<Lbl> is getting flagged as an error by Acrobat Pro DC by mistake... you could just ignore this error and wait until Acrobat fixes their built-in tester." ([source](https://community.adobe.com/t5/acrobat-discussions/why-or-how-can-i-get-acrobat-pro-dc-accessibility-check-to-resolve-lt-lbl-gt-error/td-p/10477958))
 - Treat one-tool warnings as signals to investigate, not automatic proof of source errors.
 
 ## Troubleshooting
@@ -572,6 +595,21 @@ python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf
 
 - Make sure you're using LuaLaTeX, not pdfLaTeX or XeLaTeX
 - Check that `\tagpdfsetup{math/alt/use}` is in your preamble
+
+**Acrobat complains about "H1 tag with no text" in ltx-talk slides**
+
+- This happens when `\section` commands have no titles (used for organization only)
+- Solution: Disable section title tagging and use H1 for frame titles instead
+- See the "For Slides Only" section under "Key Accessibility Features" for the code to add
+- Details: `accessible_slides.tex` includes this fix in the preamble
+
+**Acrobat reports "Lbl and LBody - Failed" errors in articles or slides**
+
+- This is a **validator bug**, not a source error in your LaTeX file
+- Occurs around figure captions, section numbers, table captions, or other numbered elements
+- The `<Lbl>` tag is correctly used for numbering, but Acrobat's checker incorrectly expects it only in lists
+- **Safe to ignore** - your PDF structure is correct; Acrobat's validator needs fixing
+- See "Validator-Specific Notes" section for detailed references and expert quotes
 
 **"PAC says: Table header cell has no associated subcells"**
 
