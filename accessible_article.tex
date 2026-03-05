@@ -4,7 +4,8 @@
 % This MUST be the first thing in your document, before \documentclass
 % It configures the PDF for accessibility compliance
 \DocumentMetadata{
-  pdfstandard=A-2u,    % PDF/A-2u format (archival standard with Unicode support)
+  pdfstandard=a-2u,    % PDF/A-2u format (archival standard with Unicode support)
+  pdfstandard=ua-1,    % Add PDF/UA-1 accessibility conformance target
   pdfversion=1.7,          % Explicit PDF version used for compatibility with conformance tooling
   lang=en-US,               % Document language (required for screen readers)
   tagging=on,                 % Enable PDF tagging (required for accessibility)
@@ -111,7 +112,7 @@
 % ======================================================================
 % Define title, author, and date for article class
 
-\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.3}
+\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.4}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu} \\ UC Berkeley}
 \date{\today}
 
@@ -248,7 +249,8 @@ Whether you're creating slides or articles, these requirements are \tb{the same}
 \begin{minipage}{0.9\linewidth}
 {\ttfamily\small
 \textbackslash DocumentMetadata\{\\[0.5ex]
-\hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
+\hspace*{0.2in}pdfstandard=a-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
+\hspace*{0.2in}pdfstandard=ua-1,\hspace*{0.26in}\% Add PDF/UA-1 conformance target\\[0.5ex]
 \hspace*{0.2in}pdfversion=1.7,\hspace*{0.31in}\% Explicit PDF version\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.69in}\% Language for screen readers\\[0.5ex]
 \hspace*{0.2in}tagging=on,\hspace*{0.73in}\% Enable PDF tagging\\[0.5ex]
@@ -491,45 +493,11 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
   \item Add \texttt{table/header-rows} to tables
   \end{itemize}
 \item \textbf{Set compiler to LuaLaTeX}
-\item \textbf{Compile (plus optional validator cleanup):}
+\item \textbf{Compile:}
   \begin{itemize}
   \item Compile with LuaLaTeX
-  \item Optional (strict archival validation): run \texttt{python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf}
-  \item Validate the \texttt{.noaf.pdf} output with \texttt{veraPDF}
   \end{itemize}
 \end{enumerate}
-
-\section{Validator-specific notes}
-
-\begin{itemize}
-\item \textbf{Different validators check different things}
-  \begin{itemize}
-  \item Accessibility usability checks and strict PDF conformance checks are not identical
-  \item A document can pass one tool and still show warnings in another
-  \end{itemize}
-
-\item \textbf{veraPDF + \texttt{strip\_af.py}}
-  \begin{itemize}
-  \item \texttt{veraPDF} enforces strict PDF/A conformance requirements
-  \item If strict archival conformance is required, run \texttt{strip\_af.py} before validating
-  \item For many course-delivery contexts, this cleanup is optional
-  \end{itemize}
-
-\item \textbf{PAC table warning (known behavior)}
-  \begin{itemize}
-  \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
-  \item The LaTeX Tagging Project documents this behavior at \urlu{https://github.com/latex3/tagging-project/issues/1056}
-  \end{itemize}
-
-\item \textbf{Recommended workflow}
-  \begin{itemize}
-  \item Keep source tagging correct first (alt text, table header rows, language, tagging)
-  \item Use multiple checks (Ally + veraPDF + PAC)
-  \item Treat one-tool warnings as prompts to investigate, not automatic proof of source errors
-  \end{itemize}
-\end{itemize}
-
-\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses), veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}), and PAC (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/}).
 
 \section{Getting started: What's different by document type}
 
@@ -550,6 +518,51 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 \item \tr{Remove Beamer themes/templates/colors}
 \item \tg{Recreate styling} using standard LaTeX/xcolor
 \item \tg{One-time preamble work}---then reuse for all future talks!
+\end{itemize}
+
+\section{Validation workflow: use multiple checkers}
+
+\begin{itemize}
+\item No single checker catches everything.
+\item Accessibility usability checks and strict PDF conformance checks are not identical.
+\item A practical workflow is to run more than one checker and compare findings.
+\end{itemize}
+
+\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses), veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}), and PAC (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/}).
+
+\section{Optional validator cleanup step: \texttt{strip\_af.py}}
+
+\begin{itemize}
+\item The metadata settings alone are enough to generate a 100\% score on Ally.
+\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
+\item Optional strict-archival cleanup command:
+\end{itemize}
+
+\begin{quote}\ttfamily
+python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf
+\end{quote}
+
+\begin{itemize}
+\item Validate \texttt{build/yourfile.noaf.pdf} with \texttt{veraPDF}.
+\item Prerequisite for the script: \texttt{python -m pip install pikepdf}
+\end{itemize}
+
+\section{Validator-specific notes}
+
+\begin{itemize}
+\item \textbf{This is often a validator interpretation issue, not necessarily a source-tagging error.}
+\item \textbf{PAC table warning (known behavior)}
+  \begin{itemize}
+  \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
+  \item The LaTeX Tagging Project documents this behavior at \urlu{https://github.com/latex3/tagging-project/issues/1056}
+  \end{itemize}
+\item \textbf{When this warning appears}
+  \begin{itemize}
+  \item First confirm source markup is correct (especially \texttt{table/header-rows})
+  \item Keep source tagging and document the validator warning
+  \item Report minimal reproductions to tool vendors when possible
+  \end{itemize}
+\item \textbf{Interpretation tip}: Treat one-tool warnings as signals to investigate, not automatic proof of source errors.
 \end{itemize}
 
 \bigskip

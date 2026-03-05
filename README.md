@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v1.3)
+# Accessible LaTeX Templates (v1.4)
 
 Templates for creating **accessible LaTeX documents** (both slides and articles) that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
 
@@ -294,9 +294,16 @@ These requirements apply whether you're creating slides or articles:
 Every document **must** start with this, **before** `\documentclass`:
 ```latex
 \DocumentMetadata{
-  pdfstandard=A-2u,    % PDF/A-2u (archival + Unicode)
+  pdfstandard=a-2u,    % PDF/A-2u (archival + Unicode)
+   pdfstandard=ua-1,   % PDF/UA-1 accessibility conformance target
   lang=en-US,          % Language for screen readers
-  tagging=on           % Enable PDF tagging
+  tagging=on,          % Enable PDF tagging
+  tagging-setup={
+    math/alt/use,           % Keep math accessibility enabled (screen readers get tagged math)
+    math/mathml/AF=false,   % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
+    math/tex/AF=false,      % Do not embed TeX source as Associated Files
+    math/mathml/sources=     % Clear MathML source attachment list (avoid extra embedded helper files)
+  }
 }
 ```
 
@@ -369,9 +376,16 @@ Whether migrating slides or articles, you need to:
 1. **Add `\DocumentMetadata` block** at the very beginning (before `\documentclass`):
    ```latex
    \DocumentMetadata{
-     pdfstandard=A-2u,
+     pdfstandard=a-2u,
+       pdfstandard=ua-1,
      lang=en-US,
-     tagging=on
+     tagging=on,
+     tagging-setup={
+       math/alt/use,
+       math/mathml/AF=false,
+       math/tex/AF=false,
+       math/mathml/sources=
+     }
    }
    ```
 
@@ -497,16 +511,37 @@ To verify your slides meet accessibility requirements:
 1. Upload your PDF to Canvas/bCourses
 2. Check the Ally accessibility score (should be 100%)
 3. Use a screen reader to test navigation
-4. (Optional, for strict archival validation) run `python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf`
-5. Verify PDF/A-2u compliance with veraPDF on the `.noaf.pdf` output
 
-**Note**: The `strip_af.py` step is usually **not required** for Ally scoring; it is a cleanup step for strict veraPDF/PDF/A checks that can flag remaining associated-file metadata.
+## Validation Workflow: Use Multiple Checkers
+
+- No single checker catches everything.
+- Accessibility usability checks and strict archival conformance checks are not identical.
+- A practical workflow is to run more than one checker and compare findings.
+
+**Checkers used so far:**
+- Ally (built into bCourses)
+- veraPDF (open-source PDF conformance validator)
+- PAC (PDF Accessibility Checker)
+
+## Optional Validator Cleanup Step: `strip_af.py`
+
+- The metadata settings alone are enough to generate a 100% score on Ally.
+- Stricter checkers (for example, veraPDF) may still complain about `/AF` or embedded-file structures.
+- Optional strict-archival cleanup command:
+
+```bash
+python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf
+```
+
+- Validate the `.noaf.pdf` output with veraPDF.
+- Prerequisite for the script: `python -m pip install pikepdf`.
 
 ## Validator-Specific Notes
 
-- Different validators check different things; accessibility usability checks and strict archival conformance checks are not identical.
-- If strict PDF/A conformance is required, use the optional `strip_af.py` step and validate the `.noaf.pdf` output with `veraPDF`.
-- PAC may report `Table header cell has no associated subcells` even when header tagging is correct; see the known behavior notes below and <https://github.com/latex3/tagging-project/issues/1056>.
+- This is often a validator interpretation issue, not necessarily a source-tagging error.
+- PAC may report `Table header cell has no associated subcells` even when header tagging is correct.
+- Known behavior reference: <https://github.com/latex3/tagging-project/issues/1056>.
+- Treat one-tool warnings as signals to investigate, not automatic proof of source errors.
 
 ## Troubleshooting
 
