@@ -396,6 +396,7 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 \item Use \texttt{\{1\}} for 1 header row
 \item Use \texttt{\{1,2\}} for 2 header rows  
 \item Use \texttt{\{1,2,3\}} for 3 header rows, etc.
+\item \textbf{Validator note:} PAC can sometimes report \texttt{Table header cell has no associated subcells} even when headers are tagged correctly. The LaTeX team documents this behavior at \urlu{https://github.com/latex3/tagging-project/issues/1056}.
 \end{itemize}
 
 \subsection{Example: Table with 3 Header Rows}
@@ -416,6 +417,7 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 
 \begin{table}[htbp]
 \begin{center}\footnotesize
+% PAC may warn about subcell associations here even when header tagging is correct; see README for details.
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
@@ -492,11 +494,42 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 \item \textbf{Compile (plus optional validator cleanup):}
   \begin{itemize}
   \item Compile with LuaLaTeX
-  \item Optional: run \texttt{python build/strip\_af.py yourfile.pdf} before strict validation in some conformance checkers
+  \item Optional (strict archival validation): run \texttt{python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf}
+  \item Validate the \texttt{.noaf.pdf} output with \texttt{veraPDF}
   \end{itemize}
 \end{enumerate}
 
-\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses) and veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}).
+\section{Validator-specific notes}
+
+\begin{itemize}
+\item \textbf{Different validators check different things}
+  \begin{itemize}
+  \item Accessibility usability checks and strict PDF conformance checks are not identical
+  \item A document can pass one tool and still show warnings in another
+  \end{itemize}
+
+\item \textbf{veraPDF + \texttt{strip\_af.py}}
+  \begin{itemize}
+  \item \texttt{veraPDF} enforces strict PDF/A conformance requirements
+  \item If strict archival conformance is required, run \texttt{strip\_af.py} before validating
+  \item For many course-delivery contexts, this cleanup is optional
+  \end{itemize}
+
+\item \textbf{PAC table warning (known behavior)}
+  \begin{itemize}
+  \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
+  \item The LaTeX Tagging Project documents this behavior at \urlu{https://github.com/latex3/tagging-project/issues/1056}
+  \end{itemize}
+
+\item \textbf{Recommended workflow}
+  \begin{itemize}
+  \item Keep source tagging correct first (alt text, table header rows, language, tagging)
+  \item Use multiple checks (Ally + veraPDF + PAC)
+  \item Treat one-tool warnings as prompts to investigate, not automatic proof of source errors
+  \end{itemize}
+\end{itemize}
+
+\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses), veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}), and PAC (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/}).
 
 \section{Getting started: What's different by document type}
 

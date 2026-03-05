@@ -476,29 +476,6 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Optional validator cleanup step: \texttt{strip\_af.py}}
-
-\begin{itemize}
-\item The metadata settings alone are enough to generate a 100\% score on Ally.
-\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
-\item To remove these and stop the complaints, run \texttt{strip\_af.py}:
-
-\bigskip
-
-\fbox{%
-\begin{minipage}{0.9\linewidth}
-\ttfamily
-python strip\_af.py build/accessible\_slides.pdf  
-\end{minipage}
-}
-
-\bigskip
-
-\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{The basics}
   \begin{itemize}
   \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
@@ -565,22 +542,23 @@ but you need to provide a \tr{text description}.
 
 \begin{frame}{Tables}
 
+\small  
 \begin{itemize}
 \item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment).
-\item  Also need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc. E.g.,
+\item  Also need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc.
 % \item Example (table with 3 header rows):
   
-\vspace*{0.15in}
+\vspace*{0.05in}
     
 \fbox{%
 \begin{minipage}{0.95\linewidth}
-\ttfamily\small
+\ttfamily\footnotesize
 \AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
 \textbackslash begin\{tabular\}\{ccccrcccr\} \\
 \textbackslash toprule \\
-\textrm{\color{blue}\small $\leftarrow$ 3 header rows} \\
+\textrm{\color{blue}\footnotesize $\leftarrow$ 3 header rows} \\
 \textbackslash midrule \\
-\textrm{\color{AccessibleGreen}\small $\leftarrow$ data rows} \\
+\textrm{\color{AccessibleGreen}\footnotesize $\leftarrow$ data rows} \\
 \textbackslash bottomrule \\
 \textbackslash end\{tabular\}
 \end{minipage}
@@ -588,7 +566,7 @@ but you need to provide a \tr{text description}.
 
 \end{itemize}
 
-\vspace*{0.15in}
+\vspace*{0.05in}
   
 \begin{center}\scriptsize
 \tagpdfsetup{table/header-rows={1,2,3}}
@@ -666,23 +644,8 @@ but you need to provide a \tr{text description}.
     \begin{itemize}
     \item Compile with LuaLaTeX
     \item PDF file now scores 100\% on \tb{Ally}
-    \end{itemize}      
-  \item \textbf{\tr{(Optional)} validator cleanup:}
-    \begin{itemize}
-    \item Run \texttt{python strip\_af.py build/yourfile.pdf} for strict conformance
-    \item If needed, install dependency first: \texttt{python -m pip install pikepdf}
     \end{itemize}
   \end{enumerate}
-
-\bigskip
-
-\begin{itemize}
-\item \textbf{Checkers used so far:}
-  \begin{itemize}
-  \item \tb{Ally} (built into bCourses)
-  \item \tb{veraPDF} (open-source PDF conformance validator, \urlu{https://verapdf.org/}).
-  \end{itemize}
-\end{itemize}  
 \end{frame}
 
 \begin{frame}{Getting started: What's different by document type}
@@ -710,6 +673,70 @@ but you need to provide a \tr{text description}.
 \bigskip
 
   \item Questions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Validation workflow: use multiple checkers}
+
+\begin{itemize}
+\item No single checker catches everything.
+\item Accessibility usability checks and strict PDF conformance checks are not identical.
+\item A practical workflow is to run more than one checker and compare findings.
+
+\bigskip
+
+\item \textbf{Checkers used so far}
+  \begin{itemize}
+  \item \tb{Ally} (built into bCourses)
+  \item \tb{veraPDF} (open-source PDF conformance validator, \urlu{https://verapdf.org/})
+  \item \tb{PAC} (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/})
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Optional validator cleanup step: \texttt{strip\_af.py}}
+
+\begin{itemize}
+\item The metadata settings alone are enough to generate a 100\% score on Ally.
+\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
+\item To remove these and stop the complaints, run \texttt{strip\_af.py}:
+
+\bigskip
+
+\fbox{%
+\begin{minipage}{0.9\linewidth}
+\ttfamily
+python strip\_af.py build/accessible\_slides.pdf
+\end{minipage}
+}
+
+\bigskip
+
+\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Validator-specific notes}
+  \begin{itemize}
+  \item \textbf{PAC table warning (known behavior)}
+    \begin{itemize}
+    \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
+    \item This behavior is documented by the LaTeX Tagging Project: \urlu{https://github.com/latex3/tagging-project/issues/1056}
+    \end{itemize}
+
+  \item \textbf{When this warning appears}
+    \begin{itemize}
+    \item First confirm source markup is correct (especially \texttt{table/header-rows})
+    \item Keep the source tagging and document the validator warning
+    \item Report minimal reproductions to tool vendors when possible
+    \end{itemize}
+
+  \item \textbf{Interpretation tip}
+    \begin{itemize}
+    \item Treat one-tool warnings as signals to investigate, not automatic proof of source errors
+    \end{itemize}
   \end{itemize}
 \end{frame}
 

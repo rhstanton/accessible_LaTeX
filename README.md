@@ -294,16 +294,9 @@ These requirements apply whether you're creating slides or articles:
 Every document **must** start with this, **before** `\documentclass`:
 ```latex
 \DocumentMetadata{
-  pdfstandard=A-2u,    % PDF/A-2u format (archival standard with Unicode support)
-  pdfversion=1.7,      % Explicit PDF version used for compatibility with conformance tooling
-  lang=en-US,          % Document language (required for screen readers)
-  tagging=on,          % Enable PDF tagging (required for accessibility)
-  tagging-setup={
-    math/alt/use,            % Keep math accessibility enabled (screen readers get tagged math)
-    math/mathml/AF=false,    % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
-    math/tex/AF=false,       % Do not embed TeX source as Associated Files
-    math/mathml/sources=     % Clear MathML source attachment list (avoid extra embedded helper files)
-  }
+  pdfstandard=A-2u,    % PDF/A-2u (archival + Unicode)
+  lang=en-US,          % Language for screen readers
+  tagging=on           % Enable PDF tagging
 }
 ```
 
@@ -333,6 +326,11 @@ Tell screen readers which rows are headers:
 ```
 **Note**: List ALL header row numbers. If your header spans 2 rows, you must use `{1,2}`, not just `{1}`.
 
+**PAC note (known validator behavior)**: Some users still see PAC errors like `Table header cell has no associated subcells` even when `table/header-rows` is set correctly.
+
+- The LaTeX Tagging Project documents this pattern in issue #1056: <https://github.com/latex3/tagging-project/issues/1056>
+- In that thread, LaTeX team maintainers explain that table header scope is present in the PDF tag structure, but PAC (and some other tools) may not interpret the attribute-class form correctly in some cases.
+- Practical guidance: keep `\tagpdfsetup{table/header-rows={...}}`, inspect the tag tree where possible, and treat PAC output as one input among several checks.
 #### 4. Accessible Math
 
 Enable automatic MathML in your preamble:
@@ -369,34 +367,29 @@ No additional tagging needed! Standard sectioning commands (`\section`, `\subsec
 Whether migrating slides or articles, you need to:
 
 1. **Add `\DocumentMetadata` block** at the very beginning (before `\documentclass`):
-```latex
-\DocumentMetadata{
-  pdfstandard=A-2u,
-  pdfversion=1.7,
-  lang=en-US,
-  tagging=on,
-  tagging-setup={
-    math/alt/use,
-    math/mathml/AF=false,
-    math/tex/AF=false,
-    math/mathml/sources=
-  }
-}
-```
+   ```latex
+   \DocumentMetadata{
+     pdfstandard=A-2u,
+     lang=en-US,
+     tagging=on
+   }
+   ```
 
-2. **Tag all images** with alt text:
+2. **Add `\tagpdfsetup{math/alt/use}`** to your preamble (enables automatic MathML)
+
+3. **Tag all images** with alt text:
    ```latex
    \includegraphics[alt={Description}]{file}
    ```
 
-3. **Tag all table headers**:
+4. **Tag all table headers**:
    ```latex
    \tagpdfsetup{table/header-rows={1}}  % or {1,2}, {1,2,3}, etc.
    ```
 
-4. **Switch to LuaLaTeX** for compilation (automatic MathML generation)
+5. **Switch to LuaLaTeX** for compilation (automatic MathML generation)
 
-5. **Update font packages** (for LuaLaTeX compatibility):
+6. **Update font packages** (for LuaLaTeX compatibility):
    - Replace `fontenc` with `fontspec`
    - Replace traditional font packages with `unicode-math`
 
@@ -509,6 +502,12 @@ To verify your slides meet accessibility requirements:
 
 **Note**: The `strip_af.py` step is usually **not required** for Ally scoring; it is a cleanup step for strict veraPDF/PDF/A checks that can flag remaining associated-file metadata.
 
+## Validator-Specific Notes
+
+- Different validators check different things; accessibility usability checks and strict archival conformance checks are not identical.
+- If strict PDF/A conformance is required, use the optional `strip_af.py` step and validate the `.noaf.pdf` output with `veraPDF`.
+- PAC may report `Table header cell has no associated subcells` even when header tagging is correct; see the known behavior notes below and <https://github.com/latex3/tagging-project/issues/1056>.
+
 ## Troubleshooting
 
 ### Common Issues
@@ -539,6 +538,12 @@ To verify your slides meet accessibility requirements:
 - Make sure you're using LuaLaTeX, not pdfLaTeX or XeLaTeX
 - Check that `\tagpdfsetup{math/alt/use}` is in your preamble
 
+**"PAC says: Table header cell has no associated subcells"**
+
+- First verify your table markup: `\tagpdfsetup{table/header-rows={...}}` must list all header rows.
+- This warning is a known pattern discussed by the LaTeX Tagging Project maintainers: <https://github.com/latex3/tagging-project/issues/1056>
+- In that issue, maintainers note PAC may not fully handle the attribute-class form used for table scope in some PDFs.
+- If your tags are otherwise correct, document the PAC finding, keep your source markup as-is, and report minimal reproductions to PAC/tool vendors.
 ### Getting Help
 
 - [LaTeX Tagging Project Issues](https://github.com/latex3/tagging-project/issues)
@@ -575,6 +580,7 @@ A: Ally and veraPDF check different things. Ally focuses on accessibility usabil
 
 - **Ally:** Accessibility checker built into bCourses, used to review accessibility issues in course materials.
 - **veraPDF:** Open-source PDF conformance validator: https://verapdf.org/
+- **PAC:** PDF Accessibility Checker (PDF/UA-focused validator): https://pac.pdf-accessibility.org/
 
 ## Questions or Suggestions?
 
