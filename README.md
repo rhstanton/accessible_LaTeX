@@ -294,9 +294,16 @@ These requirements apply whether you're creating slides or articles:
 Every document **must** start with this, **before** `\documentclass`:
 ```latex
 \DocumentMetadata{
-  pdfstandard=A-2u,    % PDF/A-2u (archival + Unicode)
-  lang=en-US,          % Language for screen readers
-  tagging=on           % Enable PDF tagging
+  pdfstandard=A-2u,    % PDF/A-2u format (archival standard with Unicode support)
+  pdfversion=1.7,      % Explicit PDF version used for compatibility with conformance tooling
+  lang=en-US,          % Document language (required for screen readers)
+  tagging=on,          % Enable PDF tagging (required for accessibility)
+  tagging-setup={
+    math/alt/use,            % Keep math accessibility enabled (screen readers get tagged math)
+    math/mathml/AF=false,    % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
+    math/tex/AF=false,       % Do not embed TeX source as Associated Files
+    math/mathml/sources=     % Clear MathML source attachment list (avoid extra embedded helper files)
+  }
 }
 ```
 
@@ -362,29 +369,34 @@ No additional tagging needed! Standard sectioning commands (`\section`, `\subsec
 Whether migrating slides or articles, you need to:
 
 1. **Add `\DocumentMetadata` block** at the very beginning (before `\documentclass`):
-   ```latex
-   \DocumentMetadata{
-     pdfstandard=A-2u,
-     lang=en-US,
-     tagging=on
-   }
-   ```
+```latex
+\DocumentMetadata{
+  pdfstandard=A-2u,
+  pdfversion=1.7,
+  lang=en-US,
+  tagging=on,
+  tagging-setup={
+    math/alt/use,
+    math/mathml/AF=false,
+    math/tex/AF=false,
+    math/mathml/sources=
+  }
+}
+```
 
-2. **Add `\tagpdfsetup{math/alt/use}`** to your preamble (enables automatic MathML)
-
-3. **Tag all images** with alt text:
+2. **Tag all images** with alt text:
    ```latex
    \includegraphics[alt={Description}]{file}
    ```
 
-4. **Tag all table headers**:
+3. **Tag all table headers**:
    ```latex
    \tagpdfsetup{table/header-rows={1}}  % or {1,2}, {1,2,3}, etc.
    ```
 
-5. **Switch to LuaLaTeX** for compilation (automatic MathML generation)
+4. **Switch to LuaLaTeX** for compilation (automatic MathML generation)
 
-6. **Update font packages** (for LuaLaTeX compatibility):
+5. **Update font packages** (for LuaLaTeX compatibility):
    - Replace `fontenc` with `fontspec`
    - Replace traditional font packages with `unicode-math`
 
