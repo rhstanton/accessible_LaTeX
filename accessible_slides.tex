@@ -5,8 +5,15 @@
 % It configures the PDF for accessibility compliance
 \DocumentMetadata{
   pdfstandard=A-2u,    % PDF/A-2u format (archival standard with Unicode support)
+  pdfversion=1.7,          % Explicit PDF version used for compatibility with conformance tooling
   lang=en-US,               % Document language (required for screen readers)
-  tagging=on                  % Enable PDF tagging (required for accessibility)
+  tagging=on,                 % Enable PDF tagging (required for accessibility)
+  tagging-setup={
+    math/alt/use,                         % Keep math accessibility enabled (screen readers get tagged math)
+    math/mathml/AF=false,    % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
+    math/tex/AF=false,             % Do not embed TeX source as Associated Files
+    math/mathml/sources=      % Clear MathML source attachment list (avoid extra embedded helper files)
+  }
 }
 
 % ======================================================================
@@ -64,10 +71,6 @@
 % Tag frame titles as H2 headings for proper document structure
 % Screen readers use heading levels to navigate documents
 \tagpdfsetup{role / new-tag = frametitle / H2}
-
-% Enable automatic alt text generation for math equations
-% This helps screen readers interpret mathematical content
-\tagpdfsetup{math/alt/use}
 
 % ======================================================================
 % COLOR DEFINITIONS
@@ -152,6 +155,20 @@
 % ======================================================================
 % Customize the footer appearance (just the page number in this template)
 
+\makeatletter
+\renewcommand\@framenumber{%
+  \ifnum\value{page}=1\relax
+    % --- title slide footer content ---
+%    \hspace*{-3in}%
+    \raisebox{0.0in}[.25in][.0in]{\includegraphics[width=.45in]{BerkeleyHaas}}
+    \hfill \hspace*{-.65in} Richard Stanton, \the\year \hfill 
+  \else
+    % Other slides: frame number only, right-aligned
+    \hfill\arabic{frame}%
+  \fi
+}
+\makeatother
+
 \EditInstance{footer}{std}{
   color         = black,
   font          = \tiny,
@@ -192,7 +209,7 @@
 % Define title, author, institution, and date
 % These work just like in Beamer
 
-\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.2}
+\title{\textcolor{blue}{Accessible Slides in LaTeX} \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.3}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}
 \institute{\small UC Berkeley}
 \date{\today}
@@ -338,7 +355,9 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (1/4): Document Metadata}
+\begin{frame}{Common requirements (1/3): Document Metadata}
+
+\bigskip
 
 \begin{itemize}
 \item \tb{\textbf{REQUIRED for both slides AND articles}}
@@ -352,24 +371,37 @@
 
 \fbox{%
 \begin{minipage}{0.9\linewidth}
-\ttfamily\small
+\ttfamily\scriptsize
 \textbackslash DocumentMetadata\{\\[0.5ex]
 \hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
+\hspace*{0.2in}pdfversion=1.7,\hspace*{0.35in}\% Explicit PDF version\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.73in}\% Language for screen readers\\[0.5ex]
-\hspace*{0.2in}tagging=on\hspace*{0.8in}\% Enable PDF tagging\\[0.5ex]
+\hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex]
+\hspace*{0.2in}tagging-setup=\{\\[0.5ex]
+\hspace*{0.4in}math/alt/use,\hspace*{0.2in}\% Keep math accessibility enabled\\[0.5ex]
+\hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
+\hspace*{0.4in}math/tex/AF=false,\hspace*{0.2in}\% Do not embed TeX source as Associated Files\\[0.5ex]
+\hspace*{0.4in}math/mathml/sources=\hspace*{0.06in}\% Clear MathML source attachment list\\[0.5ex]
+\hspace*{0.2in}\}\\[0.5ex]
 \}
 \end{minipage}
 }
 
 \bigskip
 
-\item This configures the PDF for accessibility compliance
+\item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
+\item The \texttt{tagging-setup} entries keep math accessible while reducing helper attachments that can trigger warnings in some strict conformance validators.
 
+
+
+  
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (2/4): Images and Tables}
+\begin{frame}{Common requirements (2/3): Images, Tables and Colors}
 
+  \bigskip
+  
 \begin{itemize}
 \item \tb{\textbf{REQUIRED for both slides AND articles}}
 
@@ -391,17 +423,10 @@
   \item See dedicated ``Tables'' slide for examples
   \end{itemize}
 
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Common requirements (3/4): Colors and Math}
-
-\begin{itemize}
-\item \tb{\textbf{REQUIRED for both slides AND articles}}
-
-\bigskip
-
+\bigskip  
+  
 \item \textbf{Accessible colors:} WCAG 2.1 requires 4.5:1 contrast ratio
+\medskip  
 
 \fbox{%
 \begin{minipage}{0.9\linewidth}
@@ -412,19 +437,11 @@
 \end{minipage}
 }
 
-\bigskip
-
-\item \textbf{Automatic MathML:} Add to your preamble
-
-\fbox{%
-\ttfamily\small
-\textbackslash tagpdfsetup\{math/alt/use\}
-}
-
+  
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (4/4): LuaLaTeX}
+\begin{frame}{Common requirements (3/3): LuaLaTeX}
 
 \begin{itemize}
 \item \tb{\textbf{REQUIRED for both slides AND articles}}
@@ -451,6 +468,32 @@
   \end{itemize}
 
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Optional validator cleanup step: \texttt{strip\_af.py}}
+
+\begin{itemize}
+\item The metadata settings above prevent most embedded helper files used by tagging internals.
+\item Some PDFs may still contain /AF or embedded-file structures that some strict conformance checkers flag.
+\item Ally can still score 100\% without this step; run \texttt{strip\_af.py} when you need checker-specific conformance cleanup.
+\end{itemize}
+
+\bigskip
+
+\fbox{%
+\begin{minipage}{0.9\linewidth}
+\ttfamily\small
+python build/strip\_af.py accessible\_slides.pdf
+\end{minipage}
+}
+
+\bigskip
+
+\begin{itemize}
+\item Output: \texttt{accessible\_slides.noaf.pdf}
+\item This keeps document content/tagging while removing AF and embedded-file metadata.
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}{The basics}
@@ -616,16 +659,22 @@ but you need to provide a \tr{text description}.
     \item Add \texttt{table/header-rows} to tables
     \end{itemize}
   \item \textbf{Set compiler to LuaLaTeX}
-  \item \textbf{Compile and test!}
+  \item \textbf{Compile (plus optional validator cleanup):}
+    \begin{itemize}
+    \item Compile with LuaLaTeX
+    \item Optional: run \texttt{python build/strip\_af.py yourfile.pdf} before strict validation in some conformance checkers
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Getting started: What's different by document type}
+
+\bigskip  
   
   \textbf{\tb{For Articles} (using \texttt{article}, \texttt{report}, \texttt{book}, etc.):}
   \begin{itemize}
   \item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
-  \item Add \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} to preamble
+  \item Include the \texttt{tagging-setup} block in \texttt{\textbackslash DocumentMetadata} (as shown in this template)
   \item Switch to \texttt{fontspec} and \texttt{unicode-math} packages
   \item \tg{Keep your existing documentclass!}
   \end{itemize}

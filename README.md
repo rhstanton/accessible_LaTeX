@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v1.2)
+# Accessible LaTeX Templates (v1.3)
 
 Templates for creating **accessible LaTeX documents** (both slides and articles) that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
 
@@ -492,7 +492,10 @@ To verify your slides meet accessibility requirements:
 1. Upload your PDF to Canvas/bCourses
 2. Check the Ally accessibility score (should be 100%)
 3. Use a screen reader to test navigation
-4. Verify PDF/A-2u compliance
+4. (Optional, for strict archival validation) run `python build/strip_af.py yourfile.pdf`
+5. Verify PDF/A-2u compliance with veraPDF on the `.noaf.pdf` output
+
+**Note**: The `strip_af.py` step is usually **not required** for Ally scoring; it is a cleanup step for strict veraPDF/PDF/A checks that can flag remaining associated-file metadata.
 
 ## Troubleshooting
 
@@ -552,6 +555,9 @@ A: Run `tlmgr --version` in your terminal.
 
 **Q: What if my accessibility score isn't 100%?**
 A: Check that all images have `alt` text, all tables have `table/header-rows` specified, and you're compiling with LuaLaTeX.
+
+**Q: Why does veraPDF complain even when Ally is 100%?**
+A: Ally and veraPDF check different things. Ally focuses on accessibility usability (tags, alt text, structure), while veraPDF enforces strict PDF/A archival rules. A file can be accessible enough for Ally but still contain associated-file metadata (`/AF`, embedded helper files) that veraPDF flags. If you need strict veraPDF/PDF-A compliance, run optional cleanup: `python build/strip_af.py yourfile.pdf` and validate the resulting `.noaf.pdf` file.
 
 ## Questions or Suggestions?
 
