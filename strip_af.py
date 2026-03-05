@@ -80,15 +80,11 @@ commonly used for safe structural edits to PDFs.
 
 Usage
 -----
-Basic usage:
+Basic usage (in-place overwrite):
 
     python strip_af.py input.pdf
 
-This writes:
-
-    input.noaf.pdf
-
-Alternatively specify an output filename:
+Alternatively specify an explicit output filename:
 
     python strip_af.py input.pdf output.pdf
 
@@ -107,7 +103,7 @@ Then clean the PDF:
 
 Validate:
 
-    veraPDF accessible_slides.noaf.pdf
+    veraPDF accessible_slides.pdf
 
 
 Verification
@@ -133,7 +129,9 @@ For now it provides a safe and reproducible way to ensure PDF/A
 compliance while keeping accessible tagging enabled.
 """
 
+import os
 import sys
+import tempfile
 import pikepdf
 
 
@@ -164,7 +162,20 @@ def strip_associated_files(input_pdf, output_pdf):
                 if "/AFRelationship" in obj:
                     del obj["/AFRelationship"]
 
-        pdf.save(output_pdf, linearize=True)
+        if os.path.abspath(input_pdf) == os.path.abspath(output_pdf):
+            temp_file = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    suffix=".pdf", delete=False, dir=os.path.dirname(input_pdf) or "."
+                ) as tmp:
+                    temp_file = tmp.name
+                pdf.save(temp_file, linearize=True)
+                os.replace(temp_file, input_pdf)
+            finally:
+                if temp_file and os.path.exists(temp_file):
+                    os.remove(temp_file)
+        else:
+            pdf.save(output_pdf, linearize=True)
 
 
 def main():
@@ -173,9 +184,7 @@ def main():
         sys.exit(1)
 
     input_pdf = sys.argv[1]
-    output_pdf = (
-        sys.argv[2] if len(sys.argv) > 2 else input_pdf.replace(".pdf", ".noaf.pdf")
-    )
+    output_pdf = sys.argv[2] if len(sys.argv) > 2 else input_pdf
 
     strip_associated_files(input_pdf, output_pdf)
 

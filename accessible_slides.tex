@@ -159,9 +159,9 @@
 \renewcommand\@framenumber{%
   \ifnum\value{page}=1\relax
     % --- title slide footer content ---
-%    \hspace*{-3in}%
+    \hspace*{-.2in}%
     \raisebox{0.0in}[.25in][.0in]{\includegraphics[width=.45in]{BerkeleyHaas}}
-    \hfill \hspace*{-.65in} Richard Stanton, \the\year \hfill 
+    \hfill \hspace*{-.5in} Richard Stanton, \the\year \hfill 
   \else
     % Other slides: frame number only, right-aligned
     \hfill\arabic{frame}%
@@ -373,15 +373,15 @@
 \begin{minipage}{0.9\linewidth}
 \ttfamily\scriptsize
 \textbackslash DocumentMetadata\{\\[0.5ex]
-\hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
-\hspace*{0.2in}pdfversion=1.7,\hspace*{0.35in}\% Explicit PDF version\\[0.5ex]
-\hspace*{0.2in}lang=en-US,\hspace*{0.73in}\% Language for screen readers\\[0.5ex]
+\hspace*{0.2in}pdfstandard=A-2u,\hspace*{0.425in}\% PDF/A-2u format\\[0.5ex]
+\hspace*{0.2in}pdfversion=1.7,\hspace*{0.55in}\% Explicit PDF version\\[0.5ex]
+\hspace*{0.2in}lang=en-US,\hspace*{0.78in}\% Language for screen readers\\[0.5ex]
 \hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex]
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
-\hspace*{0.4in}math/alt/use,\hspace*{0.2in}\% Keep math accessibility enabled\\[0.5ex]
+\hspace*{0.4in}math/alt/use,\hspace*{0.5in}\% Keep math accessibility enabled\\[0.5ex]
 \hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
 \hspace*{0.4in}math/tex/AF=false,\hspace*{0.2in}\% Do not embed TeX source as Associated Files\\[0.5ex]
-\hspace*{0.4in}math/mathml/sources=\hspace*{0.06in}\% Clear MathML source attachment list\\[0.5ex]
+\hspace*{0.4in}math/mathml/sources=\hspace*{0.08in}\% Clear MathML source attachment list\\[0.5ex]
 \hspace*{0.2in}\}\\[0.5ex]
 \}
 \end{minipage}
@@ -390,7 +390,7 @@
 \bigskip
 
 \item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
-\item The \texttt{tagging-setup} entries keep math accessible while reducing helper attachments that can trigger warnings in some strict conformance validators.
+%\item The \texttt{tagging-setup} entries keep math accessible while reducing helper attachments that can trigger warnings in some strict conformance validators.
 
 
 
@@ -476,6 +476,7 @@
 \item The metadata settings above prevent most embedded helper files used by tagging internals.
 \item Some PDFs may still contain /AF or embedded-file structures that some strict conformance checkers flag.
 \item Ally can still score 100\% without this step; run \texttt{strip\_af.py} when you need checker-specific conformance cleanup.
+\item Prerequisite: install the Python package first with \texttt{python -m pip install pikepdf}.
 \end{itemize}
 
 \bigskip
@@ -483,14 +484,14 @@
 \fbox{%
 \begin{minipage}{0.9\linewidth}
 \ttfamily\small
-python build/strip\_af.py accessible\_slides.pdf
+python strip\_af.py build/accessible\_slides.pdf build/accessible\_slides.noaf.pdf
 \end{minipage}
 }
 
 \bigskip
 
 \begin{itemize}
-\item Output: \texttt{accessible\_slides.noaf.pdf}
+\item Output: \texttt{build/accessible\_slides.noaf.pdf}
 \item This keeps document content/tagging while removing AF and embedded-file metadata.
 \end{itemize}
 
@@ -662,9 +663,16 @@ but you need to provide a \tr{text description}.
   \item \textbf{Compile (plus optional validator cleanup):}
     \begin{itemize}
     \item Compile with LuaLaTeX
-    \item Optional: run \texttt{python build/strip\_af.py yourfile.pdf} before strict validation in some conformance checkers
+    \item If needed, install dependency first: \texttt{python -m pip install pikepdf}
+    \item Optional: run \texttt{python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf} before strict validation in some conformance checkers
     \end{itemize}
   \end{enumerate}
+
+\bigskip
+
+\begin{itemize}
+\item \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses) and veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}).
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Getting started: What's different by document type}
