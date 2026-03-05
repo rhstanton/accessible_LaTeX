@@ -479,27 +479,22 @@
 \begin{frame}{Optional validator cleanup step: \texttt{strip\_af.py}}
 
 \begin{itemize}
-\item The metadata settings above prevent most embedded helper files used by tagging internals.
-\item Some PDFs may still contain /AF or embedded-file structures that some strict conformance checkers flag.
-\item Ally can still score 100\% without this step; run \texttt{strip\_af.py} when you need checker-specific conformance cleanup.
-\item Prerequisite: install the Python package first with \texttt{python -m pip install pikepdf}.
-\end{itemize}
+\item The metadata settings alone are enough to generate a 100\% score on Ally.
+\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
+\item To remove these and stop the complaints, run \texttt{strip\_af.py}:
 
 \bigskip
 
 \fbox{%
 \begin{minipage}{0.9\linewidth}
-\ttfamily\small
-python strip\_af.py build/accessible\_slides.pdf \\
-build/accessible\_slides.noaf.pdf
+\ttfamily
+python strip\_af.py build/accessible\_slides.pdf  
 \end{minipage}
 }
 
 \bigskip
 
-\begin{itemize}
-\item Output: \texttt{build/accessible\_slides.noaf.pdf}
-\item This keeps document content/tagging while removing AF and embedded-file metadata.
+\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
 \end{itemize}
 
 \end{frame}
@@ -653,7 +648,7 @@ but you need to provide a \tr{text description}.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Getting started: Common steps for both}
+\begin{frame}{Getting started: Common steps}
   \begin{enumerate}
   \item \textbf{Setup environment:} Use Overleaf Labs OR install/update TeX Live locally
     \begin{itemize}
@@ -667,26 +662,34 @@ but you need to provide a \tr{text description}.
     \item Add \texttt{table/header-rows} to tables
     \end{itemize}
   \item \textbf{Set compiler to LuaLaTeX}
-  \item \textbf{Compile (plus optional validator cleanup):}
+  \item \textbf{Compile:}
     \begin{itemize}
     \item Compile with LuaLaTeX
+    \item PDF file now scores 100\% on \tb{Ally}
+    \end{itemize}      
+  \item \textbf{\tr{(Optional)} validator cleanup:}
+    \begin{itemize}
+    \item Run \texttt{python strip\_af.py build/yourfile.pdf} for strict conformance
     \item If needed, install dependency first: \texttt{python -m pip install pikepdf}
-    \item Optional: run \texttt{python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf} before strict validation in some conformance checkers
     \end{itemize}
   \end{enumerate}
 
 \bigskip
 
 \begin{itemize}
-\item \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses) and veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}).
-\end{itemize}
+\item \textbf{Checkers used so far:}
+  \begin{itemize}
+  \item \tb{Ally} (built into bCourses)
+  \item \tb{veraPDF} (open-source PDF conformance validator, \urlu{https://verapdf.org/}).
+  \end{itemize}
+\end{itemize}  
 \end{frame}
 
 \begin{frame}{Getting started: What's different by document type}
 
 \bigskip  
   
-  \textbf{\tb{For Articles} (using \texttt{article}, \texttt{report}, \texttt{book}, etc.):}
+  \textbf{\tb{Articles} (using \texttt{article}, \texttt{report}, \texttt{book}, etc.):}
   \begin{itemize}
   \item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
   \item Include the \texttt{tagging-setup} block in \texttt{\textbackslash DocumentMetadata} (as shown in this template)
@@ -696,7 +699,7 @@ but you need to provide a \tr{text description}.
 
 \bigskip
 
-  \textbf{\tr{For Slides} (migrating from Beamer):}
+  \textbf{\tr{Slides} (migrating from Beamer):}
   \begin{itemize}
   \item Copy preamble from \texttt{accessible\_slides.tex}
   \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
