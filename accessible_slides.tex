@@ -338,7 +338,7 @@
 
 \bigskip
 
-\item Both require LaTeX kernel 2025-11-01 (see next slides for details)
+\item Both require LaTeX kernel 2025-11-01 or later (see next slides for details)
 \item {\color{blue}See ``Getting started'' slides at end for detailed steps}
 \item \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{LaTeX Tagging Project documentation}
 
@@ -348,8 +348,8 @@
 \begin{frame}{TeX version requirements (both slides and articles)}
 
 \begin{itemize}
-\item \tg{Minimum:} TeX Live 2023 or later with all packages updated
-\item \tg{Critical:} Must have LaTeX kernel 2025-11-01
+\item \tg{Minimum:} TeX Live 2023 or later (current = 2026) with all packages updated
+\item \tg{Critical:} Must have LaTeX kernel 2025-11-01 or later
   \begin{itemize}
   \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
   \item Or use Overleaf Labs (see next slide)
@@ -572,9 +572,12 @@ but you need to provide a \tr{text description}.
 
 \small  
 \begin{itemize}
-\item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment).
+\item
+Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment).
+%\begin{itemize}
 \item  Also need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc.
 \item  \textbf{Note:} This example may still trigger PAC's \texttt{Table header cell has no associated subcells} warning even when the source tagging is correct.
+%\end{itemize}
 % \item Example (table with 3 header rows):
   
 \vspace*{0.05in}

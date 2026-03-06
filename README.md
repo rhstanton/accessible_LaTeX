@@ -338,14 +338,8 @@ Tell screen readers which rows are headers:
 - The LaTeX Tagging Project documents this pattern in issue #1056: <https://github.com/latex3/tagging-project/issues/1056>
 - In that thread, LaTeX team maintainers explain that table header scope is present in the PDF tag structure, but PAC (and some other tools) may not interpret the attribute-class form correctly in some cases.
 - Practical guidance: keep `\tagpdfsetup{table/header-rows={...}}`, inspect the tag tree where possible, and treat PAC output as one input among several checks.
-#### 4. Accessible Math
 
-Enable automatic MathML in your preamble:
-```latex
-\tagpdfsetup{math/alt/use}
-```
-
-#### 5. Accessible Colors
+#### 4. Accessible Colors
 
 Use colors with sufficient contrast (WCAG 2.1 Level AA requires 4.5:1 for normal text):
 ```latex
