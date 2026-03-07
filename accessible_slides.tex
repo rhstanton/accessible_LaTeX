@@ -163,7 +163,7 @@
   \ifnum\value{page}=1\relax
     % --- title slide footer content ---
     \hspace*{-.2in}%
-    \raisebox{0.0in}[.25in][.0in]{\includegraphics[width=.45in,alt={UC Berkeley Haas School of Business logo}]{BerkeleyHaas}}
+    \raisebox{0.0in}[.25in][.0in]{\includegraphics[width=.45in,alt={Berkeley Haas logo}]{BerkeleyHaas}}
     \hfill \hspace*{-.5in} Richard Stanton, \the\year \hfill 
   \else
     % Other slides: frame number only, right-aligned
@@ -721,6 +721,7 @@ python strip\_af.py build/accessible\_slides.pdf
 \end{frame}
 
 \begin{frame}{Validator-specific notes}
+  \small
   \begin{itemize}
   \item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
     \begin{itemize}
@@ -730,7 +731,7 @@ python strip\_af.py build/accessible\_slides.pdf
     \item Acrobat's checker incorrectly expects it only in lists
     \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
     \end{itemize}
-  
+
   \item \textbf{PAC table warning (known behavior)}
     \begin{itemize}
     \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
@@ -744,7 +745,7 @@ python strip\_af.py build/accessible\_slides.pdf
     \item Report minimal reproductions to tool vendors when possible
     \end{itemize}
 
-\item \textbf{Bottom line}
+  \item \textbf{Bottom line}
     \begin{itemize}
     \item Use multiple validators (Ally, veraPDF, PAC, Acrobat) and compare findings
     \item Treat one-tool warnings as signals to investigate, not proof of errors
