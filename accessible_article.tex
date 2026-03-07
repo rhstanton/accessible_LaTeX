@@ -36,9 +36,6 @@
 % ======================================================================
 
 \usepackage[margin=1in]{geometry}%
-
-
-\usepackage[margin=1in]{geometry}%
 \usepackage{fontspec}       % Font selection for LuaLaTeX (provides \setmainfont, \setsansfont)
 \usepackage{unicode-math}   % Unicode math fonts (provides \setmathfont + automatic MathML)
 \usepackage{graphicx}       % Graphics support (for \includegraphics)
@@ -68,7 +65,7 @@
 % CUSTOM COMMANDS FOR TEXT COLORS
 % ======================================================================
 % Shortcuts for commonly used colors in teaching materials
-% Use these to maintain consistent, accessible colors throughout your slides
+% Use these to maintain consistent, accessible colors throughout your documents
 
 \newcommand\tb[1]{\textcolor{blue}{#1}}                       % Blue text
 \newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}     % Red text (accessible)
@@ -99,7 +96,7 @@
 \newcommand{\hrefu}[2]{\href{#1}{\uline{#2}}}  % Hyperlink with underline
 \newcommand{\urlu}[1]{\uline{\url{#1}}}        % URL with underline
 
-% Set link colors (blue for consistency with heading color in slides)
+% Set link colors (blue for consistency)
 \hypersetup{
   colorlinks=true,
   linkcolor=blue,   % Internal links (TOC, references)
@@ -161,8 +158,8 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 \subsection{Converting to accessible LaTeX: Overview}
 
 \begin{itemize}
-\item \tg{\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
-\item \tg{\textbf{The changes are minimal}} and follow consistent patterns
+\item {\color{AccessibleGreen}\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
+\item {\color{AccessibleGreen}\textbf{The changes are minimal}} and follow consistent patterns
 \end{itemize}
 
 \bigskip
@@ -184,7 +181,7 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 
 \bigskip
 
-\noindent Both require LaTeX kernel 2025-11-01 (see next sections for details). 
+\noindent Both require LaTeX kernel 2025-11-01 or later (see next sections for details).
 
 \bigskip
 
@@ -197,7 +194,7 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 
 \begin{itemize}
 \item \tg{Minimum:} TeX Live 2023 or later with all packages updated
-\item \tg{Critical:} Must have LaTeX kernel 2025-11-01
+\item \tg{Critical:} Must have LaTeX kernel 2025-11-01 or later
   \begin{itemize}
   \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
   \item Or use Overleaf Labs (see next section)
@@ -336,26 +333,6 @@ Whether you're creating slides or articles, these requirements are \tb{the same}
   \end{itemize}
 \end{itemize}
 
-\subsection{Optional validator cleanup for some checkers (\texttt{strip\_af.py})}
-
-\begin{itemize}
-\item Even with the metadata settings above, some builds may still include PDF Associated File entries.
-\item These are typically harmless helper attachments, but some strict conformance checkers can still flag them.
-\item Ally can still score 100\% without this step; run \texttt{strip\_af.py} when you need checker-specific conformance cleanup.
-\end{itemize}
-
-\bigskip
-
-\noindent \fbox{%
-{\ttfamily\small
-python build/strip\_af.py accessible\_article.pdf
-}
-}
-
-\bigskip
-
-\noindent This writes \texttt{accessible\_article.noaf.pdf}, removing /AF and embedded-file structures while preserving document content and accessibility tagging.
-
 \section{The basics}
 
 \begin{itemize}
@@ -369,10 +346,6 @@ python build/strip\_af.py accessible\_article.pdf
 \section{Figures}
 
 When including a figure, you \tr{must provide alt text} describing the image for screen readers. This is \emph{required} for accessibility compliance.\\
-
-%\subsection{How to Add Alt Text}
-
-%Add the \texttt{alt} parameter to \texttt{\textbackslash includegraphics}:\\
 
 \noindent \fbox{%
   \ttfamily\small
@@ -391,8 +364,7 @@ When including a figure, you \tr{must provide alt text} describing the image for
 
 \section{Tables}
 
-When including a table, you \tr{must specify which rows are headers}. Screen readers use this information to help users navigate table content. 
-%\subsection{How to Tag Table Headers}
+When including a table, you \tr{must specify which rows are headers}. Screen readers use this information to help users navigate table content.
 Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{before} the \texttt{tabular} environment:
 \begin{itemize}
 \item Use \texttt{\{1\}} for 1 header row
@@ -450,8 +422,6 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
     \begin{itemize}
     \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table
     \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 header rows, etc.
-%   \item Must list \emph{all} header rows — \texttt{\{1\}} won't work if header spans 2 rows!
-%    \item Forget this and screen readers can't navigate your tables properly
     \end{itemize}
     
   \item \tr{Insufficient color contrast}
@@ -466,7 +436,6 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
   \item \tr{Using the wrong compiler}
     \begin{itemize}
     \item Make sure your editor is set to use \tg{LuaLaTeX}, not \tr{pdfLaTeX}
-%    \item Check this \emph{every time} you open the project
     \end{itemize}
     
   \item \tr{Old TeX distribution}
@@ -476,37 +445,6 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
     \end{itemize}
     
   \end{itemize}
-
-
-\section{Validator-specific notes}
-
-\noindent \textbf{Not all validator warnings indicate real problems.} Some are \textit{validator bugs}:
-
-  \begin{itemize}
-  \item \textbf{Acrobat: ``Lbl and LBody -- Failed''} 
-    \begin{itemize}
-    \item Appears around figure captions, section numbers, table captions
-    \item \tg{This is a validator bug}, not a source error
-    \item The \texttt{<Lbl>} tag is correctly used for numbering
-    \item Acrobat's checker incorrectly expects it only in lists
-    \item \textbf{Safe to ignore} -- your PDF structure is correct
-    \item References:
-      \begin{itemize}
-      \item LaTeX developer Ulrike Fischer: ``Adobe doesn't like the (valid) use of Lbl for the section numbers, complain to them that they should correct their checker.'' (\urlu{https://tex.stackexchange.com/a/709655/2388})
-      \item Adobe Community expert Philip Kiff: ``<Lbl> is getting flagged as an error by Acrobat Pro DC by mistake... you could just ignore this error and wait until Acrobat fixes their built-in tester.''
-      \end{itemize}
-    \end{itemize}
-    
-  \item \textbf{PAC: ``Table header cell has no associated subcells''}
-    \begin{itemize}
-    \item Often a validator interpretation issue
-    \item Verify your \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} is correct
-    \item PAC may not fully handle attribute-class form for table scope
-    \item Known behavior: \urlu{https://github.com/latex3/tagging-project/issues/1056}
-    \end{itemize}
-  \end{itemize}
-
-\noindent \textbf{Recommendation:} Use multiple validators (Ally, veraPDF, PAC) and compare findings. No single checker catches everything, and each may have quirks.
 
 
 \section{Getting started: Common steps for both}
@@ -559,7 +497,7 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 \item A practical workflow is to run more than one checker and compare findings.
 \end{itemize}
 
-\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses), veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}), and PAC (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/}).
+\noindent \textbf{Checkers used so far:} Ally (the accessibility checker built into bCourses), veraPDF (open-source PDF conformance validator, \urlu{https://verapdf.org/}), PAC (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/}), and Acrobat.
 
 \section{Optional validator cleanup step: \texttt{strip\_af.py}}
 
@@ -570,18 +508,25 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 \end{itemize}
 
 \begin{quote}\ttfamily
-python strip\_af.py build/yourfile.pdf build/yourfile.noaf.pdf
+python strip\_af.py build/yourfile.pdf
 \end{quote}
 
 \begin{itemize}
-\item Validate \texttt{build/yourfile.noaf.pdf} with \texttt{veraPDF}.
+\item Then validate \texttt{build/yourfile.pdf} with \texttt{veraPDF}.
 \item Prerequisite for the script: \texttt{python -m pip install pikepdf}
 \end{itemize}
 
 \section{Validator-specific notes}
 
 \begin{itemize}
-\item \textbf{This is often a validator interpretation issue, not necessarily a source-tagging error.}
+\item \textbf{Not all validator warnings indicate real source problems.}
+\item \textbf{Acrobat: ``Lbl and LBody -- Failed''}
+  \begin{itemize}
+  \item Often appears around figure captions, section numbers, and table captions
+  \item This is usually an Acrobat checker bug, not a source-tagging error
+  \item The \texttt{<Lbl>} tag is valid for numbering
+  \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
+  \end{itemize}
 \item \textbf{PAC table warning (known behavior)}
   \begin{itemize}
   \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct

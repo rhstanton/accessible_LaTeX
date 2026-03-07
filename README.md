@@ -27,7 +27,7 @@ Templates for creating **accessible LaTeX documents** (both slides and articles)
 
 ### Requirements
 
-- TeX Live 2023+ with LaTeX kernel 2025-11-01 (update via TeX Live Manager/Utility)
+- TeX Live 2023+ with LaTeX kernel 2025-11-01 or later (update via TeX Live Manager/Utility)
 - Or use Overleaf Labs with Rolling TeXLive
 
 **That's it!** See below for complete details, examples, and migration guides.
@@ -62,7 +62,7 @@ Both templates use infrastructure from the [LaTeX Tagging Project](https://latex
 - **Automatic tagging**: Document structure, headings, lists, etc.
 - **MathML generation**: Makes math accessible to screen readers (via LuaLaTeX)
 - **Consistent approach**: Same accessibility techniques work across document types
-- **Requires LaTeX kernel 2025-11-01**: Update your TeX Live installation (see installation instructions below)
+- **Requires LaTeX kernel 2025-11-01 or later**: Update your TeX Live installation (see installation instructions below)
 
 ### For Articles: Your existing class + accessibility
 
@@ -401,7 +401,7 @@ Whether migrating slides or articles, you need to:
    }
    ```
 
-2. **Add `\tagpdfsetup{math/alt/use}`** to your preamble (enables automatic MathML)
+2. **Ensure `math/alt/use` is enabled in `\DocumentMetadata`** (as shown above in `tagging-setup`, enables automatic MathML)
 
 3. **Tag all images** with alt text:
    ```latex
@@ -449,7 +449,7 @@ After completing the common steps above:
    - Navigation symbols and footline customizations (ltx-talk uses different approach)
 
 3. **Copy slide-specific configuration** from `accessible_slides.tex` preamble:
-   - Frame title tagging as H2
+   - Frame title tagging as H1
    - Page numbering customization
    - Footer/header setup (uses standard LaTeX, not Beamer templates)
    - Color definitions using `\colorlet` or `\definecolor` (not `\setbeamercolor`)
@@ -544,10 +544,10 @@ To verify your slides meet accessibility requirements:
 - Optional strict-archival cleanup command:
 
 ```bash
-python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf
+python strip_af.py build/yourfile.pdf
 ```
 
-- Validate the `.noaf.pdf` output with veraPDF.
+- Then validate `build/yourfile.pdf` with veraPDF.
 - Prerequisite for the script: `python -m pip install pikepdf`.
 
 ## Validator-Specific Notes
@@ -588,7 +588,7 @@ python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf
 **Math doesn't render correctly**
 
 - Make sure you're using LuaLaTeX, not pdfLaTeX or XeLaTeX
-- Check that `\tagpdfsetup{math/alt/use}` is in your preamble
+- Check that `math/alt/use` is enabled in your `\DocumentMetadata` `tagging-setup`
 
 **Acrobat complains about "H1 tag with no text" in ltx-talk slides**
 
@@ -626,7 +626,7 @@ A: Yes, but you'll need to manually create MathML files for every equation. LuaL
 A: The basic frame structure (`\begin{frame}...\end{frame}`) is similar, but Beamer themes, color schemes, templates, and most setup commands won't work. You'll need to recreate your styling using standard LaTeX commands and packages. See the "Migrating from Beamer" section above for details.
 
 **Q: Do I need to install any packages?**
-A: No separate package installation needed, but you must have an up-to-date TeX Live installation (2023 or later) with LaTeX kernel 2025-11-01 required by `ltx-talk`. Update using TeX Live Manager (Windows) or TeX Live Utility (Mac).
+A: No separate package installation needed, but you must have an up-to-date TeX Live installation (2023 or later) with LaTeX kernel 2025-11-01 or later required by `ltx-talk`. Update using TeX Live Manager (Windows) or TeX Live Utility (Mac).
 
 **Q: Can I use my own fonts?**
 A: Yes! The font configuration is optional. Just remove or modify the `\setmainfont`, `\setsansfont`, and `\setmathfont` commands in the preamble.
@@ -641,13 +641,14 @@ A: Run `tlmgr --version` in your terminal.
 A: Check that all images have `alt` text, all tables have `table/header-rows` specified, and you're compiling with LuaLaTeX.
 
 **Q: Why does veraPDF complain even when Ally is 100%?**
-A: Ally and veraPDF check different things. Ally focuses on accessibility usability (tags, alt text, structure), while veraPDF enforces strict PDF/A archival rules. A file can be accessible enough for Ally but still contain associated-file metadata (`/AF`, embedded helper files) that veraPDF flags. If you need strict veraPDF/PDF-A compliance, run optional cleanup: `python strip_af.py build/yourfile.pdf build/yourfile.noaf.pdf` and validate the resulting `.noaf.pdf` file.
+A: Ally and veraPDF check different things. Ally focuses on accessibility usability (tags, alt text, structure), while veraPDF enforces strict PDF/A archival rules. A file can be accessible enough for Ally but still contain associated-file metadata (`/AF`, embedded helper files) that veraPDF flags. If you need strict veraPDF/PDF-A compliance, run optional cleanup: `python strip_af.py build/yourfile.pdf` and then validate `build/yourfile.pdf`.
 
 ## Appendix: Checkers Used So Far
 
 - **Ally:** Accessibility checker built into bCourses, used to review accessibility issues in course materials.
 - **veraPDF:** Open-source PDF conformance validator: https://verapdf.org/
 - **PAC:** PDF Accessibility Checker (PDF/UA-focused validator): https://pac.pdf-accessibility.org/
+- **Acrobat:** Adobe Acrobat Pro accessibility checker (useful cross-check, but known false positives can occur)
 
 ## Questions or Suggestions?
 
