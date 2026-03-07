@@ -43,7 +43,7 @@
 % similar to Beamer: \begin{frame}{Title}
 %
 % CRITICAL REQUIREMENTS:
-% - LaTeX Engine: LuaLaTeX strongly recommended (this template requires it)
+% - LaTeX Engine: LuaLaTeX required for this template
 %   * pdfLaTeX has partial support but requires manual MathML files
 %   * XeLaTeX does NOT support accessibility tagging
 % - TeX Distribution: TeX Live 2023 or later with all packages updated
@@ -61,7 +61,6 @@
 % ======================================================================
 \usepackage{booktabs}      % Professional-quality tables
 \usepackage{xcolor}          % Color support (needed for accessibility-friendly colors)
-\usepackage{fancyvrb}      % Enhanced verbatim environment
 \usepackage[normalem]{ulem} % Underline support (normalem prevents emphasis from being underlined)
 
 % ======================================================================
@@ -731,7 +730,7 @@ python strip\_af.py build/accessible\_slides.pdf
     \item Acrobat's checker incorrectly expects it only in lists
     \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
     \end{itemize}
-
+  
   \item \textbf{PAC table warning (known behavior)}
     \begin{itemize}
     \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
@@ -745,7 +744,7 @@ python strip\_af.py build/accessible\_slides.pdf
     \item Report minimal reproductions to tool vendors when possible
     \end{itemize}
 
-  \item \textbf{Bottom line}
+\item \textbf{Bottom line}
     \begin{itemize}
     \item Use multiple validators (Ally, veraPDF, PAC, Acrobat) and compare findings
     \item Treat one-tool warnings as signals to investigate, not proof of errors
@@ -765,7 +764,7 @@ python strip\_af.py build/accessible\_slides.pdf
 % If you use a different editor: You can safely ignore or delete this section
 %
 % Key settings explained:
-%   - TeX-engine: luatex           -> Forces LuaLaTeX (STRONGLY RECOMMENDED!)
+%   - TeX-engine: luatex           -> Forces LuaLaTeX (REQUIRED FOR THIS TEMPLATE)
 %   - TeX-command-extra-options    -> Adds -interaction=nonstopmode flag
 %   - TeX-master: t                -> This file is its own master document
 %   - eval: commands               -> Custom Emacs functions for this file

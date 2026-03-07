@@ -18,7 +18,7 @@
 }
 
 % CRITICAL REQUIREMENTS:
-% - LaTeX Engine: LuaLaTeX strongly recommended (this template requires it)
+% - LaTeX Engine: LuaLaTeX required for this template
 %   * pdfLaTeX has partial support but requires manual MathML files
 %   * XeLaTeX does NOT support accessibility tagging
 % - TeX Distribution: TeX Live 2023 or later with all packages updated
@@ -41,7 +41,6 @@
 \usepackage{graphicx}       % Graphics support (for \includegraphics)
 \usepackage{booktabs}       % Professional-quality tables
 \usepackage{xcolor}         % Color support (needed for accessibility-friendly colors)
-\usepackage{fancyvrb}       % Enhanced verbatim environment
 \usepackage[normalem]{ulem} % Underline support (normalem prevents emphasis from being underlined)
 
 % ======================================================================
@@ -557,7 +556,7 @@ python strip\_af.py build/yourfile.pdf
 % If you use a different editor: You can safely ignore or delete this section
 %
 % Key settings explained:
-%   - TeX-engine: luatex           -> Forces LuaLaTeX (STRONGLY RECOMMENDED!)
+%   - TeX-engine: luatex           -> Forces LuaLaTeX (REQUIRED FOR THIS TEMPLATE)
 %   - TeX-command-extra-options    -> Adds -interaction=nonstopmode flag
 %   - TeX-master: t                -> This file is its own master document
 %   - eval: commands               -> Custom Emacs functions for this file

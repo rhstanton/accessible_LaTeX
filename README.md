@@ -30,7 +30,7 @@ Templates for creating **accessible LaTeX documents** (both slides and articles)
 - TeX Live 2023+ with LaTeX kernel 2025-11-01 or later (update via TeX Live Manager/Utility)
 - Or use Overleaf Labs with Rolling TeXLive
 
-**That's it!** See below for complete details, examples, and migration guides.
+**That's it.** See below for details and examples. For canonical setup requirements, use `Quick Start -> Requirements`; later mentions are troubleshooting reminders.
 
 📊 **[View example slides PDF](accessible_slides.pdf)** for template output and detailed migration guidance.
 
@@ -43,12 +43,11 @@ This project provides two complete templates demonstrating accessible LaTeX docu
 1. **`accessible_article.tex`** - Standard documents using the `article` class with accessibility features
 2. **`accessible_slides.tex`** - Presentation slides using the `ltx-talk` class (Beamer replacement)
 
-Both templates serve multiple purposes:
+Both templates provide:
 
-- **Working examples** - Complete documents with math, text, graphics, and tables you can copy and adapt
-- **Documentation** - Heavily commented code explaining what you need to do and how each part works
-- **Quick migration path** - Copy preambles and add accessibility tags to your existing LaTeX files
-- **Guidance** - Best practices for creating accessible content
+- **Working examples** - Complete documents with math, text, graphics, and tables you can adapt
+- **Documentation** - Heavily commented code explaining what to change and why
+- **Migration guidance** - Practical steps for updating existing LaTeX files
 
 Both templates achieve a **100% accessibility score** from the bCourses (Canvas) Ally accessibility checker.
 
@@ -169,7 +168,7 @@ Regardless of document type, you need to:
 - Just add the common requirements above
 
 **For slides**: Use the new `ltx-talk` class instead of `beamer`  
-- Same `frame` syntax as Beamer (easy migration!)  
+- Familiar `frame` syntax as Beamer, but preamble migration is still required  
 - Handles slide-specific tagging automatically
 
 ## Features
@@ -201,7 +200,7 @@ Additional features by template:
 ### Requirements
 
 - **LaTeX Distribution**: TeX Live 2023 or later
-- **LaTeX Engine**: LuaLaTeX (strongly recommended - see below)
+- **LaTeX Engine**: LuaLaTeX (required for these templates)
 - **Fonts**: Lato and LeteSansMath.otf (optional - included in TeX Live)
 
 **Note on fonts**: The font configuration in this template is **optional** and purely for visual consistency. The accessibility features work with any font. Lato and LeteSansMath.otf are included in modern TeX distributions.
@@ -210,15 +209,13 @@ Additional features by template:
 
 ### Why LuaLaTeX?
 
-LuaLaTeX is **strongly recommended** for full accessibility features:
+LuaLaTeX is **required** for these templates:
 
 1. **Automatic MathML Generation**: LuaLaTeX can automatically generate MathML for equations through the built-in `luamml` package, making math accessible to screen readers without any extra work.
 
-2. **PDF Tagging Support**: While the LaTeX tagging project now supports both pdfLaTeX and LuaLaTeX, LuaLaTeX provides the most complete and automatic accessibility support.
+2. **PDF Tagging Support**: While the LaTeX tagging project now supports both pdfLaTeX and LuaLaTeX, this repository standardizes on LuaLaTeX for a single, consistent workflow.
 
-3. **Modern Font Support**: LuaLaTeX handles OpenType fonts (like Lato and LeteSansMath.otf) natively, essential for proper Unicode support and consistent rendering.
-
-4. **Full UTF-8 Support**: Crucial for accessibility, especially for screen readers and international character sets.
+3. **Modern Font + Unicode Support**: LuaLaTeX handles OpenType fonts (like Lato and LeteSansMath.otf) and UTF-8 reliably for screen readers and international text.
 
 **Note on pdfLaTeX**: While pdfLaTeX has partial support for PDF tagging, it requires manually providing MathML in separate files for equations, which is tedious and error-prone. For this reason, **this template requires LuaLaTeX**.
 
@@ -235,7 +232,7 @@ LuaLaTeX is **strongly recommended** for full accessibility features:
 - **Will NOT work**: 
   - TeX Live 2022 or earlier
 
-**Why these versions?** The accessibility features require:
+**Why these versions?** These accessibility features require:
 
 - LaTeX kernel 2025-11-01 or later (required by `ltx-talk` class)
 - Modern `\DocumentMetadata` support and tagging infrastructure
@@ -423,9 +420,7 @@ Whether migrating slides or articles, you need to:
 
 After completing the common steps above:
 
-**That's it!** Keep your existing `\documentclass{article}` (or `report`, `book`, etc.).
-
-No class change needed. No special article-specific configuration required.
+**That's it.** Keep your existing `\documentclass{article}` (or `report`, `book`, etc.). No class change is required.
 
 See [`accessible_article.tex`](accessible_article.tex) for a complete working example.
 
@@ -465,9 +460,9 @@ After completing the common steps above:
    - Use standard LaTeX packages and commands for colors, fonts, and layout
    - See `accessible_slides.tex` for examples of styling without Beamer themes
    - Test incrementally as you migrate each feature
-   - **Once working**: Save your preamble and reuse it for all future talks!
+   - **Once working**: Reuse that preamble for future talks.
 
-**Reality check**: While the frame environment is similar, ltx-talk is a different class with its own approach. Plan time to recreate your visual styling using standard LaTeX techniques rather than Beamer's theme system. **However**, this is mostly **one-time preamble work**—once you have a working setup, copy that preamble to all future presentations. Your slide content (frames) mostly works as-is.
+**Reality check**: The frame environment is similar, but ltx-talk is a different class. Plan time to recreate styling with standard LaTeX tools instead of Beamer themes. This is mostly one-time preamble work; once your setup is solid, reuse it across future presentations.
 
 See [`accessible_slides.tex`](accessible_slides.tex) for a complete working example.
 
@@ -518,7 +513,7 @@ This template includes pre-tested accessible colors that meet WCAG requirements.
 
 ## Testing Accessibility
 
-To verify your slides meet accessibility requirements:
+To verify your documents meet accessibility requirements:
 
 1. Upload your PDF to Canvas/bCourses
 2. Check the Ally accessibility score (should be 100%)
@@ -547,6 +542,7 @@ To verify your slides meet accessibility requirements:
 python strip_af.py build/yourfile.pdf
 ```
 
+- Output location depends on your build flow (for example, `latexmk -outdir=build` vs default output in the project root).
 - Then validate `build/yourfile.pdf` with veraPDF.
 - Prerequisite for the script: `python -m pip install pikepdf`.
 
@@ -620,7 +616,7 @@ python strip_af.py build/yourfile.pdf
 ## Frequently Asked Questions
 
 **Q: Can I use pdfLaTeX instead of LuaLaTeX?**
-A: Yes, but you'll need to manually create MathML files for every equation. LuaLaTeX does this automatically, saving significant time and effort.
+A: Not for these templates. Use LuaLaTeX. While pdfLaTeX has partial tagging support, it requires manual MathML management and does not match the intended workflow or guidance here.
 
 **Q: Will my existing Beamer slides work with ltx-talk?**
 A: The basic frame structure (`\begin{frame}...\end{frame}`) is similar, but Beamer themes, color schemes, templates, and most setup commands won't work. You'll need to recreate your styling using standard LaTeX commands and packages. See the "Migrating from Beamer" section above for details.
@@ -642,13 +638,6 @@ A: Check that all images have `alt` text, all tables have `table/header-rows` sp
 
 **Q: Why does veraPDF complain even when Ally is 100%?**
 A: Ally and veraPDF check different things. Ally focuses on accessibility usability (tags, alt text, structure), while veraPDF enforces strict PDF/A archival rules. A file can be accessible enough for Ally but still contain associated-file metadata (`/AF`, embedded helper files) that veraPDF flags. If you need strict veraPDF/PDF-A compliance, run optional cleanup: `python strip_af.py build/yourfile.pdf` and then validate `build/yourfile.pdf`.
-
-## Appendix: Checkers Used So Far
-
-- **Ally:** Accessibility checker built into bCourses, used to review accessibility issues in course materials.
-- **veraPDF:** Open-source PDF conformance validator: https://verapdf.org/
-- **PAC:** PDF Accessibility Checker (PDF/UA-focused validator): https://pac.pdf-accessibility.org/
-- **Acrobat:** Adobe Acrobat Pro accessibility checker (useful cross-check, but known false positives can occur)
 
 ## Questions or Suggestions?
 
