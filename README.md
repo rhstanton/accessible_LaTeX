@@ -2,7 +2,7 @@
 
 As of April 2026, updated ADA requirements mean digital course materials, including materials in password-protected course sites, must comply with accessibility standards ([WCAG 2.1 Level AA](https://www.w3.org/WAI/standards-guidelines/wcag/)). Many instructors create course materials in LaTeX, but standard LaTeX (including Beamer) does not automatically generate accessible PDFs. 
 
-This repository provides practical templates and migration guidance to satisfy those requirements.
+This repository provides practical templates and migration guidance to satisfy those requirements. `accessible_slides.tex` is the master reference document for accessibility requirements and migration guidance in this repository.
 
 **Author**: Richard Stanton, UC Berkeley  
 **Date**: Feb 10, 2026  
