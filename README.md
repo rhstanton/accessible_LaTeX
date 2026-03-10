@@ -1,6 +1,8 @@
 # Accessible LaTeX Templates (v1.4)
 
-Templates for creating **accessible LaTeX documents** (both slides and articles) that comply with **WCAG 2.1 Level AA** accessibility standards and ADA digital accessibility requirements.
+As of April 2026, updated ADA requirements mean digital course materials, including materials in password-protected course sites, must comply with accessibility standards ([WCAG 2.1 Level AA](https://www.w3.org/WAI/standards-guidelines/wcag/)). Many instructors create course materials in LaTeX, but standard LaTeX (including Beamer) does not automatically generate accessible PDFs. 
+
+This repository provides practical templates and migration guidance to satisfy those requirements.
 
 **Author**: Richard Stanton, UC Berkeley  
 **Date**: Feb 10, 2026  
