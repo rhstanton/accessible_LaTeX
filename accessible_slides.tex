@@ -180,6 +180,65 @@
   element-order = {framenumber},
 }
 
+% Put section titles into list of PDF bookmarks
+
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{xparse}
+
+\makeatletter
+\DeclareCommandCopy{\origsection}{\section}
+
+\RenewDocumentCommand{\section}{s o m}
+  {%
+    % Run the original \section, but suppress hyperref's automatic bookmark.
+    \begingroup
+      \let\rs@Hy@writebookmark\Hy@writebookmark
+      \def\Hy@writebookmark##1##2##3##4##5{}%
+      \IfBooleanTF{#1}
+        {%
+          \phantomsection
+          \IfNoValueTF{#2}
+            {\origsection*{#3}}
+            {\origsection*[#2]{#3}}%
+        }
+        {%
+          \IfNoValueTF{#2}
+            {\origsection{#3}}
+            {\origsection[#2]{#3}}%
+        }%
+    \endgroup
+    % Now add exactly one bookmark, with the text you want.
+    \IfBooleanTF{#1}
+      {%
+        \IfNoValueTF{#2}
+          {\pdfbookmark[1]{#3}{section*.\thepage.\number\inputlineno}}
+          {\pdfbookmark[1]{#2}{section*.\thepage.\number\inputlineno}}%
+      }
+      {%
+        \IfNoValueTF{#2}
+          {\pdfbookmark[1]{Section \thesection: #3}{section.\thesection}}
+          {\pdfbookmark[1]{Section \thesection: #2}{section.\thesection}}%
+      }%
+  }
+\makeatother
+
+% Put slide titles into list of PDF bookmarks
+
+\ExplSyntaxOn
+\int_new:N \g_rs_frame_bm_int
+
+\AddToHook{cmd/frametitle/after}{%
+  \tl_if_empty:NF \g__talk_frame_title_tl
+    {
+      \int_gincr:N \g_rs_frame_bm_int
+      \pdfbookmark[2]{\tl_use:N \g__talk_frame_title_tl}
+        {frame-\int_use:N \g_rs_frame_bm_int}
+    }
+}
+\ExplSyntaxOff
+
+
 % ======================================================================
 % FONT CONFIGURATION (OPTIONAL)
 % ======================================================================
@@ -243,8 +302,8 @@
 % Keep title slide unnumbered and start content slide numbering at 1.
 \setcounter{frame}{0}
 
-\section{Introduction}
 
+\section{Introduction}
 \begin{frame}{Introduction}
 
 \begin{itemize}
@@ -593,7 +652,7 @@ but you need to provide a \tr{text description}.
   \item \tr{Forgetting alt text for images}
     \begin{itemize}
     \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
-    \item Even decorative images need alt text (use \texttt{alt=\{decorative\}})
+    \item For purely decorative images, use empty alt text: \texttt{alt=\{\}}
     \end{itemize}
     
   \item \tr{Not specifying table header rows}

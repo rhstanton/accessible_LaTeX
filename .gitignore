@@ -36,3 +36,4 @@ Thumbs.db
 
 # But DO keep the main PDF in the root for easy viewing
 !accessible.pdf
+.aider*
