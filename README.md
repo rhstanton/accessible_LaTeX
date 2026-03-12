@@ -1,669 +1,408 @@
 # Accessible LaTeX Templates (v1.4)
 
-Richard Stanton, UC Berkeley  
+![License: CC0](https://img.shields.io/badge/license-CC0-blue)  
+![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)  
+![Engine](https://img.shields.io/badge/engine-LuaLaTeX-blue)
+
+Richard Stanton — UC Berkeley  
 Feb 10, 2026  
+
 https://github.com/rhstanton/accessible_LaTeX
 
 ---
 
-As of April 2026, updated ADA requirements mean digital course materials, including materials in password-protected course sites, must comply with accessibility standards ([WCAG 2.1 Level AA](https://www.w3.org/WAI/standards-guidelines/wcag/)). Many instructors create course materials in LaTeX, but standard LaTeX (including Beamer) does not automatically generate accessible PDFs. 
+## Overview
 
-This repository provides practical templates and migration guidance to satisfy those requirements. `accessible_slides.tex` is the master reference document.
+As of **April 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
 
-📊 **[View accessible_slides.pdf](accessible_slides.pdf)** for template output and detailed migration guidance.
+Many instructors write course materials in **LaTeX**, but standard LaTeX (including Beamer) does **not automatically generate accessible PDFs**.
 
----
+This repository provides **working templates and migration guidance** for creating accessible LaTeX documents that meet those requirements.
 
-## Quick Summary (TL;DR)
+📊 **Example output**
 
-**Making LaTeX accessible is straightforward.** Most requirements are the same for both slides and articles:
+- [accessible_slides.pdf](accessible_slides.pdf)
+- [accessible_article.pdf](accessible_article.pdf)
 
-### Five Common Steps (Apply to Everything)
+The slides document is the most complete example and the best place to start.
 
-1. **Add `\DocumentMetadata`** before `\documentclass` (configures PDF tagging)
-2. **Tag images**: `\includegraphics[alt={description}]{file}`
-3. **Tag tables**: `\tagpdfsetup{table/header-rows={1}}` (or `{1,2}`, etc.)
-4. **Use accessible colors**: Sufficient contrast (avoid light yellow/cyan)
-5. **Compile with LuaLaTeX** (automatic MathML for equations)
+Two templates are included:
 
-### Plus One Class-Specific Step
-
-- **For articles**: Nothing! Keep `\documentclass{article}` (or `report`, `book`, etc.)
-- **For slides**: Change `\documentclass{beamer}` to `\documentclass[frame-title-arg]{ltx-talk}` **plus** recreate preamble styling (Beamer themes don't work—but this is one-time setup you reuse for all future talks)
-
-### Requirements
-
-- TeX Live 2023+ with LaTeX kernel 2025-11-01 or later (update via TeX Live Manager/Utility)
-- Or use Overleaf Labs with Rolling TeXLive
-
-**That's it.** See below for details and examples. For canonical setup requirements, use `Quick Start -> Requirements`; later mentions are troubleshooting reminders.
+- **`accessible_slides.tex`** — accessible presentation slides using `ltx-talk`
+- **`accessible_article.tex`** — accessible article-style documents
 
 ---
 
-## What is this?
+# Quick Summary (TL;DR)
 
-This project provides two complete templates demonstrating accessible LaTeX document creation using the LaTeX Tagging Project:
+Making LaTeX accessible requires **five common steps**.
 
-1. **`accessible_article.tex`** - Standard documents using the `article` class with accessibility features
-2. **`accessible_slides.tex`** - Presentation slides using the `ltx-talk` class (Beamer replacement)
+These apply to both **slides and articles**.
 
-Both templates provide:
+### Five Common Steps
 
-- **Working examples** - Complete documents with math, text, graphics, and tables you can adapt
-- **Documentation** - Heavily commented code explaining what to change and why
-- **Migration guidance** - Practical steps for updating existing LaTeX files
+1. Add `\DocumentMetadata` before `\documentclass`
+2. Tag images with alt text
+3. Tag table header rows
+4. Use accessible color contrast
+5. Compile with **LuaLaTeX**
 
-Both templates achieve a **100% accessibility score** from the bCourses (Canvas) Ally accessibility checker.
+Example:
 
-**📄 View example PDFs**: [Slides PDF](accessible_slides.pdf) | [Article PDF](accessible_article.pdf)
-
-### The LaTeX Tagging Project: Common Foundation
-
-Both templates use infrastructure from the [LaTeX Tagging Project](https://latex3.github.io/tagging-project/), which provides:
-
-- **PDF/A-2u standard**: Archival-quality, accessible PDFs
-- **Automatic tagging**: Document structure, headings, lists, etc.
-- **MathML generation**: Makes math accessible to screen readers (via LuaLaTeX)
-- **Consistent approach**: Same accessibility techniques work across document types
-- **Requires LaTeX kernel 2025-11-01 or later**: Update your TeX Live installation (see installation instructions below)
-
-### For Articles: Your existing class + accessibility
-
-For non-presentation documents, **continue using your existing document class** (`article`, `report`, `book`, etc.):
-
-- **No class change needed**: Keep `\documentclass{article}` (or whatever you use)
-- **Just add accessibility features**: DocumentMetadata, alt text, table tags
-- **Works with standard classes**: The LaTeX Tagging Project integrates seamlessly
-
-### For Slides: ltx-talk class
-
-`ltx-talk` is a presentation document class created specifically for accessible slides:
-
-- **Similar frame syntax**: Uses the familiar `\begin{frame}...\end{frame}` environment
-- **Automatic slide tagging**: Handles presentation-specific structure
-- **Requires manual styling**: Beamer themes don't work—recreate styling in preamble (one-time setup, then reuse)
-- **Included in TeX Live 2023+**: No separate installation needed
-
-## Getting This Repository
-
-This section explains how to download and use these templates. Choose the method that works best for you.
-
-### Method 1: Download ZIP (Easiest - No Git Required)
-
-**Perfect for beginners or if you just want to try the templates:**
-
-1. Click the green **"Code"** button at the top of this page
-2. Select **"Download ZIP"**
-3. Extract the ZIP file to a folder on your computer
-4. Open the `.tex` files in your LaTeX editor (or Overleaf)
-
-**Note**: This method gives you a one-time copy. To get updates later, you'll need to download the ZIP again.
-
-### Method 2: Clone with Git (Recommended for Regular Use)
-
-**Best if you want to easily get updates or contribute improvements:**
-
-#### First-time setup:
-
-1. **Install Git** (if you don't have it):
-   - **Mac**: Git comes pre-installed. Open Terminal and type `git --version` to verify
-   - **Windows**: Download from [git-scm.com](https://git-scm.com/download/win)
-   - **Linux**: Use your package manager, e.g., `sudo apt install git`
-
-2. **Clone the repository**:
-   ```bash
-   cd ~/Documents  # or wherever you want to store it
-   git clone https://github.com/rhstanton/accessible_LaTeX.git
-   cd accessible_LaTeX
-   ```
-
-#### Getting updates later:
-
-When the templates are updated, just run:
-```bash
-cd ~/Documents/accessible_LaTeX  # navigate to your local copy
-git pull
+```latex
+\includegraphics[alt={Description of image}]{figure}
 ```
 
-This downloads only the changes, keeping your local copy up to date.
+```latex
+\tagpdfsetup{table/header-rows={1}}
+```
 
-### Method 3: Fork on GitHub (For Contributors)
+### One Class-Specific Step
 
-**If you plan to customize extensively or contribute back:**
+| Document Type | Requirement |
+|---|---|
+| Articles | Keep `article`, `report`, or `book` |
+| Slides | Replace `beamer` with `ltx-talk` |
 
-1. Click the **"Fork"** button at the top-right of this page
-2. This creates your own copy of the repository under your GitHub account
-3. Clone your fork: `git clone https://github.com/YOUR-USERNAME/accessible_LaTeX.git`
-4. Make changes, commit them, and push back to your fork
-5. Submit a Pull Request if you want to contribute improvements
+---
 
-### Need Help?
+# Minimal Slides Example
 
-- **GitHub Guides**: [https://guides.github.com/](https://guides.github.com/)
-- **Git Basics**: [https://git-scm.com/doc](https://git-scm.com/doc)
-- **Contact**: richard.stanton@berkeley.edu
+```latex
+\DocumentMetadata{
+  pdfstandard=a-2u,   % PDF/A archival standard
+  pdfstandard=ua-1,   % PDF/UA accessibility standard
+  pdfversion=1.7,
+  lang=en-US,
+  tagging=on,
+  tagging-setup={
+    math/alt/use,
+    math/mathml/AF=false,
+    math/tex/AF=false,
+    math/mathml/sources=
+  }
+}
 
-## Why does this exist?
+\documentclass[frame-title-arg]{ltx-talk}
 
-As of April 2026, the updated requirements of the ADA mandate that digital course materials, including those in password-protected course sites, must comply with accessibility standards ([WCAG 2.1 Level AA](https://www.w3.org/WAI/standards-guidelines/wcag/)). 
+\tagpdfsetup{role/new-tag=frametitle/H1}
 
-**The problem**: Standard LaTeX (including Beamer) does not automatically generate accessible PDFs that meet these requirements.
+\ExplSyntaxOn
+\AtBeginDocument{
+  \NewTaggingSocketPlug{talk/sec/title}{none}{}
+  \AssignTaggingSocketPlug{talk/sec/title}{none}
+}
+\ExplSyntaxOff
 
-**The solution**: The LaTeX Tagging Project provides infrastructure for creating accessible PDFs. The good news:
+\title{Accessible LaTeX Slides}
+\author{Richard Stanton}
 
-✅ **Most requirements are the SAME** whether you're creating slides or articles  
-✅ **The changes are minimal** and follow consistent patterns  
-✅ **Your existing LaTeX skills transfer** - you're just adding accessibility features
+\begin{document}
 
-### What's Common to Both Slides and Articles
+\maketitle
 
-Regardless of document type, you need to:
+\begin{frame}{Example Slide}
+Accessible math: \(E = mc^2\)
+\includegraphics[alt={Example image}]{capybara}
+\end{frame}
 
-1. Add `\DocumentMetadata` before `\documentclass` (configures PDF tagging)
-2. Tag figures with alt text: `alt={description}`
-3. Tag table header rows: `\tagpdfsetup{table/header-rows={...}}`
-4. Use accessible colors (sufficient contrast)
-5. Compile with LuaLaTeX for automatic MathML generation
+\end{document}
+```
 
-### What's Different by Document Type
+Compile with:
 
-**For articles**: Keep using your existing class (`article`, `report`, `book`)  
-- No class change needed!  
-- Just add the common requirements above
+```bash
+lualatex example.tex
+```
 
-**For slides**: Use the new `ltx-talk` class instead of `beamer`  
-- Familiar `frame` syntax as Beamer, but preamble migration is still required  
-- Handles slide-specific tagging automatically
+For full configuration and validator workarounds, see `accessible_slides.tex`.
 
-## Features
+---
 
-Both templates demonstrate:
+# Who This Repository Is For
 
-- **Accessible images** with alt text
-- **Accessible tables** with properly tagged header rows
-- **Accessible math** with MathML output
-- **Accessible colors** with sufficient contrast
-- **Proper document structure** with tagged headings
-- **Accessible links** with underlines for visibility
-- Working examples of text, figures, tables, and equations
+This repository is intended for:
 
-Additional features by template:
+- instructors creating **course materials in LaTeX**
+- researchers preparing **accessible PDFs**
+- users migrating **existing LaTeX documents to WCAG-compliant PDFs**
 
-**`accessible_article.tex`**:
-- Standard article structure with sections and subsections
-- Shows how minimal changes are needed for existing documents
-- Demonstrates accessibility with familiar LaTeX workflow
+---
 
-**`accessible_slides.tex`**:
-- Frame-based presentation structure (Beamer-compatible)
-- Custom slide formatting and page numbering
-- Example of numbered and unnumbered slides
+# Article vs Slides
 
-## Quick Start
+| Feature | Articles | Slides |
+|---|---|---|
+| Document class | `article`, `report`, `book` | `ltx-talk` |
+| Class change needed | No | Yes |
+| Frame environment | N/A | Yes |
+| Beamer themes | N/A | Not supported |
+| Accessibility steps | Same for both | Same for both |
 
-### Requirements
+---
 
-- **LaTeX Distribution**: TeX Live 2023 or later
-- **LaTeX Engine**: LuaLaTeX (required for these templates)
-- **Fonts**: Lato and LeteSansMath.otf (optional - included in TeX Live)
+# The LaTeX Tagging Project
 
-**Note on fonts**: The font configuration in this template is **optional** and purely for visual consistency. The accessibility features work with any font. Lato and LeteSansMath.otf are included in modern TeX distributions.
+Both templates use infrastructure from the **LaTeX Tagging Project**.
 
-**✅ Overleaf Support**: You **can** use this template on Overleaf, but it requires special setup through the **Overleaf Labs program**. See the "Using Overleaf" section below for detailed instructions.
+https://latex3.github.io/tagging-project/
 
-### Why LuaLaTeX?
+This provides:
 
-LuaLaTeX is **required** for these templates:
+- automatic **PDF tagging**
+- **MathML generation**
+- structured headings
+- accessible lists and tables
+- PDF/A archival compatibility
 
-1. **Automatic MathML Generation**: LuaLaTeX can automatically generate MathML for equations through the built-in `luamml` package, making math accessible to screen readers without any extra work.
+Requirements:
 
-2. **PDF Tagging Support**: While the LaTeX tagging project now supports both pdfLaTeX and LuaLaTeX, this repository standardizes on LuaLaTeX for a single, consistent workflow.
+- **LaTeX kernel 2025-11-01 or later**
+- **TeX Live 2023+ with updates applied**
 
-3. **Modern Font + Unicode Support**: LuaLaTeX handles OpenType fonts (like Lato and LeteSansMath.otf) and UTF-8 reliably for screen readers and international text.
+---
 
-**Note on pdfLaTeX**: While pdfLaTeX has partial support for PDF tagging, it requires manually providing MathML in separate files for equations, which is tedious and error-prone. For this reason, **this template requires LuaLaTeX**.
+# Quick Start
 
-**XeLaTeX**: Does NOT support the tagging features and should not be used.
+Clone the repository:
 
-### TeX Version Requirements
+```bash
+git clone https://github.com/rhstanton/accessible_LaTeX.git
+cd accessible_LaTeX
+```
 
-- **Minimum**: TeX Live 2023 or later **with updates applied**
-  - **Critical**: Update all packages to get **LaTeX kernel 2025-11-01** (required by `ltx-talk`)
-    - **Windows**: Use TeX Live Manager GUI from Start menu
-    - **Mac**: Use TeX Live Utility app from Applications folder
-    - **Command line**: `tlmgr update --all`
-  - Without this kernel update, `ltx-talk` will not work
-- **Will NOT work**: 
-  - TeX Live 2022 or earlier
+Compile:
 
-**Why these versions?** These accessibility features require:
-
-- LaTeX kernel 2025-11-01 or later (required by `ltx-talk` class)
-- Modern `\DocumentMetadata` support and tagging infrastructure
-- Updated `tagpdf` package integrated into the kernel
-
-If you're using an older TeX distribution, you **must upgrade** before using this template.
-
-### Using Overleaf
-
-**✅ You CAN use this template on Overleaf!** The `ltx-talk` class requires a very recent version of TeX Live, which is available through Overleaf's **Labs program** (not in the standard Overleaf environment).
-
-#### Setup Steps:
-
-1. **Join Overleaf Labs**: 
-   - Visit the [Overleaf Labs participation page](https://www.overleaf.com/labs/participate)
-   - Opt in to the Overleaf Labs program
-   - Enable **"Rolling TeX Live releases"**
-
-2. **Configure your project**:
-   - In your project settings, change **TeX Live version** to **"Rolling TeXLive (labs)"** (at the bottom of the list)
-   - Change your project's **Compiler** to **LuaLaTeX**
-
-#### Additional Resources:
-
-- [Overleaf TeX Live 2025 announcement](https://www.overleaf.com/blog/tex-live-2025-is-now-available)
-- [Creating accessible PDFs in LaTeX on Overleaf](https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs)
-
-### Installing TeX Live Locally
-
-If you prefer to compile locally or don't want to use Overleaf:
-
-**This template requires LuaLaTeX** for automatic MathML generation and full accessibility support.
-
-Command line:
 ```bash
 lualatex accessible_slides.tex
-# or
+```
+
+or
+
+```bash
 lualatex accessible_article.tex
 ```
 
-Or configure your LaTeX editor:
+---
 
-- **TeXShop**: Select "LuaLaTeX" from the typeset menu
-- **TeXworks**: Select "LuaLaTeX" from the dropdown
-- **VS Code with LaTeX Workshop**: Add LuaLaTeX recipe (see extension docs)
-- **Emacs/AUCTeX**: See local variables at end of .tex files
+# Requirements
 
-## Key Accessibility Features
+Minimum environment:
 
-### Common to ALL Documents (Slides and Articles)
+- **TeX Live 2023+**
+- **LaTeX kernel 2025-11-01+**
+- **LuaLaTeX**
 
-These requirements apply whether you're creating slides or articles:
+Update packages if necessary:
 
-#### 1. Document Metadata (REQUIRED - Goes FIRST)
+```bash
+tlmgr update --all
+```
 
-Every document **must** start with this, **before** `\documentclass`:
+---
+
+# Using Overleaf
+
+This template works on **Overleaf** using the **Labs environment**.
+
+Steps:
+
+1. Join the Overleaf Labs program  
+2. Enable **Rolling TeX Live releases**
+3. Set compiler to **LuaLaTeX**
+
+https://www.overleaf.com/labs/participate
+
+---
+
+# Repository Layout
+
+```
+accessible_article.tex
+accessible_slides.tex
+capybara.jpg
+strip_af.py
+.latexmkrc
+```
+
+| File | Purpose |
+|---|---|
+| accessible_article.tex | example accessible article |
+| accessible_slides.tex | example accessible slides |
+| capybara.jpg | sample figure |
+| strip_af.py | optional validator cleanup script |
+| .latexmkrc | build configuration |
+
+---
+
+# Key Accessibility Features
+
+Both templates demonstrate:
+
+- tagged document structure
+- accessible math (MathML)
+- accessible tables
+- alt text for images
+- accessible color contrast
+- accessible links
+
+---
+
+# DocumentMetadata Configuration
+
+Every accessible document must begin with a `\DocumentMetadata{...}` block before `\documentclass`.
+
 ```latex
 \DocumentMetadata{
-  pdfstandard=a-2u,    % PDF/A-2u (archival + Unicode)
-   pdfstandard=ua-1,   % PDF/UA-1 accessibility conformance target
-  lang=en-US,          % Language for screen readers
-  tagging=on,          % Enable PDF tagging
+  pdfstandard=a-2u,
+  pdfstandard=ua-1,
+  pdfversion=1.7,
+  lang=en-US,
+  tagging=on,
   tagging-setup={
-    math/alt/use,           % Keep math accessibility enabled (screen readers get tagged math)
-    math/mathml/AF=false,   % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
-    math/tex/AF=false,      % Do not embed TeX source as Associated Files
-    math/mathml/sources=     % Clear MathML source attachment list (avoid extra embedded helper files)
+    math/alt/use,
+    math/mathml/AF=false,
+    math/tex/AF=false,
+    math/mathml/sources=
   }
 }
 ```
 
-#### 2. Images with Alt Text
+For a complete working example in context, see `accessible_slides.tex`.
 
-Every image needs descriptive text:
+---
+
+# Common Pitfalls
+
+### 1. Using an incomplete `\DocumentMetadata` block
+
+A minimal example may compile, but the recommended configuration is the one used in `accessible_slides.tex`.
+
+### 2. Missing PDF metadata
+
+Some validators require a document title in the XMP metadata.
+
 ```latex
-\includegraphics[alt={Descriptive text here}]{imagefile}
+\title{Document title}
+\author{Author name}
 ```
 
-#### 3. Tables with Header Rows
+### 3. Missing alt text on images
 
-Tell screen readers which rows are headers:
 ```latex
-% For a table with 1 header row:
+\includegraphics[alt={Description of image}]{file}
+```
+
+### 4. Incorrect table header tagging
+
+```latex
 \tagpdfsetup{table/header-rows={1}}
-
-% For a table with 2 header rows:
-\tagpdfsetup{table/header-rows={1,2}}
-
-% For a table with 3 header rows:
-\tagpdfsetup{table/header-rows={1,2,3}}
-
-\begin{tabular}{ccc}
-  % table content
-\end{tabular}
-```
-**Note**: List ALL header row numbers. If your header spans 2 rows, you must use `{1,2}`, not just `{1}`.
-
-**PAC note (known validator behavior)**: Some users still see PAC errors like `Table header cell has no associated subcells` even when `table/header-rows` is set correctly.
-
-- The LaTeX Tagging Project documents this pattern in issue #1056: <https://github.com/latex3/tagging-project/issues/1056>
-- In that thread, LaTeX team maintainers explain that table header scope is present in the PDF tag structure, but PAC (and some other tools) may not interpret the attribute-class form correctly in some cases.
-- Practical guidance: keep `\tagpdfsetup{table/header-rows={...}}`, inspect the tag tree where possible, and treat PAC output as one input among several checks.
-
-#### 4. Accessible Colors
-
-Use colors with sufficient contrast (WCAG 2.1 Level AA requires 4.5:1 for normal text):
-```latex
-\colorlet{AccessibleRed}{red!80!black}      % Darker red
-\colorlet{AccessibleGreen}{green!40!black}  % Darker green
-% Standard blue is fine as-is
 ```
 
-### Class-Specific Features
+### 5. Using the wrong engine
 
-#### For Articles Only
+Use **LuaLaTeX**, not XeLaTeX or pdfLaTeX.
 
-No additional tagging needed! Standard sectioning commands (`\section`, `\subsection`) are automatically tagged.
+### 6. Expecting `ltx-talk` to behave like Beamer
 
-#### For Slides Only (ltx-talk)
+Beamer themes and templates do not transfer directly.
 
-**1. Configure frame titles as H1 headings:**
-```latex
-% Tag frame titles as H1 headings
-\tagpdfsetup{role / new-tag = frametitle / H1}
+### 7. Starting from the wrong file
+
+`accessible_slides.tex` is the most complete example.
+
+---
+
+# Validator Notes
+
+Different accessibility tools check different aspects of a PDF.
+
+### Ally vs archival validators
+
+Ally checks usability and accessibility structure.  
+veraPDF checks strict PDF/A archival conformance.
+
+### Acrobat `<Lbl>` errors
+
+```
+Lbl and LBody – Failed
 ```
 
-**2. Prevent empty H1 tag warnings from `\section` commands:**
+This is a known issue with Acrobat’s accessibility checker and can generally be ignored.
 
-ltx-talk uses `\section` for structural organization, but section titles in slides are often empty (just organizational markers). PDF validators like Acrobat complain about H1 tags with no text content.
+### PAC table-header warnings
 
-Solution: Disable tagging for section titles by adding this to your preamble:
+PAC may report:
 
-```latex
-\ExplSyntaxOn
-\AtBeginDocument{
-  \NewTaggingSocketPlug { talk / sec / title } { none } { }
-  \AssignTaggingSocketPlug { talk / sec / title } { none }
-}
-\ExplSyntaxOff
+```
+Table header cell has no associated subcells
 ```
 
-This prevents empty H1 tags while keeping frame titles as H1 (which always have content).
+even when header rows are tagged correctly.
 
-## Migrating Your Existing LaTeX Files
+### Validator disagreements
 
-### Common Steps for ALL Documents
+Recommended workflow:
 
-Whether migrating slides or articles, you need to:
+1. Run multiple validators.
+2. Compare findings.
+3. Investigate structural issues but treat isolated warnings cautiously.
 
-1. **Add `\DocumentMetadata` block** at the very beginning (before `\documentclass`):
-   ```latex
-   \DocumentMetadata{
-     pdfstandard=a-2u,
-       pdfstandard=ua-1,
-     lang=en-US,
-     tagging=on,
-     tagging-setup={
-       math/alt/use,
-       math/mathml/AF=false,
-       math/tex/AF=false,
-       math/mathml/sources=
-     }
-   }
-   ```
+---
 
-2. **Ensure `math/alt/use` is enabled in `\DocumentMetadata`** (as shown above in `tagging-setup`, enables automatic MathML)
-
-3. **Tag all images** with alt text:
-   ```latex
-   \includegraphics[alt={Description}]{file}
-   ```
-
-4. **Tag all table headers**:
-   ```latex
-   \tagpdfsetup{table/header-rows={1}}  % or {1,2}, {1,2,3}, etc.
-   ```
-
-5. **Switch to LuaLaTeX** for compilation (automatic MathML generation)
-
-6. **Update font packages** (for LuaLaTeX compatibility):
-   - Replace `fontenc` with `fontspec`
-   - Replace traditional font packages with `unicode-math`
-
-### Additional Steps for Articles
-
-After completing the common steps above:
-
-**That's it.** Keep your existing `\documentclass{article}` (or `report`, `book`, etc.). No class change is required.
-
-See [`accessible_article.tex`](accessible_article.tex) for a complete working example.
-
-### Additional Steps for Slides (Beamer → ltx-talk)
-
-After completing the common steps above:
-
-1. **Change the document class**:
-   ```latex
-   % Old:
-   \documentclass{beamer}
-   
-   % New:
-   \documentclass[frame-title-arg]{ltx-talk}
-   ```
-
-2. **Remove Beamer-specific commands** that won't work:
-   - `\usetheme{}`, `\usecolortheme{}`, `\usefonttheme{}` (themes are not supported)
-   - `\setbeamertemplate{}` commands (template system is different)
-   - `\setbeamercolor{}`, `\setbeamerfont{}` (use standard LaTeX/xcolor commands instead)
-   - Navigation symbols and footline customizations (ltx-talk uses different approach)
-
-3. **Copy slide-specific configuration** from `accessible_slides.tex` preamble:
-   - Frame title tagging as H1
-   - Page numbering customization
-   - Footer/header setup (uses standard LaTeX, not Beamer templates)
-   - Color definitions using `\colorlet` or `\definecolor` (not `\setbeamercolor`)
-
-4. **Keep your frame syntax** - the basic environment works the same:
-   ```latex
-   \begin{frame}{Title}
-     % Your content here
-   \end{frame}
-   ```
-
-5. **Recreate your visual styling** (one-time preamble setup):
-   - Use standard LaTeX packages and commands for colors, fonts, and layout
-   - See `accessible_slides.tex` for examples of styling without Beamer themes
-   - Test incrementally as you migrate each feature
-   - **Once working**: Reuse that preamble for future talks.
-
-**Reality check**: The frame environment is similar, but ltx-talk is a different class. Plan time to recreate styling with standard LaTeX tools instead of Beamer themes. This is mostly one-time preamble work; once your setup is solid, reuse it across future presentations.
-
-See [`accessible_slides.tex`](accessible_slides.tex) for a complete working example.
-
-## Common Pitfalls
-
-### Color Contrast
-
-One of the most frequent accessibility failures involves insufficient color contrast. WCAG 2.1 Level AA requires:
-
-- **Normal text**: Minimum contrast ratio of 4.5:1 against the background
-- **Large text** (18pt+, or 14pt+ bold): Minimum contrast ratio of 3:1 against the background
-
-**Common mistakes:**
-
-- Using light colors on white backgrounds (e.g., `yellow`, `cyan`)
-- Using bright red or green without darkening (standard `red` and `green` can be borderline)
-- Relying solely on color to convey information (must also use text, symbols, or patterns)
-
-**Solutions:**
-
-- Use darker versions of problematic colors: `red!80!black`, `green!40!black`
-- Standard `blue` is typically fine and meets WCAG requirements
-- Test color combinations with a [contrast checker](https://webaim.org/resources/contrastchecker/)
-- Always provide text labels or patterns in addition to color coding
-
-**Example from this template:**
-```latex
-\colorlet{AccessibleRed}{red!80!black}
-\colorlet{AccessibleGreen}{green!40!black}
-```
-
-This template includes pre-tested accessible colors that meet WCAG requirements.
-
-## File Structure
-
-- `accessible_slides.tex` - Presentation slides template with examples and extensive comments
-- `accessible_article.tex` - Article document template with examples and extensive comments
-- `capybara.jpg` - Sample image used in both templates
-- `.latexmkrc` - Configuration for latexmk build tool
-- `build/` - Build artifacts (PDF, HTML with MathML)
-- `auto/` - Auto-generated auxiliary files
-
-## Resources
-
-- [LaTeX Tagging Project](https://latex3.github.io/tagging-project/) - Official documentation
-- [Detailed Usage Instructions](https://latex3.github.io/tagging-project/documentation/usage-instructions)
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/standards-guidelines/wcag/)
-
-## Testing Accessibility
-
-To verify your documents meet accessibility requirements:
-
-1. Upload your PDF to Canvas/bCourses
-2. Check the Ally accessibility score (should be 100%)
-3. Use a screen reader to test navigation
-
-## Validation Workflow: Use Multiple Checkers
-
-- No single checker catches everything.
-- Accessibility usability checks and strict archival conformance checks are not identical.
-- A practical workflow is to run more than one checker and compare findings.
-
-**Checkers used so far:**
-
-- Ally (built into bCourses)
-- veraPDF (open-source PDF conformance validator)
-- PAC (PDF Accessibility Checker)
-- Adobe Acrobat
-
-## Optional Validator Cleanup Step: `strip_af.py`
-
-- The metadata settings alone are enough to generate a 100% score on Ally.
-- Stricter checkers (for example, veraPDF) may still complain about `/AF` or embedded-file structures.
-- Optional strict-archival cleanup command:
+# Optional Validator Cleanup
 
 ```bash
 python strip_af.py build/yourfile.pdf
+pip install pikepdf
 ```
 
-- Output location depends on your build flow (for example, `latexmk -outdir=build` vs default output in the project root).
-- Then validate `build/yourfile.pdf` with veraPDF.
-- Prerequisite for the script: `python -m pip install pikepdf`.
+---
 
-## Validator-Specific Notes
+# Troubleshooting
 
-- This is often a validator interpretation issue, not necessarily a source-tagging error.
-- PAC may report `Table header cell has no associated subcells` even when header tagging is correct.
-- Known behavior reference: <https://github.com/latex3/tagging-project/issues/1056>.
-- **Acrobat may report `Lbl and LBody - Failed` errors** around figure captions, section numbers, or other numbered elements. This is a **validator bug**, not a source error. The `<Lbl>` tag is validly used for numbering (not just lists), but Acrobat's checker incorrectly expects `<LBody>` to accompany it. See references:
-  - LaTeX developer Ulrike Fischer: "Adobe doesn't like the (valid) use of Lbl for the section numbers, complain to them that they should correct their checker." ([source](https://tex.stackexchange.com/a/709655/2388))
-  - Adobe Community expert Philip Kiff: "<Lbl> is getting flagged as an error by Acrobat Pro DC by mistake... you could just ignore this error and wait until Acrobat fixes their built-in tester." ([source](https://community.adobe.com/t5/acrobat-discussions/why-or-how-can-i-get-acrobat-pro-dc-accessibility-check-to-resolve-lt-lbl-gt-error/td-p/10477958))
-- Treat one-tool warnings as signals to investigate, not automatic proof of source errors.
+### Undefined `\DocumentMetadata`
 
-## Troubleshooting
+Upgrade to **TeX Live 2023+**.
 
-### Common Issues
+### `ltx-talk.cls` not found
 
-**"Undefined control sequence \DocumentMetadata"**
+Update your TeX distribution.
 
-- Your TeX distribution is too old (pre-2023)
-- Solution: Upgrade to TeX Live 2023 or later and update all packages (use TeX Live Manager on Windows or TeX Live Utility on Mac)
+### Compilation is slow
 
-**"Font not found" errors**
+LuaLaTeX is slower than pdfLaTeX.
 
-- If using a modern TeX distribution, fonts should be included
-- Solution: The font configuration is optional - you can comment out or remove the `\setmainfont`, `\setsansfont`, and `\setmathfont` lines. Accessibility will still work fine.
+---
 
-**Compilation takes a long time**
+# Tested Environments
 
-- LuaLaTeX is slower than pdfLaTeX (this is normal)
-- First compilation generates MathML files
-- Subsequent compilations are faster
+- TeX Live 2025  
+- MacTeX  
+- Overleaf Rolling TeX Live  
+- LuaLaTeX  
 
-**"ltx-talk.cls not found"**
+---
 
-- Your TeX distribution doesn't include ltx-talk
-- Solution: Upgrade to TeX Live 2023 or later
+# Resources
 
-**Math doesn't render correctly**
+LaTeX Tagging Project  
+https://latex3.github.io/tagging-project/
 
-- Make sure you're using LuaLaTeX, not pdfLaTeX or XeLaTeX
-- Check that `math/alt/use` is enabled in your `\DocumentMetadata` `tagging-setup`
+WCAG 2.1  
+https://www.w3.org/WAI/standards-guidelines/wcag/
 
-**Acrobat complains about "H1 tag with no text" in ltx-talk slides**
+---
 
-- This happens when `\section` commands have no titles (used for organization only)
-- Solution: Disable section title tagging and use H1 for frame titles instead
-- See the "For Slides Only" section under "Key Accessibility Features" for the code to add
-- Details: `accessible_slides.tex` includes this fix in the preamble
+# Acknowledgments
 
-**Acrobat reports "Lbl and LBody - Failed" errors in articles or slides**
+- Andrei Kurbatov — https://github.com/andreigithubK
 
-- This is a **validator bug**, not a source error in your LaTeX file
-- Occurs around figure captions, section numbers, table captions, or other numbered elements
-- The `<Lbl>` tag is correctly used for numbering, but Acrobat's checker incorrectly expects it only in lists
-- **Safe to ignore** - your PDF structure is correct; Acrobat's validator needs fixing
-- See "Validator-Specific Notes" section for detailed references and expert quotes
+---
 
-**"PAC says: Table header cell has no associated subcells"**
+# License
 
-- First verify your table markup: `\tagpdfsetup{table/header-rows={...}}` must list all header rows.
-- This warning is a known pattern discussed by the LaTeX Tagging Project maintainers: <https://github.com/latex3/tagging-project/issues/1056>
-- In that issue, maintainers note PAC may not fully handle the attribute-class form used for table scope in some PDFs.
-- If your tags are otherwise correct, document the PAC finding, keep your source markup as-is, and report minimal reproductions to PAC/tool vendors.
-### Getting Help
+Released under **CC0 1.0 Universal**.
 
-- [LaTeX Tagging Project Issues](https://github.com/latex3/tagging-project/issues)
-- [LaTeX Tagging Project Discussions](https://github.com/latex3/tagging-project/discussions)
-- Email the template author: richard.stanton@berkeley.edu
+No restrictions. No warranty.
 
-## Frequently Asked Questions
-
-**Q: Can I use pdfLaTeX instead of LuaLaTeX?**
-A: Not for these templates. Use LuaLaTeX. While pdfLaTeX has partial tagging support, it requires manual MathML management and does not match the intended workflow or guidance here.
-
-**Q: Will my existing Beamer slides work with ltx-talk?**
-A: The basic frame structure (`\begin{frame}...\end{frame}`) is similar, but Beamer themes, color schemes, templates, and most setup commands won't work. You'll need to recreate your styling using standard LaTeX commands and packages. See the "Migrating from Beamer" section above for details.
-
-**Q: Do I need to install any packages?**
-A: No separate package installation needed, but you must have an up-to-date TeX Live installation (2023 or later) with LaTeX kernel 2025-11-01 or later required by `ltx-talk`. Update using TeX Live Manager (Windows) or TeX Live Utility (Mac).
-
-**Q: Can I use my own fonts?**
-A: Yes! The font configuration is optional. Just remove or modify the `\setmainfont`, `\setsansfont`, and `\setmathfont` commands in the preamble.
-
-**Q: Does this work on Overleaf?**
-A: **Yes!** You need to use Overleaf's **Labs program** with **Rolling TeX Live releases**. See the "Using Overleaf" section above for detailed setup instructions. Alternatively, you can compile locally - see installation instructions for [Windows](https://tug.org/texlive/) and [Mac](https://tug.org/mactex/).
-
-**Q: How do I check my TeX Live version?**
-A: Run `tlmgr --version` in your terminal.
-
-**Q: What if my accessibility score isn't 100%?**
-A: Check that all images have `alt` text, all tables have `table/header-rows` specified, and you're compiling with LuaLaTeX.
-
-**Q: Why does veraPDF complain even when Ally is 100%?**
-A: Ally and veraPDF check different things. Ally focuses on accessibility usability (tags, alt text, structure), while veraPDF enforces strict PDF/A archival rules. A file can be accessible enough for Ally but still contain associated-file metadata (`/AF`, embedded helper files) that veraPDF flags. If you need strict veraPDF/PDF-A compliance, run optional cleanup: `python strip_af.py build/yourfile.pdf` and then validate `build/yourfile.pdf`.
-
-## Questions or Suggestions?
-
-**Author**: Richard Stanton, UC Berkeley  
-**Contact**: [richard.stanton@berkeley.edu](mailto:richard.stanton@berkeley.edu)  
-**Repository**: https://github.com/rhstanton/accessible_LaTeX
-
-## Acknowledgments
-
-Thanks to the following for useful feedback:
-
-- Andrei Kurbatov ([@andreigithubK](https://github.com/andreigithubK))
-
-## License
-
-This template is released into the **public domain** under the [CC0 1.0 Universal (CC0 1.0) Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/).
-
-You are free to:
-
-- Use this template for any purpose (academic, commercial, personal)
-- Modify and adapt it to your needs
-- Distribute it to others
-- Use it without attribution (though attribution is appreciated!)
-
-**No restrictions. No warranty. Use freely.**
