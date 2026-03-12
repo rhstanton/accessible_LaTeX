@@ -649,6 +649,12 @@ A: Ally and veraPDF check different things. Ally focuses on accessibility usabil
 **Contact**: [richard.stanton@berkeley.edu](mailto:richard.stanton@berkeley.edu)  
 **Repository**: https://github.com/rhstanton/accessible_LaTeX
 
+## Acknowledgments
+
+Thanks to the following for useful feedback:
+
+- Andrei Kurbatov ([@andreigithubK](https://github.com/andreigithubK))
+
 ## License
 
 This template is released into the **public domain** under the [CC0 1.0 Universal (CC0 1.0) Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/).
