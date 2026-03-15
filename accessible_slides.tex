@@ -4,6 +4,7 @@
 % This MUST be the first thing in your document, before \documentclass
 % It configures the PDF for accessibility compliance
 \DocumentMetadata{
+  % Request both PDF/A archival conformance and PDF/UA accessibility tagging
   pdfstandard=a-2u,    % PDF/A-2u format (archival standard with Unicode support)
   pdfstandard=ua-1,    % Add PDF/UA-1 accessibility conformance target
   pdfversion=1.7,          % Explicit PDF version used for compatibility with conformance tooling
@@ -17,6 +18,17 @@
   }
 }
 
+% TEMPLATE USAGE NOTES
+%
+% 1. Copy this file as a starting point for new slide decks
+% 2. Keep the DocumentMetadata block unchanged
+% 3. Modify only the content frames and styling sections
+% 4. Compile with LuaLaTeX
+% 5. Test output with Ally or PAC
+%
+% The accessibility configuration in the preamble is intentional.
+% Removing or altering it may cause validator failures.
+
 % ======================================================================
 % DOCUMENT CLASS
 % ======================================================================
@@ -29,7 +41,7 @@
 % - Included in TeX Live 2023+ (no separate installation needed)
 %
 % Migrating from Beamer:
-% ✓ SIMILAR: The \begin{frame}...\end{frame} environment structure
+% ✓ SIMILAR: The \begin{frame}...\end{frame} environment syntax
 % ✗ WON'T WORK: Beamer themes, templates, and setup commands:
 %   - \usetheme{}, \usecolortheme{}, \usefonttheme{} (no theme system)
 %   - \setbeamertemplate{} commands (different template approach)
@@ -67,6 +79,9 @@
 % ACCESSIBILITY CONFIGURATION
 % ======================================================================
 % Configure PDF tagging and bookmark structure for accessibility compliance
+%
+% NOTE: PDF bookmarks control the navigation pane in PDF viewers.
+% They are separate from the accessibility structure tree used by screen readers.
 
 % ----------------------------------------------------------------------
 % Part 1: PDF Tagging Configuration (Screen Reader Document Structure)
@@ -78,9 +93,8 @@
 \AtBeginDocument{
   % Suppress automatic tagging of \section titles
   %
-  % WHY: ltx-talk uses \section for organizational structure, but these
-  % are often just markers, not true headings. Auto-tagging creates empty
-  % H1 tags that trigger validator warnings.
+  % WHY: ltx-talk uses \section primarily for organization.
+  % Automatic tagging creates empty H1 headings that trigger validator warnings.
   %
   % SOLUTION: Disable section-title tagging; tag frame titles as H1 instead
   \NewTaggingSocketPlug { talk / sec / title } { none } { }
@@ -88,8 +102,7 @@
 }
 \ExplSyntaxOff
 
-% Tag frame titles as H1 headings (the actual slide headings)
-% This creates proper document structure for screen readers
+% Treat frame titles as H1 headings in the document structure
 \tagpdfsetup{role / new-tag = frametitle / H1}
 
 % ----------------------------------------------------------------------
@@ -319,13 +332,11 @@
 
 \begin{itemize}
 
-\item On January 8, 2026, we were notified by campus that, beginning in April 2026,
-
-  \begin{quotation}
-    \color{blue}
-``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
-\end{quotation}
-
+\item From April 2026, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
+\item Applies even to password-protected course sites (e.g. \tb{bCourses}).
+  \begin{itemize}
+  \item (Official campus guidance issued Jan 8, 2026)
+  \end{itemize}
 \item Many of us use \LaTeX\ to create teaching materials---both slides and documents.
 \item Standard \LaTeX\ (including Beamer) does not automatically generate accessible PDFs.
 \item \tb{The good news:} The \LaTeX\ Project team has developed solutions!
@@ -338,15 +349,17 @@
 \begin{itemize}
 \item An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging Project
   \begin{itemize}
-  \item \tg{Two templates:} Articles (\texttt{article} class) and slides (\texttt{ltx-talk})
-  \item \tg{Shows:} What's common to both, what's different
-  \item \tg{Contains:} Working examples with math, text, graphics, and tables
-  \item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
+  \item \tg{Two templates:} Articles (\tr{\texttt{article}} class) and slides (\tr{\texttt{ltx-talk}})
+  \item \tg{Shows:} What is shared and what differs
+  \item \tg{Contains:} Examples with math, text, graphics, and tables
+  \item \tg{Scores:} Slides score 100\% with \tb{Ally} and pass common accessibility validators (\tb{veraPDF}, \tb{PAC}, \tb{Acrobat}).
   \end{itemize}
 
-\bigskip
+\end{itemize}
+\end{frame}
 
-\item \tb{How to use it:}
+\begin{frame}{How to use it?}
+
   \begin{enumerate}
   \item \textbf{Learn the common requirements:} Apply to any \LaTeX\ document
   \item \textbf{See class-specific needs:} Understand slides vs. articles
@@ -356,16 +369,16 @@
 
 \bigskip
 
+\begin{itemize}
 \item Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
-  
-\end{itemize}
+\end{itemize}  
 \end{frame}
 
 \begin{frame}{Converting to accessible LaTeX: Overview}
 
 \begin{itemize}
-\item {\color{AccessibleGreen}\textbf{Your existing \LaTeX\ skills transfer}} - you're just adding accessibility features
-\item {\color{AccessibleGreen}\textbf{The changes are minimal}} and follow consistent patterns
+\item \textbf{\tg{Your existing \LaTeX\ skills transfer}}: you're just adding accessibility features
+\item \textbf{\tg{The changes are minimal}} and follow consistent patterns
 
 \bigskip
 
@@ -380,14 +393,14 @@
 
 \item \textbf{Key difference:}
   \begin{itemize}
-  \item Articles: {\color{AccessibleGreen}Keep your existing class!} Just add accessibility features
+  \item Articles: \tg{Keep your existing class!} Just add accessibility features
   \item Slides: Switch to \texttt{ltx-talk} (similar syntax, but recreate styling)
   \end{itemize}
 
 \bigskip
 
 \item Both require LaTeX kernel 2025-11-01 or later (see next slides for details)
-\item {\color{blue}See ``Getting started'' slides at end for detailed steps}
+\item \tb{See ``Getting started'' slides at end for detailed steps}
 \item \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{LaTeX Tagging Project documentation}
 
 \end{itemize}
@@ -410,7 +423,7 @@
 \begin{frame}{\tb{You \textbf{CAN} use Overleaf (both slides and articles)}}
 
 \begin{itemize}
-\item \texttt{ltx-talk} requires a very recent TeX Live version
+\item \texttt{ltx-talk} requires a very recent \textbf{LaTeX kernel} (2025-11-01 or later)
 \item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
   
 \bigskip
@@ -458,7 +471,7 @@
 \hspace*{0.2in}pdfstandard=ua-1,\hspace*{0.42in}\% Add PDF/UA-1 conformance target\\[0.5ex]
 \hspace*{0.2in}pdfversion=1.7,\hspace*{0.55in}\% Explicit PDF version\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.78in}\% Language for screen readers\\[0.5ex]
-\hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex]
+\hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex] \\
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
 \hspace*{0.4in}math/alt/use,\hspace*{0.5in}\% Keep math accessibility enabled\\[0.5ex]
 \hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
@@ -551,7 +564,7 @@
 \begin{frame}{The basics}
   \begin{itemize}
   \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
-  \item So \textbf{\color{blue}existing source files don't need a lot of editing.}
+  \item So \textbf{\tb{existing source files don't need a lot of editing.}}
   \item Here's some gratuitous  $\mathit{math}$ for the accessibility checker.
   \end{itemize}
   
@@ -575,8 +588,8 @@
 \begin{itemize}
 \item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peeve\ldots)
     \begin{itemize}
-    \item {\color{AccessibleRed} Text:}  \$1234567890\%.
-    \item {\color{AccessibleRed} Math:}  $\$1234567890\%.$
+    \item \tr{Text:}  \$1234567890\%.
+    \item \tr{Math:}  $\$1234567890\%.$
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -628,9 +641,9 @@ but you need to provide a \tr{text description}.
 \AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
 \textbackslash begin\{tabular\}\{ccccrcccr\} \\
 \textbackslash toprule \\
-\textrm{\color{blue}\footnotesize $\leftarrow$ 3 header rows} \\
+\textrm{\tb{\footnotesize $\leftarrow$ 3 header rows}} \\
 \textbackslash midrule \\
-\textrm{\color{AccessibleGreen}\footnotesize $\leftarrow$ data rows} \\
+\textrm{\tg{\footnotesize $\leftarrow$ data rows}} \\
 \textbackslash bottomrule \\
 \textbackslash end\{tabular\}
 \end{minipage}
@@ -644,14 +657,14 @@ but you need to provide a \tr{text description}.
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
-  \color{blue} & \color{blue} & \color{blue} & \color{blue} & \multicolumn{1}{c}{\color{blue}Days} & \color{blue}Days in & \color{blue} & \color{blue} & \color{blue}\\
-\color{blue}Payment & \color{blue}Caplet & \color{blue} & \color{blue}Forward & \multicolumn{1}{c}{\color{blue}to} & \color{blue}accrual & \color{blue} & \color{blue}\\
-  \color{blue}date & \color{blue}expiry date & \color{blue}$DF_\text{pay}$ & \color{blue}rate & \multicolumn{1}{c}{\color{blue}expiry} & \color{blue}period & \color{blue}$T_\text{expiry}$ & \color{blue}$\Delta$ & \multicolumn{1}{c}{\color{blue}Caplet} \\
+   &  & & & \multicolumn{1}{c}{\tb{Days}} & \tb{Days in} & & & \\
+\tb{Payment} & \tb{Caplet} & & \tb{Forward} & \multicolumn{1}{c}{\tb{to}} & \tb{accrual} & & \\
+  \tb{date} & \tb{expiry date} & \tb{$DF_\text{pay}$} & \tb{rate} & \multicolumn{1}{c}{\tb{expiry}} & \tb{period} & \tb{$T_\text{expiry}$} & \tb{$\Delta$} & \multicolumn{1}{c}{\tb{Caplet}} \\
 \midrule
-  \color{AccessibleGreen}2004/12/01 & \color{AccessibleGreen}--- & \color{AccessibleGreen}0.99550 & \color{AccessibleGreen}0.01790 & \color{AccessibleGreen}0 & \color{AccessibleGreen}91 & \color{AccessibleGreen}0.00000 & \color{AccessibleGreen}0.25278 & \color{AccessibleGreen}--- \hspace*{0.15in}\\
-  \color{AccessibleGreen}2005/03/01 & \color{AccessibleGreen}2004/11/29 & \color{AccessibleGreen}0.99008 & \color{AccessibleGreen}0.02188 & \color{AccessibleGreen}89 & \color{AccessibleGreen}90 & \color{AccessibleGreen}0.24384 & \color{AccessibleGreen}0.25000 & \color{AccessibleGreen}1,178.77\\
-  \color{AccessibleGreen}2005/06/01 & \color{AccessibleGreen}2005/02/25 & \color{AccessibleGreen}0.98401 & \color{AccessibleGreen}0.02413 & \color{AccessibleGreen}177 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.48493 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}4,844.73\\
-  \color{AccessibleGreen}2005/09/01 & \color{AccessibleGreen}2005/05/27 & \color{AccessibleGreen}0.97733 & \color{AccessibleGreen}0.02675 & \color{AccessibleGreen}268 & \color{AccessibleGreen}92 & \color{AccessibleGreen}0.73425 & \color{AccessibleGreen}0.25556 & \color{AccessibleGreen}10,016.71\\
+  \tg{2004/12/01} & \tg{--- } & \tg{0.99550} & \tg{0.01790} & \tg{0} & \tg{91} & \tg{0.00000} & \tg{0.25278} & \tg{---} \hspace*{0.15in}\\
+  \tg{2005/03/01} & \tg{2004/11/29} & \tg{0.99008} & \tg{0.02188} & \tg{89} & \tg{90} & \tg{0.24384} & \tg{0.25000} & \tg{1,178.77} \\
+  \tg{2005/06/01} & \tg{2005/02/25} & \tg{0.98401} & \tg{0.02413} & \tg{177} & \tg{92} & \tg{0.48493} & \tg{0.25556} & \tg{4,844.73} \\
+  \tg{2005/09/01} & \tg{2005/05/27} & \tg{0.97733} & \tg{0.02675} & \tg{268} & \tg{92} & \tg{0.73425} & \tg{0.25556} & \tg{10,016.71} \\
   \bottomrule
 \end{tabular}  
 \end{center}
