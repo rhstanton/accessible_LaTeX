@@ -39,23 +39,62 @@ Making LaTeX accessible requires **five common steps**.
 
 These apply to both **slides and articles**.
 
-### Five Common Steps
+---
+
+## Converting Existing Documents? What to ADD
+
+If you're converting existing LaTeX/Beamer files, here's what to add:
+
+### Required for ALL documents
+
+1. **At the very top** (before `\documentclass`):
+   ```latex
+   \DocumentMetadata{
+     pdfstandard=a-2u,
+     pdfstandard=ua-1,
+     pdfversion=1.7,
+     lang=en-US,
+     tagging=on,
+     tagging-setup={
+       math/alt/use,
+       math/mathml/AF=false,
+       math/tex/AF=false,
+       math/mathml/sources=
+     }
+   }
+   ```
+
+2. **In every `\includegraphics`**:
+   ```latex
+   \includegraphics[alt={Description of image}]{figure}
+   ```
+
+3. **Before every table**:
+   ```latex
+   \tagpdfsetup{table/header-rows={1}}
+   ```
+
+4. **Change compiler to LuaLaTeX**
+
+### Additional for Beamer slides
+
+5. **Change document class**:
+   ```latex
+   \documentclass[frame-title-arg]{ltx-talk}  % was \documentclass{beamer}
+   ```
+   - Keep your `\begin{frame}` environments as-is
+   - Remove Beamer themes/templates/colors
+   - Recreate styling with standard LaTeX packages
+
+---
+
+## Five Common Steps Summary
 
 1. Add `\DocumentMetadata` before `\documentclass`
 2. Tag images with alt text
 3. Tag table header rows
 4. Use accessible color contrast
 5. Compile with **LuaLaTeX**
-
-Example:
-
-```latex
-\includegraphics[alt={Description of image}]{figure}
-```
-
-```latex
-\tagpdfsetup{table/header-rows={1}}
-```
 
 ### One Class-Specific Step
 
@@ -278,7 +317,23 @@ For a complete working example in context, see `accessible_slides.tex`.
 
 A minimal example may compile, but the recommended configuration is the one used in `accessible_slides.tex`.
 
-### 2. Missing PDF metadata
+### 2. Confusing PDF tagging with PDF bookmarks
+
+**Important distinction:**
+
+- **PDF tagging** (`tagging=on`): Creates structure tree for screen readers
+  - REQUIRED for accessibility compliance
+  - Happens automatically once enabled
+  
+- **PDF bookmarks**: Navigation outline in the left pane
+  - NOT required for accessibility
+  - Do NOT generate automatically from `tagging=on`
+  - Require custom code (see `accessible_slides.tex` for example)
+  - For articles, use `\tableofcontents` or the `bookmark` package
+
+If you want bookmarks in your PDFs, you need to add bookmark-generation code yourself. The slides template includes example code for this.
+
+### 3. Missing PDF metadata
 
 Some validators require a document title in the XMP metadata.
 
@@ -287,27 +342,27 @@ Some validators require a document title in the XMP metadata.
 \author{Author name}
 ```
 
-### 3. Missing alt text on images
+### 4. Missing alt text on images
 
 ```latex
 \includegraphics[alt={Description of image}]{file}
 ```
 
-### 4. Incorrect table header tagging
+### 5. Incorrect table header tagging
 
 ```latex
 \tagpdfsetup{table/header-rows={1}}
 ```
 
-### 5. Using the wrong engine
+### 6. Using the wrong engine
 
 Use **LuaLaTeX**, not XeLaTeX or pdfLaTeX.
 
-### 6. Expecting `ltx-talk` to behave like Beamer
+### 7. Expecting `ltx-talk` to behave like Beamer
 
 Beamer themes and templates do not transfer directly.
 
-### 7. Starting from the wrong file
+### 8. Starting from the wrong file
 
 `accessible_slides.tex` is the most complete example.
 

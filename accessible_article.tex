@@ -49,6 +49,15 @@
 % Configure PDF tagging for accessibility compliance
 % Math accessibility and MathML/AF behavior are configured in
 % \DocumentMetadata tagging-setup above.
+%
+% IMPORTANT NOTE ABOUT PDF BOOKMARKS:
+% "tagging = on" enables PDF TAGGING (structure tree for screen readers).
+% It does NOT automatically generate PDF bookmarks (navigation outline).
+% For articles, standard LaTeX \tableofcontents and hyperref handle bookmarks.
+% If you want section bookmarks without a printed TOC, add:
+%   \usepackage{bookmark}
+%   \bookmarksetup{startatroot}
+% in your preamble. But this is OPTIONAL - not required for accessibility.
 
 % ======================================================================
 % COLOR DEFINITIONS
@@ -411,6 +420,15 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 
 \section{Common pitfalls}
   \begin{itemize}
+  \item \tr{Confusing PDF tagging with PDF bookmarks}
+    \begin{itemize}
+    \item \texttt{tagging=on} creates structure tree for \tg{screen readers} (required for accessibility!)
+    \item PDF bookmarks (navigation outline in left pane) are \tg{separate and optional}
+    \item Bookmarks do NOT generate automatically from \texttt{tagging=on}
+    \item For articles: use \texttt{\textbackslash tableofcontents} or the \texttt{bookmark} package
+    \item For slides: See custom bookmark code in \texttt{accessible\_slides.tex} preamble (Part 2)
+    \end{itemize}
+    
   \item \tr{Forgetting alt text for images}
     \begin{itemize}
     \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
@@ -445,6 +463,77 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
     
   \end{itemize}
 
+
+\section{What to ADD to existing documents}
+
+When converting existing LaTeX files to be accessible, here's what you need to add:
+
+\subsection{Required additions for ALL documents}
+
+\begin{enumerate}
+\item \textbf{At the very top} (before \texttt{\textbackslash documentclass}):
+
+\medskip
+
+\noindent\fbox{%
+\begin{minipage}{0.9\linewidth}
+{\ttfamily\small
+\AltBox{\textbackslash DocumentMetadata\{} \\
+\hspace*{0.2in}pdfstandard=a-2u,\\
+\hspace*{0.2in}pdfstandard=ua-1,\\
+\hspace*{0.2in}pdfversion=1.7,\\
+\hspace*{0.2in}lang=en-US,\\
+\hspace*{0.2in}tagging=on,\\
+\hspace*{0.2in}tagging-setup=\{...see template...\}\\
+\AltBox{\}}
+}
+\end{minipage}
+}
+
+\medskip
+
+\item \textbf{In every} \texttt{\textbackslash includegraphics} command:
+
+\medskip
+
+\noindent\fbox{%
+\begin{minipage}{0.9\linewidth}
+{\ttfamily\small
+\textbackslash includegraphics[\AltBox{alt=\{Description of image\}}]\{file\}
+}
+\end{minipage}
+}
+
+\medskip
+
+\item \textbf{Before every table}:
+
+\medskip
+
+\noindent\fbox{%
+\begin{minipage}{0.9\linewidth}
+{\ttfamily\small
+\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}\\
+\textbackslash begin\{tabular\}\{...\}
+}
+\end{minipage}
+}
+
+\medskip
+
+\item \textbf{Change your compiler to LuaLaTeX} (not pdfLaTeX or XeLaTeX)
+
+\end{enumerate}
+
+\subsection{Additional for existing Beamer slides}
+
+\begin{itemize}
+\item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
+\item Remove all Beamer themes, color schemes, and template commands
+\item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
+\item Recreate styling using standard LaTeX packages (xcolor, fontspec, etc.)
+\item This is \tg{one-time preamble work}---then reuse for all future talks!
+\end{itemize}
 
 \section{Getting started: Common steps for both}
 

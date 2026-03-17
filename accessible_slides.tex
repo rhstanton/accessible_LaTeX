@@ -80,14 +80,26 @@
 % ======================================================================
 % Configure PDF tagging and bookmark structure for accessibility compliance
 %
-% NOTE: PDF bookmarks control the navigation pane in PDF viewers.
-% They are separate from the accessibility structure tree used by screen readers.
+% IMPORTANT DISTINCTION:
+% - "tagging = on" in \DocumentMetadata enables PDF TAGGING (structure tree)
+%   * This is for screen readers and accessibility compliance
+%   * This is REQUIRED for WCAG compliance
+%   * This happens automatically once enabled
+%
+% - PDF BOOKMARKS (navigation outline in the left pane) are SEPARATE
+%   * These are for sighted users navigating the PDF
+%   * These do NOT generate automatically from "tagging = on"
+%   * The code below (Parts 1 & 2) implements CUSTOM bookmark generation
+%   * You can remove Part 2 if you don't want bookmarks
+%
+% This template includes BOTH, but only tagging is mandatory for accessibility.
 
 % ----------------------------------------------------------------------
 % Part 1: PDF Tagging Configuration (Screen Reader Document Structure)
 % ----------------------------------------------------------------------
 % Controls how document elements are tagged in the PDF structure tree
 % This affects how screen readers interpret the document hierarchy
+% THIS PART IS REQUIRED FOR ACCESSIBILITY
 
 \ExplSyntaxOn
 \AtBeginDocument{
@@ -110,6 +122,11 @@
 % ----------------------------------------------------------------------
 % Creates PDF bookmarks (outline) for sections and slides
 % This affects the navigation pane in PDF readers (not screen reader structure)
+%
+% NOTE: THIS SECTION IS OPTIONAL AND NOT REQUIRED FOR ACCESSIBILITY!
+% It's included here as a convenience feature for navigation.
+% The bookmark code below is CUSTOM - it doesn't happen automatically.
+% You can remove this entire section if you don't want bookmarks.
 
 % Required packages for bookmark customization
 \usepackage{hyperref}   % PDF hyperlinks and bookmarks
@@ -532,6 +549,53 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{What to ADD to existing documents}
+
+\begin{itemize}
+\item \tb{\textbf{Converting existing LaTeX/Beamer files? Here's what to add:}}
+
+\bigskip
+
+\item \textbf{1. At the very top} (before \texttt{\textbackslash documentclass}):
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\AltBox{\textbackslash DocumentMetadata\{...tagging=on...\}}
+\end{minipage}
+}
+
+\item \textbf{2. In every} \texttt{\textbackslash includegraphics}:
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\textbackslash includegraphics[\AltBox{alt=\{Description\}}]\{file\}
+\end{minipage}
+}
+
+\item \textbf{3. Before every table}:
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}
+\end{minipage}
+}
+
+\item \textbf{4. Change compiler to LuaLaTeX}
+
+\bigskip
+
+\item \textbf{5. For slides only:} Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\{ltx-talk\}}
+  \begin{itemize}
+  \item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
+  \item Remove Beamer themes/templates; recreate styling with standard LaTeX
+  \end{itemize}
+
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Common requirements (3/3): LuaLaTeX}
 
 \begin{itemize}
@@ -672,7 +736,16 @@ but you need to provide a \tr{text description}.
 \end{frame}
 
 \begin{frame}{Common pitfalls}
+\scriptsize
   \begin{itemize}
+  \item \tr{Confusing PDF tagging with PDF bookmarks}
+    \begin{itemize}
+    \item \texttt{tagging=on} creates structure tree for \tg{screen readers} (required!)
+    \item PDF bookmarks (navigation pane) are \tg{separate and optional}
+    \item Bookmarks do NOT generate automatically---need custom code
+    \item This template includes bookmark code; see preamble Part 2
+    \end{itemize}
+    
   \item \tr{Forgetting alt text for images}
     \begin{itemize}
     \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
