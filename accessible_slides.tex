@@ -345,34 +345,29 @@
 
 \section{Overview}
 
-\begin{frame}{Why this matters (and what we'll cover)}
+\begin{frame}{Why this matters}
 
 \begin{itemize}
 
 \item From \tb{April 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
 \begin{itemize}
 \item Applies even to password-protected course sites (e.g., \tb{bCourses}).
-\item Campus guidance issued Jan 8, 2026.
+%\item Campus guidance issued Jan 8, 2026.
 \end{itemize}
 
 \bigskip
 
-% \item Many of us use \LaTeX\ to create teaching materials---both slides and documents.
-\item \tr{Bad news:} Standard \LaTeX\ (e.g., \tb{Beamer}) does not automatically generate accessible PDFs.
+\item Many of us use \tb{\LaTeX} to create teaching materials, both slides and documents.
+  \begin{itemize}
+  \item \textbf{\tr{But standard \LaTeX\ (e.g., \tb{Beamer}) does not automatically generate accessible PDFs.}}
+  \end{itemize}    
+
+\bigskip  
+  
 \item \tg{Good news:} The \LaTeX\ Project team has developed solutions.
-
-\bigskip
-
-\item \textbf{Roadmap (4 slides worth of ideas):}
-  \begin{enumerate}
-  \item What changes for \LaTeX\ to make accessible PDFs
-  \item Setup requirements (kernel/engine) and Overleaf guidance
-  \item Examples: figures, tables, math
-  \item Validation workflow + common “false positive” warnings
-  \end{enumerate}
-\end{itemize}
-
-  \end{frame}
+\end{itemize}    
+  
+\end{frame}
 
 \begin{frame}{What is this project?}
 
@@ -445,15 +440,15 @@
 \begin{minipage}{0.92\linewidth}
 \ttfamily\small
 % prints your LaTeX format date in the .log\\
-\string\show\string\fmtversion
+\textbackslash show\textbackslash fmtversion
 \end{minipage}}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Overleaf (works well when configured correctly)}
+\begin{frame}{Overleaf (works \textbf{when configured correctly})}
 \begin{itemize}
 \item \texttt{ltx-talk} requires a very recent \LaTeX\ kernel (format date \tb{2025-11-01+}).
-\item On Overleaf, this typically means using the \tb{Labs} program (not default projects).
+\item On Overleaf, this typically means using the \tb{Labs} program (\tr{not standard Overleaf}).
 
 \bigskip
 
@@ -462,11 +457,11 @@
   \item Join Overleaf Labs:
     \begin{itemize}
     \item \urlu{https://www.overleaf.com/labs/participate}
-    \item Enable \tb{Rolling TeX Live releases}
+    \item Opt in and enable \tb{Rolling TeX Live releases}
     \end{itemize}
   \item Configure the project:
     \begin{itemize}
-    \item TeX Live: \tg{Rolling TeXLive (labs)}
+    \item TeX Live version: \tg{Rolling TeXLive (labs)} (bottom of list)
     \item Compiler: \tg{Lua\LaTeX}
     \end{itemize}
   \end{enumerate}
@@ -482,56 +477,30 @@
 % ======================================================================
 \section{Core requirements}
 
-\begin{frame}{Core requirement 1: DocumentMetadata (minimal template)}
+\begin{frame}{Core requirement 1: Document Metadata}
+
+\bigskip
+
 \begin{itemize}
-\item \tb{\textbf{Required for both slides and articles.}}
-\item Must appear \tr{before} \texttt{\textbackslash documentclass}.
+\item \tb{\textbf{Required for both slides and articles}}
 
 \bigskip
 
-\item \textbf{Minimal pattern (don’t overthink it):}
-
-\medskip  
-  
-\fbox{%
-\begin{minipage}{0.92\linewidth}
-\ttfamily\small
-\string\DocumentMetadata\{\\
-\hspace*{0.2in}lang=en-US,\\
-\hspace*{0.2in}tagging=on\\
-\}
-\end{minipage}}
+\item Every accessible document \tr{must} begin with \texttt{\textbackslash DocumentMetadata}
+\item Goes \tr{before} \texttt{\textbackslash documentclass}
 
 \bigskip
-
-\item In practice, you’ll usually keep the full template settings (next slide) for PDF/A + PDF/UA and math behavior.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Core requirement 1 (recommended): full metadata block}
-\begin{itemize}
-\item This template’s \texttt{\textbackslash DocumentMetadata} block:
-  \begin{itemize}
-  \item targets \tb{PDF/A-2u} + \tb{PDF/UA-1}
-  \item enables tagging
-  \item keeps math accessible and reduces some validator complaints
-  \end{itemize}
-
-\bigskip
-
-\item \textbf{Recommendation:} copy/paste the full block and \tg{leave it unchanged}.
-
-\medskip
 
 \fbox{%
 \begin{minipage}{0.9\linewidth}
 \ttfamily\scriptsize
 \textbackslash DocumentMetadata\{\\[0.5ex]
+\hspace*{0.2in}\% Request both PDF/A archival conformance and PDF/UA accessibility tagging\\[0.5ex]
 \hspace*{0.2in}pdfstandard=a-2u,\hspace*{0.425in}\% PDF/A-2u format\\[0.5ex]
 \hspace*{0.2in}pdfstandard=ua-1,\hspace*{0.42in}\% Add PDF/UA-1 conformance target\\[0.5ex]
 \hspace*{0.2in}pdfversion=1.7,\hspace*{0.55in}\% Explicit PDF version\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.78in}\% Language for screen readers\\[0.5ex]
-\hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex] \\
+\hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex]
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
 \hspace*{0.4in}math/alt/use,\hspace*{0.5in}\% Keep math accessibility enabled\\[0.5ex]
 \hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
@@ -542,6 +511,10 @@
 \end{minipage}
 }
 
+\bigskip
+
+\item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
+  
 \end{itemize}
 \end{frame}
 
@@ -562,9 +535,10 @@
   
 \fbox{%
 \begin{minipage}{0.92\linewidth}
-\ttfamily\small
-\string\colorlet\{AccessibleRed\}\{red!80!black\}\\
-\string\colorlet\{AccessibleGreen\}\{green!40!black\}
+\ttfamily
+\textbackslash colorlet\{AccessibleRed\}\{red!80!black\}\\
+\textbackslash colorlet\{AccessibleGreen\}\{green!40!black\}\\
+\% Standard blue is fine
 \end{minipage}}
 \end{itemize}
 \end{frame}
@@ -600,9 +574,8 @@
 
 \begin{frame}{Slides content: mostly the same as Beamer}
 \begin{itemize}
-\item Slides live in \texttt{frame} environments (similar to Beamer).
-\item So your \textbf{\tb{content}} often transfers with minimal changes.
-\item Here’s some gratuitous $\mathit{math}$ for accessibility checkers.
+\item Slides live in \tr{\texttt{frame}} environments (similar to Beamer).
+\item So your content often transfers with minimal changes.
 
 \bigskip
 
@@ -612,18 +585,23 @@
   
 \fbox{%
 \begin{minipage}{0.92\linewidth}
-\ttfamily\small
-\string\begin\{frame\}\{Title\}\\
-\string\begin\{itemize\}\\
-\hspace*{0.2in}\string\item\ First point\\
-\string\end\{itemize\}\\
-\string\end\{frame\}
+\ttfamily
+\textbackslash begin\{frame\}\{Title\}\\
+\textbackslash begin\{itemize\}\\
+\hspace*{0.2in}\textbackslash item\ First point\\
+\textbackslash end\{itemize\}\\
+\textbackslash end\{frame\}
 \end{minipage}}
 
 \bigskip
 
-\item \tb{Note (optional):} fonts in this template keep digits consistent between text and math.
+\item \tb{Note (optional):} template fonts keep digits/percent/dollar signs consistent in math/text.
+  \begin{itemize}
+  \item \makebox[2.75em][l]{\tg{Text:}}\ $\$1234567890\%.$
+  \item \makebox[2.75em][l]{\tg{Math:}}\ $\$1234567890\%.$
+  \end{itemize}
 \end{itemize}
+
 \end{frame}
 
 \begin{frame*}{Figures: alt text}
@@ -633,20 +611,17 @@
 \bigskip
 
 \item \textbf{Good (minimal):}
-\fbox{\ttfamily\small
-  \string\includegraphics[\AltBox{alt=\{A capybara\}}]\{capybara.jpg\}
+\fbox{\ttfamily
+  \textbackslash includegraphics[\AltBox{alt=\{A capybara\}}]\{capybara.jpg\}
 }
-
-
-%  \string\includegraphics[alt=\{A capybara\}]\{capybara.jpg\}}
 
 \bigskip
 
 \item \textbf{Better (more informative):}
 
   \medskip  
-\fbox{\ttfamily\small
-\string\includegraphics[alt=\{Photo of a capybara's head facing left\}]\{capybara.jpg\}}
+\fbox{\ttfamily
+\textbackslash includegraphics[alt=\{A capybara's head facing left\}]\{capybara.jpg\}}
 
 \bigskip
 
@@ -655,10 +630,10 @@
 
 \vspace*{0.15in}
 \centering
-\includegraphics[height=.42\textheight, alt={Photo of a capybara's head facing left}]{capybara.jpg}
+\includegraphics[height=.42\textheight, alt={A capybara's head facing left}]{capybara.jpg}
 \end{frame*}
 
-\begin{frame}{Tables}
+\begin{frame}{Tables: header rows}
 
 \small  
 \begin{itemize}
@@ -705,28 +680,11 @@
 \end{frame}
 
 % ======================================================================
-% SECTION: PRACTICAL CHECKLISTS (deduplicated)
+% SECTION: SLIDES VERSUS ARTICLES
 % ======================================================================
-\section{Practical checklists}
+\section{Slides versus articles}
 
-\begin{frame}{One checklist (applies to everything)}
-\begin{itemize}
-\item \textbf{Do these for any accessible \LaTeX\ PDF:}
-  \begin{enumerate}
-  \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
-  \item Compile with \tb{Lua\LaTeX}
-  \item Add \texttt{alt=\{...\}} to every \texttt{\textbackslash includegraphics}
-  \item Add \texttt{table/header-rows=\{...\}} before every table
-  \item Use sufficient color contrast (4.5:1 for normal text)
-  \end{enumerate}
-
-\bigskip
-
-\item \textbf{Useful link:} contrast checker \urlu{https://webaim.org/resources/contrastchecker/}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{The one big fork: articles vs.\ slides}
+\begin{frame}{Articles vs.\ slides}
 \begin{itemize}
 \item \textbf{Articles:} \tg{keep your existing class} (e.g., \texttt{article}) and add the checklist items.
 \item \textbf{Slides:} switch to \texttt{ltx-talk}.
@@ -738,10 +696,12 @@
 \bigskip
 
 \item \textbf{If you’re converting Beamer slides:}
+
+\medskip  
 \fbox{%
 \begin{minipage}{0.92\linewidth}
-\ttfamily\small
-\AltBox{\string\documentclass\{ltx-talk\}} \quad \textrm{(instead of beamer)}
+\ttfamily
+\AltBox{\textbackslash documentclass\{ltx-talk\}} \quad \textrm{(instead of beamer)}
 \end{minipage}}
 \end{itemize}
 \end{frame}
@@ -773,8 +733,8 @@
 % ======================================================================
 \section{Validation and known issues}
 
-\begin{frame}{Common pitfalls (high-impact mistakes)}
-\small
+\begin{frame}{Common pitfalls}
+
 \begin{itemize}
 \item \tr{Confusing PDF tagging with PDF bookmarks}
   \begin{itemize}
@@ -840,13 +800,13 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item Install prerequisite, \tg{pikepdf}:  \qquad \texttt{python -m pip install pikepdf}
+\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
 \item Then validate again with veraPDF.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Validator-specific notes (common false positives)}
-\small
+
 \begin{itemize}
 \item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
   \begin{itemize}
@@ -870,11 +830,11 @@ python strip\_af.py build/accessible\_slides.pdf
 \end{frame}
 
 % ======================================================================
-% FINAL: TL;DR (photo-worthy)
+% FINAL: QUICK START
 % ======================================================================
-\section{TL;DR}
+\section{Quick start}
 
-\begin{frame}{TL;DR}
+\begin{frame}{Quick start: accessible \LaTeX\ on one slide}
 \begin{itemize}
 \item \textbf{To make an accessible \LaTeX\ PDF:}
   \begin{enumerate}
