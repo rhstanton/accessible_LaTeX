@@ -343,142 +343,185 @@
 % Keep title slide unnumbered and start content slide numbering at 1.
 \setcounter{frame}{0}
 
-\section{Introduction}
+\section{Overview}
 
-\begin{frame}{Introduction}
+\begin{frame}{Why this matters (and what we'll cover)}
 
 \begin{itemize}
 
-\item From April 2026, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
+\item From \tb{April 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
+\begin{itemize}
 \item Applies even to password-protected course sites (e.g., \tb{bCourses}).
-  \begin{itemize}
-  \item (Official campus guidance issued Jan 8, 2026)
-  \end{itemize}
-\item Many of us use \LaTeX\ to create teaching materials---both slides and documents.
-\item Standard \LaTeX\ (including Beamer) does not automatically generate accessible PDFs.
-\item \tb{The good news:} The \LaTeX\ Project team has developed solutions!
-
+\item Campus guidance issued Jan 8, 2026.
 \end{itemize}
-\end{frame}
+
+\bigskip
+
+% \item Many of us use \LaTeX\ to create teaching materials---both slides and documents.
+\item \tr{Bad news:} Standard \LaTeX\ (e.g., \tb{Beamer}) does not automatically generate accessible PDFs.
+\item \tg{Good news:} The \LaTeX\ Project team has developed solutions.
+
+\bigskip
+
+\item \textbf{Roadmap (4 slides worth of ideas):}
+  \begin{enumerate}
+  \item What changes for \LaTeX\ to make accessible PDFs
+  \item Setup requirements (kernel/engine) and Overleaf guidance
+  \item Examples: figures, tables, math
+  \item Validation workflow + common “false positive” warnings
+  \end{enumerate}
+\end{itemize}
+
+  \end{frame}
 
 \begin{frame}{What is this project?}
 
 \begin{itemize}
-\item An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging Project
+\item A practical template set for accessible \LaTeX\ using the \hrefu{https://latex3.github.io/tagging-project/}{\LaTeX\ Tagging Project}
   \begin{itemize}
   \item \tg{Two templates:} Articles (\tr{\texttt{article}} class) and slides (\tr{\texttt{ltx-talk}})
   \item \tg{Shows:} What is shared and what differs
-  \item \tg{Contains:} Examples with math, text, graphics, and tables
-  \item \tg{Scores:} Slides score 100\% with \tb{Ally} and pass common accessibility validators (\tb{veraPDF}, \tb{PAC}, \tb{Acrobat}).
+  \item \tg{Contains:} Math, text, figures, and tables
+  \item \tg{Validation status:} Slides score 100\% with \tb{Ally} and pass common validators (\tb{veraPDF}, \tb{PAC}, \tb{Acrobat}) in typical workflows (tested March 17, 2026).
   \end{itemize}
+
+\bigskip
+
+\item Repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
 
 \end{itemize}
 \end{frame}
 
-\begin{frame}{How to use it?}
+\begin{frame}{Converting to accessible \LaTeX: the big picture}
+\begin{itemize}
+\item \tg{Your existing \LaTeX\ skills transfer:} mainly adding a few consistent accessibility features.
+\item \tg{Most changes are local:} metadata once; then per-figure and per-table tweaks.
 
+\bigskip
+
+\item \textbf{Applies to both slides \& articles:}
+  \begin{itemize}
+  \item Document metadata + PDF tagging
+  \item Alt text on images
+  \item Table header row tagging
+  \item Sufficient color contrast
+  \item Compile with Lua\LaTeX
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Key fork:}
+  \begin{itemize}
+  \item Articles: \tg{keep your existing class} and add tagging features
+  \item Slides: switch to \texttt{ltx-talk} (frame syntax similar to Beamer), then recreate styling
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+% ======================================================================
+% SECTION: SETUP / REQUIREMENTS
+% ======================================================================
+
+\section{Setup requirements}
+
+\begin{frame}{Version requirements: what actually matters}
+\begin{itemize}
+\item \tg{Engine:} must compile with \tb{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
+
+\bigskip
+
+\item \tg{LaTeX kernel/format date:} must be \tb{2025-11-01 or later}.
+\item \textbf{Important:} a “TeX Live year” alone is not a reliable guarantee.
+  \begin{itemize}
+  \item You need a sufficiently new \LaTeX\ kernel \emph{on your install}, or use Overleaf Labs.
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Quick check (in any document preamble):}
+
+  \medskip  
+\fbox{%
+\begin{minipage}{0.92\linewidth}
+\ttfamily\small
+% prints your LaTeX format date in the .log\\
+\string\show\string\fmtversion
+\end{minipage}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Overleaf (works well when configured correctly)}
+\begin{itemize}
+\item \texttt{ltx-talk} requires a very recent \LaTeX\ kernel (format date \tb{2025-11-01+}).
+\item On Overleaf, this typically means using the \tb{Labs} program (not default projects).
+
+\bigskip
+
+\item \textbf{Overleaf setup (2 steps):}
   \begin{enumerate}
-  \item \textbf{Learn the common requirements:} Apply to any \LaTeX\ document
-  \item \textbf{See class-specific needs:} Understand slides vs. articles
-  \item \textbf{Copy and adapt:} Use as templates for your documents
-  \item \textbf{Study the code:} Heavily commented for learning
+  \item Join Overleaf Labs:
+    \begin{itemize}
+    \item \urlu{https://www.overleaf.com/labs/participate}
+    \item Enable \tb{Rolling TeX Live releases}
+    \end{itemize}
+  \item Configure the project:
+    \begin{itemize}
+    \item TeX Live: \tg{Rolling TeXLive (labs)}
+    \item Compiler: \tg{Lua\LaTeX}
+    \end{itemize}
   \end{enumerate}
 
 \bigskip
 
-\begin{itemize}
-\item Available at: \urlu{https://github.com/rhstanton/accessible_LaTeX}
-\end{itemize}  
-\end{frame}
-
-\begin{frame}{Converting to accessible LaTeX: Overview}
-
-\begin{itemize}
-\item \textbf{\tg{Your existing \LaTeX\ skills transfer}}: you're just adding accessibility features
-\item \textbf{\tg{The changes are minimal}} and follow consistent patterns
-
-\bigskip
-
-\item \textbf{Common requirements} (both slides \& articles):
-  \begin{itemize}
-  \item Add document metadata and enable PDF tagging
-  \item Tag images with alt text; tag table headers
-  \item Use accessible colors; compile with LuaLaTeX
-  \end{itemize}
-
-\bigskip
-
-\item \textbf{Key difference:}
-  \begin{itemize}
-  \item Articles: \tg{Keep your existing class!} Just add accessibility features
-  \item Slides: Switch to \texttt{ltx-talk} (similar syntax, but recreate styling)
-  \end{itemize}
-
-\bigskip
-
-\item Both require LaTeX kernel 2025-11-01 or later (see next slides for details)
-\item \tb{See ``Getting started'' slides at end for detailed steps}
-\item \hrefu{https://latex3.github.io/tagging-project/documentation/usage-instructions}{LaTeX Tagging Project documentation}
-
+\item Overleaf guide: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{TeX version requirements (both slides and articles)}
+% ======================================================================
+% SECTION: COMMON REQUIREMENTS (split for readability)
+% ======================================================================
+\section{Core requirements}
 
+\begin{frame}{Core requirement 1: DocumentMetadata (minimal template)}
 \begin{itemize}
-\item \tg{Minimum:} TeX Live 2023 or later with all packages updated
-\item \tg{Critical:} Must have LaTeX kernel 2025-11-01 or later
-  \begin{itemize}
-  \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
-  \item Or use Overleaf Labs (see next slide)
-  \end{itemize}
-\item \tr{Will NOT work:} TeX Live 2022 or earlier
+\item \tb{\textbf{Required for both slides and articles.}}
+\item Must appear \tr{before} \texttt{\textbackslash documentclass}.
 
-\end{itemize}
-\end{frame}
+\bigskip
 
-\begin{frame}{\tb{You \textbf{CAN} use Overleaf (both slides and articles)}}
+\item \textbf{Minimal pattern (don’t overthink it):}
 
-\begin{itemize}
-\item \texttt{ltx-talk} requires a very recent \textbf{LaTeX kernel} (2025-11-01 or later)
-\item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
+\medskip  
   
+\fbox{%
+\begin{minipage}{0.92\linewidth}
+\ttfamily\small
+\string\DocumentMetadata\{\\
+\hspace*{0.2in}lang=en-US,\\
+\hspace*{0.2in}tagging=on\\
+\}
+\end{minipage}}
+
 \bigskip
 
-\item \textbf{\tb{Using Overleaf (2 steps)}}
-  \begin{enumerate}
-  \item \textbf{Join Overleaf Labs}: 
-    \begin{itemize}
-    \item Visit \urlu{https://www.overleaf.com/labs/participate}
-    \item Opt in and enable ``Rolling TeX Live releases''
-    \end{itemize}
-  \item \textbf{Configure project}:
-    \begin{itemize}
-    \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
-    \item Set Compiler to \tg{LuaLaTeX}
-    \end{itemize}
-  \end{enumerate}
-  
-\bigskip
-
-\item \textbf{Resources}: \urlu{https://docs.overleaf.com/writing-and-editing/creating-accessible-pdfs}
-
+\item In practice, you’ll usually keep the full template settings (next slide) for PDF/A + PDF/UA and math behavior.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (1/3): Document Metadata}
-
-\bigskip
-
+\begin{frame}{Core requirement 1 (recommended): full metadata block}
 \begin{itemize}
-\item \tb{\textbf{REQUIRED for both slides AND articles}}
+\item This template’s \texttt{\textbackslash DocumentMetadata} block:
+  \begin{itemize}
+  \item targets \tb{PDF/A-2u} + \tb{PDF/UA-1}
+  \item enables tagging
+  \item keeps math accessible and reduces some validator complaints
+  \end{itemize}
 
 \bigskip
 
-\item Every accessible document \tr{must} begin with \texttt{\textbackslash DocumentMetadata}
-\item Goes \emph{before} \texttt{\textbackslash documentclass}
+\item \textbf{Recommendation:} copy/paste the full block and \tg{leave it unchanged}.
 
-\bigskip
+\medskip
 
 \fbox{%
 \begin{minipage}{0.9\linewidth}
@@ -499,72 +542,45 @@
 \end{minipage}
 }
 
-\bigskip
-
-\item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
-  
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (2/3): Images, Tables and Colors}
-
-  \bigskip
-  
+\begin{frame}{Core requirements 2--4: images, tables, and color contrast}
 \begin{itemize}
-\item \tb{\textbf{REQUIRED for both slides AND articles}}
+\item \tb{\textbf{Required for both slides and articles.}}
 
 \bigskip
 
-\item \textbf{Images:} All images must include alt text descriptions
-  \begin{itemize}
-  \item Allows screen readers to describe visual content
-  \item Even decorative images need marking
-  \item See dedicated ``Figures'' slide for examples
-  \end{itemize}
-
+\item \textbf{Images:} every \texttt{\textbackslash includegraphics} needs \texttt{alt=\{...\}}.
+\item \textbf{Tables:} mark header rows using \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}.
+\item \textbf{Colors:} WCAG 2.1 AA requires \tb{4.5:1} contrast ratio for normal text.
 \bigskip
 
-\item \textbf{Tables:} Must specify which rows are headers
-  \begin{itemize}
-  \item Helps screen readers navigate table structure
-  \item Essential for data accessibility
-  \item See dedicated ``Tables'' slide for examples
-  \end{itemize}
+\item \textbf{Accessible color defaults:}
 
-\bigskip  
-  
-\item \textbf{Accessible colors:} WCAG 2.1 requires 4.5:1 contrast ratio
 \medskip  
-
-\fbox{%
-\begin{minipage}{0.9\linewidth}
-\ttfamily\small
-\textbackslash colorlet\{AccessibleRed\}\{red!80!black\}\\[0.5ex]
-\textbackslash colorlet\{AccessibleGreen\}\{green!40!black\}\\[0.5ex]
-\% Standard blue is fine as-is
-\end{minipage}
-}
-
   
+\fbox{%
+\begin{minipage}{0.92\linewidth}
+\ttfamily\small
+\string\colorlet\{AccessibleRed\}\{red!80!black\}\\
+\string\colorlet\{AccessibleGreen\}\{green!40!black\}
+\end{minipage}}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Common requirements (3/3): LuaLaTeX}
-
+\begin{frame}{Core requirement 5: compile with Lua\LaTeX}
 \begin{itemize}
-\item \tb{\textbf{REQUIRED for both slides AND articles}}
+\item \tb{\textbf{Required for both slides and articles.}}
+\item Compile with \tr{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
 
 \bigskip
 
-\item You \tr{must} compile with LuaLaTeX (not pdfLaTeX or XeLaTeX)
-
-\bigskip
-
-\item \textbf{Why LuaLaTeX?}
+\item \textbf{Why Lua\LaTeX?}
   \begin{enumerate}
-  \item \textbf{Automatic MathML:} Makes math accessible without manual work
-  \item \textbf{Full tagging support:} Complete PDF accessibility features
-  \item \textbf{Modern fonts:} Handles Unicode and OpenType fonts
+  \item Automatic math accessibility support (no manual MathML files in normal workflows)
+  \item Full tagging support
+  \item Good Unicode/OpenType font support
   \end{enumerate}
 
 \bigskip
@@ -572,83 +588,83 @@
 \item \textbf{How to switch:}
   \begin{itemize}
   \item Command line: \texttt{lualatex filename.tex}
-  \item Most editors: Select ``LuaLaTeX'' from compiler menu
+  \item Editors: select \texttt{LuaLaTeX} as the compiler
   \end{itemize}
-
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The basics}
-  \begin{itemize}
-  \item Slides are put inside a \texttt{frame} environment, just like in Beamer.
-  \item So \textbf{\tb{existing source files don't need a lot of editing.}}
-  \item Here's some gratuitous  $\mathit{math}$ for the accessibility checker.
-  \end{itemize}
+% ======================================================================
+% SECTION: EXAMPLES (shorter, more readable)
+% ======================================================================
+\section{Examples}
+
+\begin{frame}{Slides content: mostly the same as Beamer}
+\begin{itemize}
+\item Slides live in \texttt{frame} environments (similar to Beamer).
+\item So your \textbf{\tb{content}} often transfers with minimal changes.
+\item Here’s some gratuitous $\mathit{math}$ for accessibility checkers.
+
+\bigskip
+
+\item \textbf{Typical frame skeleton:}
+
+  \medskip
   
-\vspace*{0.25in}
-    
 \fbox{%
-\begin{minipage}{0.95\linewidth}
+\begin{minipage}{0.92\linewidth}
 \ttfamily\small
-\textbackslash begin\{frame\}\{The basics\}\\
-\textbackslash begin\{itemize\}\\
-\textbackslash item Slides are put inside a \textbackslash texttt\{frame\} environment, just like in Beamer.\\
-\textbackslash item So \textbackslash textbf\{\textbackslash color\{blue\}existing source files don't need a lot of editing.\}\\
-\textbackslash item Here's some gratuitous  \$\textbackslash mathit\{math\}\$ for the accessibility checker.\\
-\textbackslash end\{itemize\}\\
-\textbackslash end\{frame\}
-\end{minipage}
-}
+\string\begin\{frame\}\{Title\}\\
+\string\begin\{itemize\}\\
+\hspace*{0.2in}\string\item\ First point\\
+\string\end\{itemize\}\\
+\string\end\{frame\}
+\end{minipage}}
 
-\vspace*{0.25in}
+\bigskip
 
-\begin{itemize}
-\item \tb{Note:} I set the fonts in this file so that numbers, percent signs, and dollar signs look the same in both math and text mode (my pet Beamer peeve\ldots)
-    \begin{itemize}
-    \item \tr{Text:}  \$1234567890\%.
-    \item \tr{Math:}  $\$1234567890\%.$
-    \end{itemize}
-  \end{itemize}
+\item \tb{Note (optional):} fonts in this template keep digits consistent between text and math.
+\end{itemize}
 \end{frame}
 
-% ======================================================================
-% NOTE: frame* (with asterisk) creates an UNNUMBERED slide
-% Use frame* when you don't want the slide number to increment
-% (e.g., for subsidiary slides or examples that break up the flow)
-% ======================================================================
-\begin{frame*}{Figures}
-
-\vspace*{.2in}
-
+\begin{frame*}{Figures: alt text}
 \begin{itemize}
-\item Including figures is the same as in Beamer (e.g., using \texttt{\textbackslash includegraphics}),
-but you need to provide a \tr{text description}.
+\item Figures are included as usual (e.g., \texttt{\textbackslash includegraphics}), but \tr{add alt text}.
 
-\vspace*{0.25in}
+\bigskip
 
-\fbox{%
-  \ttfamily\small
-  \textbackslash includegraphics[height=.4\textbackslash textheight,%
-  \AltBox{alt=\{A capybara\}}%
-  ]\{capybara.jpg\}%
+\item \textbf{Good (minimal):}
+\fbox{\ttfamily\small
+  \string\includegraphics[\AltBox{alt=\{A capybara\}}]\{capybara.jpg\}
 }
 
+
+%  \string\includegraphics[alt=\{A capybara\}]\{capybara.jpg\}}
+
+\bigskip
+
+\item \textbf{Better (more informative):}
+
+  \medskip  
+\fbox{\ttfamily\small
+\string\includegraphics[alt=\{Photo of a capybara's head facing left\}]\{capybara.jpg\}}
+
+\bigskip
+
+\item Decorative images: use empty alt text: \texttt{alt=\{\}}.
 \end{itemize}
 
-\vspace*{0.25in}
-
+\vspace*{0.15in}
 \centering
-\includegraphics[height=.5\textheight, alt={A capybara}]{capybara.jpg}
-
+\includegraphics[height=.42\textheight, alt={Photo of a capybara's head facing left}]{capybara.jpg}
 \end{frame*}
 
 \begin{frame}{Tables}
 
 \small  
 \begin{itemize}
-\item Including tables is the same as in Beamer (e.g., using the \texttt{tabular} environment).
-\item  Also need to specify \tr{header rows}.  Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 rows, etc.
-\item  \textbf{Note:} This example may still trigger PAC's \texttt{Table header cell has no associated subcells} warning even when the source tagging is correct.
+\item Tables use \texttt{tabular} as usual, but you must  specify \tr{header rows}.  
+\item Use \texttt{\{1\}} for one header row, \texttt{\{1,2\}} for two header rows, etc.
+\item \textbf{Note:} \tb{PAC} may still warn about header associations in some cases; see \tb{Validator-specific notes}.
   
 \vspace*{0.05in}
     
@@ -688,180 +704,135 @@ but you need to provide a \tr{text description}.
 
 \end{frame}
 
-\begin{frame}{Common pitfalls}
-\scriptsize
-  \begin{itemize}
-  \item \tr{Confusing PDF tagging with PDF bookmarks}
-    \begin{itemize}
-    \item \texttt{tagging=on} creates structure tree for \tg{screen readers} (required!)
-    \item PDF bookmarks (navigation pane) are \tg{separate and optional}
-    \item Bookmarks do NOT generate automatically---need custom code
-    \item This template includes bookmark code; see preamble Part 2
-    \end{itemize}
-    
-  \item \tr{Forgetting alt text for images}
-    \begin{itemize}
-    \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
-    \item For purely decorative images, use empty alt text: \texttt{alt=\{\}}
-    \end{itemize}
-    
-  \item \tr{Not specifying table header rows}
-    \begin{itemize}
-    \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table
-    \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 header rows, etc.
-    \end{itemize}
-    
-  \item \tr{Insufficient color contrast}
-    \begin{itemize}
-    \item WCAG 2.1 requires 4.5:1 contrast ratio for normal text
-    \item Avoid light colors: \texttt{yellow}, \texttt{cyan} fail contrast requirements
-    \item Darken \texttt{red} and \texttt{green}: use \texttt{red!80!black}, \texttt{green!40!black}
-    \item Standard \texttt{blue} is fine and meets WCAG requirements
-    \item Test with a contrast checker: \urlu{https://webaim.org/resources/contrastchecker/}
-    \end{itemize}
+% ======================================================================
+% SECTION: PRACTICAL CHECKLISTS (deduplicated)
+% ======================================================================
+\section{Practical checklists}
 
-  \item \tr{Using the wrong compiler}
-    \begin{itemize}
-    \item Make sure your editor is set to use \tg{LuaLaTeX}, not \tr{pdfLaTeX}
-    \end{itemize}
-    
-  \item \tr{Old TeX distribution}
-    \begin{itemize}
-    \item TeX Live 2022 or earlier won't work
-    \item Update packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
-    \end{itemize}
-    
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{What to ADD to existing documents}
-
+\begin{frame}{One checklist (applies to everything)}
 \begin{itemize}
-\item \tb{\textbf{Converting existing LaTeX/Beamer files? Here's what to add:}}
+\item \textbf{Do these for any accessible \LaTeX\ PDF:}
+  \begin{enumerate}
+  \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
+  \item Compile with \tb{Lua\LaTeX}
+  \item Add \texttt{alt=\{...\}} to every \texttt{\textbackslash includegraphics}
+  \item Add \texttt{table/header-rows=\{...\}} before every table
+  \item Use sufficient color contrast (4.5:1 for normal text)
+  \end{enumerate}
 
 \bigskip
 
-\item \textbf{1. At the very top} (before \texttt{\textbackslash documentclass}):
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\AltBox{\textbackslash DocumentMetadata\{...tagging=on...\}}
-\end{minipage}
-}
-
-\item \textbf{2. In every} \texttt{\textbackslash includegraphics}:
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\textbackslash includegraphics[\AltBox{alt=\{Description\}}]\{file\}
-\end{minipage}
-}
-
-\item \textbf{3. Before every table}:
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}
-\end{minipage}
-}
-
-\item \textbf{4. Change compiler to LuaLaTeX}
-
-\bigskip
-
-\item \textbf{5. For slides only:} Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\{ltx-talk\}}
-  \begin{itemize}
-  \item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
-  \item Remove Beamer themes/templates; recreate styling with standard LaTeX
-  \end{itemize}
-
+\item \textbf{Useful link:} contrast checker \urlu{https://webaim.org/resources/contrastchecker/}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Getting started: Common steps}
-  \begin{enumerate}
-  \item \textbf{Setup environment:} Use Overleaf Labs OR install/update TeX Live locally
-    \begin{itemize}
-    \item Overleaf: See earlier slides for Labs setup
-    \item Local: Update via TeX Live Manager/Utility
-    \end{itemize}
-  \item \textbf{Get templates:} Download from \urlu{https://github.com/rhstanton/accessible_LaTeX}
-  \item \textbf{Add accessibility features:}
-    \begin{itemize}
-    \item Add \texttt{alt} text to images
-    \item Add \texttt{table/header-rows} to tables
-    \end{itemize}
-  \item \textbf{Set compiler to LuaLaTeX}
-  \item \textbf{Compile:}
-    \begin{itemize}
-    \item Compile with LuaLaTeX
-    \item PDF file now scores 100\% on \tb{Ally}
-    \end{itemize}
-  \end{enumerate}
+\begin{frame}{The one big fork: articles vs.\ slides}
+\begin{itemize}
+\item \textbf{Articles:} \tg{keep your existing class} (e.g., \texttt{article}) and add the checklist items.
+\item \textbf{Slides:} switch to \texttt{ltx-talk}.
+  \begin{itemize}
+  \item Your \texttt{\textbackslash begin\{frame\}} content often stays the same.
+  \item Remove Beamer themes/templates; recreate styling with standard \LaTeX\ packages (as in this template).
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{If you’re converting Beamer slides:}
+\fbox{%
+\begin{minipage}{0.92\linewidth}
+\ttfamily\small
+\AltBox{\string\documentclass\{ltx-talk\}} \quad \textrm{(instead of beamer)}
+\end{minipage}}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Getting started: What's different by document type}
-
-\bigskip  
-  
-  \textbf{\tb{Articles} (using \texttt{article}, \texttt{report}, \texttt{book}, etc.):}
+\begin{frame}{Getting started (new vs.\ converting): keep it simple}
+\begin{itemize}
+\item \textbf{New documents:}
   \begin{itemize}
-  \item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
-  \item Include the \texttt{tagging-setup} block in \texttt{\textbackslash DocumentMetadata} (as shown in this template)
-  \item Switch to \texttt{fontspec} and \texttt{unicode-math} packages
-  \item \tg{Keep your existing documentclass!}
+  \item copy \texttt{accessible\_slides.tex} or \texttt{accessible\_article.tex}
+  \item replace content; keep the metadata/preamble structure
   \end{itemize}
 
 \bigskip
 
-  \textbf{\tr{Slides} (migrating from Beamer):}
+\item \textbf{Converting existing documents:}
   \begin{itemize}
-  \item Copy preamble from \texttt{accessible\_slides.tex}
-  \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
-  \item \tr{Remove Beamer themes/templates/colors}
-  \item \tg{Recreate styling} using standard LaTeX/xcolor
-  \item \tg{One-time preamble work}—then reuse for all future talks!
-  
+  \item add metadata + Lua\LaTeX\ + alt text + table header rows
+  \item for slides, switch to \texttt{ltx-talk} and redo styling once
+  \end{itemize}
+
 \bigskip
 
-  \item Questions? \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+\item Repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\end{itemize}
+\end{frame}
+
+% ======================================================================
+% SECTION: PITFALLS / VALIDATION
+% ======================================================================
+\section{Validation and known issues}
+
+\begin{frame}{Common pitfalls (high-impact mistakes)}
+\small
+\begin{itemize}
+\item \tr{Confusing PDF tagging with PDF bookmarks}
+  \begin{itemize}
+  \item \texttt{tagging=on} creates the structure tree for \tg{screen readers} (required).
+  \item PDF bookmarks (navigation pane) are separate and optional.
   \end{itemize}
+
+\item \tr{Forgetting alt text}
+  \begin{itemize}
+  \item Every \texttt{\textbackslash includegraphics} needs \texttt{alt=\{...\}} (or \texttt{alt=\{\}} if decorative).
+  \end{itemize}
+
+\item \tr{Not tagging table header rows}
+  \begin{itemize}
+  \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table.
+  \end{itemize}
+
+\item \tr{Low contrast colors}
+  \begin{itemize}
+  \item Avoid light colors (e.g., plain yellow/cyan).
+  \item Use darker variants for red/green (defined in this template).
+  \end{itemize}
+
+\item \tr{Wrong engine or old kernel}
+  \begin{itemize}
+  \item Use Lua\LaTeX\ and ensure format date \texttt{2025-11-01} or later.
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Validation workflow: use multiple checkers}
-
 \begin{itemize}
 \item No single checker catches everything.
 \item Accessibility usability checks and strict PDF conformance checks are not identical.
-\item A practical workflow is to run more than one checker and compare findings.
+\item Practical workflow: run \tb{2+} tools and compare findings.
 
 \bigskip
 
-\item \textbf{Checkers used so far}
+\item \textbf{Common tools:}
   \begin{itemize}
-  \item \tb{Ally} (built into bCourses)
-  \item \tb{veraPDF} (open-source PDF conformance validator, \urlu{https://verapdf.org/})
-  \item \tb{PAC} (PDF Accessibility Checker, \urlu{https://pac.pdf-accessibility.org/})
-  \item \tb{Adobe Acrobat}.
+  \item \tb{Ally} (bCourses)
+  \item \tb{veraPDF} (PDF/A conformance): \urlu{https://verapdf.org/}
+  \item \tb{PAC} (PDF accessibility): \urlu{https://pac.pdf-accessibility.org/}
+  \item \tb{Adobe Acrobat} (useful but has known quirks)
   \end{itemize}
 \end{itemize}
-
 \end{frame}
 
-\begin{frame}{Optional validator cleanup step: \texttt{strip\_af.py}}
-
+\begin{frame}{Optional cleanup for strict validators: \texttt{strip\_af.py}}
 \begin{itemize}
-\item The metadata settings alone are enough to generate a 100\% score on Ally.
-\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
-\item To remove these and stop the complaints, run \texttt{strip\_af.py}:
+\item The metadata settings alone can be enough for a 100\% score in Ally.
+\item Some strict tools (e.g., \tb{veraPDF}) may still complain about \texttt{/AF} or embedded-file structures.
+\item To remove these, run:
 
 \bigskip
 
 \fbox{%
-\begin{minipage}{0.9\linewidth}
+\begin{minipage}{0.92\linewidth}
 \ttfamily
 python strip\_af.py build/accessible\_slides.pdf
 \end{minipage}
@@ -869,44 +840,58 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
-\item Then validate \texttt{build/accessible\_slides.pdf} with \texttt{veraPDF}.
+\item Install prerequisite, \tg{pikepdf}:  \qquad \texttt{python -m pip install pikepdf}
+\item Then validate again with veraPDF.
 \end{itemize}
-
 \end{frame}
 
-\begin{frame}{Validator-specific notes}
-  \small
+\begin{frame}{Validator-specific notes (common false positives)}
+\small
+\begin{itemize}
+\item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
   \begin{itemize}
-  \item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
-    \begin{itemize}
-    \item Appears around figure captions, section numbers, table captions
-    \item \tg{This is an Acrobat bug}, not a source error -- \tb{safe to ignore}
-    \item The \texttt{<Lbl>} tag is correctly used for numbering
-    \item Acrobat's checker incorrectly expects it only in lists
-    \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
-    \end{itemize}
-  
-  \item \textbf{PAC table warning (known behavior)}
-    \begin{itemize}
-    \item PAC can report \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct
-    \item This behavior is documented by the LaTeX Tagging Project: \urlu{https://github.com/latex3/tagging-project/issues/1056}
-    \end{itemize}
-
-  \item \textbf{When this warning appears}
-    \begin{itemize}
-    \item First confirm source markup is correct (especially \texttt{table/header-rows})
-    \item Keep the source tagging and document the validator warning
-    \item Report minimal reproductions to tool vendors when possible
-    \end{itemize}
-
-\item \textbf{Bottom line}
-    \begin{itemize}
-    \item Use multiple validators (Ally, veraPDF, PAC, Acrobat) and compare findings
-    \item Treat one-tool warnings as signals to investigate, not proof of errors
-    \end{itemize}
+  \item Often appears around figure captions, section numbers, table captions.
+  \item \tg{This is an Acrobat bug} in common setups; typically safe to ignore if source tagging is correct.
+  \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
   \end{itemize}
+
+\bigskip
+
+\item \textbf{PAC table warning (known behavior)}
+  \begin{itemize}
+  \item PAC can report: \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct.
+  \item Documented by the Tagging Project: \urlu{https://github.com/latex3/tagging-project/issues/1056}
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Bottom line:} treat one-tool warnings as investigation prompts, not definitive errors.
+\end{itemize}
 \end{frame}
+
+% ======================================================================
+% FINAL: TL;DR (photo-worthy)
+% ======================================================================
+\section{TL;DR}
+
+\begin{frame}{TL;DR}
+\begin{itemize}
+\item \textbf{To make an accessible \LaTeX\ PDF:}
+  \begin{enumerate}
+  \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
+  \item Compile with \tb{Lua\LaTeX}
+  \item Every figure: \texttt{\textbackslash includegraphics[alt=\{...\}]\{...\}}
+  \item Every table: \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}
+  \item Use high-contrast colors (4.5:1) and validate with 2+ tools
+  \end{enumerate}
+
+\bigskip
+
+\item Template repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\item Questions: \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
+\end{itemize}
+\end{frame}
+
 
 \end{document}
 
