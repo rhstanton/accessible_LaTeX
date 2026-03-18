@@ -549,53 +549,6 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{What to ADD to existing documents}
-
-\begin{itemize}
-\item \tb{\textbf{Converting existing LaTeX/Beamer files? Here's what to add:}}
-
-\bigskip
-
-\item \textbf{1. At the very top} (before \texttt{\textbackslash documentclass}):
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\AltBox{\textbackslash DocumentMetadata\{...tagging=on...\}}
-\end{minipage}
-}
-
-\item \textbf{2. In every} \texttt{\textbackslash includegraphics}:
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\textbackslash includegraphics[\AltBox{alt=\{Description\}}]\{file\}
-\end{minipage}
-}
-
-\item \textbf{3. Before every table}:
-
-\fbox{%
-\begin{minipage}{0.85\linewidth}
-\ttfamily\scriptsize
-\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}
-\end{minipage}
-}
-
-\item \textbf{4. Change compiler to LuaLaTeX}
-
-\bigskip
-
-\item \textbf{5. For slides only:} Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\{ltx-talk\}}
-  \begin{itemize}
-  \item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
-  \item Remove Beamer themes/templates; recreate styling with standard LaTeX
-  \end{itemize}
-
-\end{itemize}
-\end{frame}
-
 \begin{frame}{Common requirements (3/3): LuaLaTeX}
 
 \begin{itemize}
@@ -749,7 +702,7 @@ but you need to provide a \tr{text description}.
   \item \tr{Forgetting alt text for images}
     \begin{itemize}
     \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
-    \item Even decorative images need alt text (use \texttt{alt=\{decorative\}})
+    \item For purely decorative images, use empty alt text: \texttt{alt=\{\}}
     \end{itemize}
     
   \item \tr{Not specifying table header rows}
@@ -779,6 +732,53 @@ but you need to provide a \tr{text description}.
     \end{itemize}
     
   \end{itemize}
+\end{frame}
+
+\begin{frame}{What to ADD to existing documents}
+
+\begin{itemize}
+\item \tb{\textbf{Converting existing LaTeX/Beamer files? Here's what to add:}}
+
+\bigskip
+
+\item \textbf{1. At the very top} (before \texttt{\textbackslash documentclass}):
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\AltBox{\textbackslash DocumentMetadata\{...tagging=on...\}}
+\end{minipage}
+}
+
+\item \textbf{2. In every} \texttt{\textbackslash includegraphics}:
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\textbackslash includegraphics[\AltBox{alt=\{Description\}}]\{file\}
+\end{minipage}
+}
+
+\item \textbf{3. Before every table}:
+
+\fbox{%
+\begin{minipage}{0.85\linewidth}
+\ttfamily\scriptsize
+\AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1\}\}}
+\end{minipage}
+}
+
+\item \textbf{4. Change compiler to LuaLaTeX}
+
+\bigskip
+
+\item \textbf{5. For slides only:} Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\{ltx-talk\}}
+  \begin{itemize}
+  \item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
+  \item Remove Beamer themes/templates; recreate styling with standard LaTeX
+  \end{itemize}
+
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Getting started: Common steps}
