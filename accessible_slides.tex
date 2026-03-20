@@ -283,6 +283,36 @@
 }
 
 % ======================================================================
+% TABLE OF CONTENTS FORMATTING
+% ======================================================================
+% Custom TOC formatting for outline/agenda slides
+% Without this, \tableofcontents produces an ugly default layout
+%
+% USAGE:
+%   \begin{frame}{Outline}
+%     \OutlineTOCStyle
+%       \tableofcontents
+%     \EndOutlineTOCStyle
+%   \end{frame}
+
+\makeatletter
+\newcommand{\OutlineTOCStyle}{%
+  \vspace*{-.2in}%
+  \bgroup%
+  % Remove page numbers, use paragraph layout instead of two columns
+  \renewcommand*\l@section[2]{\par\noindent\raggedright{##1}\par\vspace{0.6em}}%
+  % Format section numbers inline: "1." followed by title
+  \renewcommand*\numberline[1]{##1.\hspace{0.6em}}%
+  \vskip1\baselineskip%
+  \fontsize{11}{13}\selectfont%
+}
+\newcommand{\EndOutlineTOCStyle}{%
+  \vskip0pt minus 1filll%
+  \egroup%
+}
+\makeatother
+
+% ======================================================================
 % FONT CONFIGURATION (OPTIONAL)
 % ======================================================================
 % Font choices that ensure consistency between text and math mode
@@ -345,19 +375,9 @@
 % Keep title slide unnumbered and start content slide numbering at 1.
 \setcounter{frame}{0}
 
-% Show sections only (not subsections) in TOC
-\setcounter{tocdepth}{1}
-\setcounter{secnumdepth}{2}
+% \section{Overview}
 
-\begin{frame}{Outline}
-\OutlineTOCStyle
-\tableofcontents
-\EndOutlineTOCStyle
-\end{frame}
-
-\section{Overview}
-
-\begin{frame}{Why this matters}
+\begin{frame}{\LaTeX\ and accessibility: new requirements}
 
 \begin{itemize}
 
@@ -370,10 +390,11 @@
 \bigskip
 
 \item Many of us use \tb{\LaTeX} to create teaching materials, both slides and documents.
-  \begin{itemize}
-  \item \textbf{\tr{But standard \LaTeX\ (e.g., \tb{Beamer}) does not automatically generate accessible PDFs.}}
-  \end{itemize}    
 
+\bigskip
+  
+\item \textbf{\tr{But standard \LaTeX\ (especially \tb{Beamer}) does not automatically generate accessible PDFs.}}
+  
 \bigskip  
   
 \item \tg{Good news:} The \LaTeX\ Project team has developed solutions.
@@ -392,6 +413,15 @@
   \item \tg{Validation status:} Slides score 100\% with \tb{Ally} and pass common validators (\tb{veraPDF}, \tb{PAC}, \tb{Acrobat}) in typical workflows (tested March 17, 2026).
   \end{itemize}
 
+  \bigskip
+
+\item Also includes some (optional) additional slide features
+  \begin{itemize}
+  \item Readable  \tb{outline slide}
+  \item Automatic \tb{section separator slides}
+  \item Multi-page \tb{bibliography support}
+  \end{itemize}
+  
 \bigskip
 
 \item Repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
@@ -425,11 +455,21 @@
 \end{itemize}
 \end{frame}
 
+% Show sections only (not subsections) in TOC
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\begin{frame}{Outline}
+\OutlineTOCStyle
+\tableofcontents
+\EndOutlineTOCStyle
+\end{frame}
+
 % ======================================================================
 % SECTION: SETUP / REQUIREMENTS
 % ======================================================================
 
-\section{Setup requirements}
+\section{Setup}
 
 \begin{frame}{Version requirements: what actually matters}
 \begin{itemize}
@@ -841,6 +881,7 @@ python strip\_af.py build/accessible\_slides.pdf
 \end{itemize}
 \end{frame}
 
+
 % ======================================================================
 % FINAL: QUICK START
 % ======================================================================
@@ -864,6 +905,125 @@ python strip\_af.py build/accessible\_slides.pdf
 \end{itemize}
 \end{frame}
 
+% ======================================================================
+% SECTION: (OPTIONAL) ADDITIONAL  UTILITIES (slide_utils.sty)
+% ======================================================================
+\section{(Optional) additional utilities}
+
+\begin{frame}{Optional presentation utilities}
+
+\begin{itemize}
+\item This template includes \tg{optional utilities} in \texttt{slide\_utils.sty}
+  \begin{itemize}
+  \item \tr{Not required for accessibility}
+  \item Useful for common presentation tasks
+  \item Easy to customize or remove
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Two optional features:}
+  \begin{enumerate}
+  \item Automatic section separator slides
+  \item Multi-page bibliography support
+  \end{enumerate}
+
+\bigskip
+
+\item See \texttt{slide\_utils.sty} for implementation details and customization options.
+\item \textbf{Note:} There's additional code in the main preamble to get readable table of contents.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Optional feature 1: section separator slides}
+
+\begin{itemize}
+\item \textbf{What it does:} Automatically inserts a separator slide after each \texttt{\textbackslash section} command
+  \begin{itemize}
+  \item Displays section number and title in large text
+  \item Centered on the slide for visual emphasis
+  \item Uses accessible colors (AccessibleRed for sections, blue for subsections)
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Example:} After \texttt{\textbackslash section\{Core requirements\}}, automatically creates a slide saying
+
+  \bigskip
+  \begin{center}
+  {\color{AccessibleRed}\Large\bfseries 3. Core requirements}
+  \end{center}
+
+\bigskip
+
+\item \textbf{To disable:} Comment out or remove the redefinition code in \texttt{slide\_utils.sty} Section 1
+\item \textbf{To customize:} Edit colors, fonts, or spacing in the frame template
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optional feature 2: multi-page bibliography}
+
+  \medskip
+  
+\begin{itemize}
+\item \textbf{\tr{Problem:}} \texttt{\textbackslash bibliography} inside \texttt{frame} environment puts all references on one slide.
+  \begin{itemize}
+  \item For large bibliographies, this can be unreadable.
+  \item This was easy with Beamer, using the \texttt{allowframebreaks} option.
+  \item But \texttt{ltx-talk} does not have a similar option.
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{\tg{Solution:}} Write code to split bibliography automatically across multiple slides
+  \begin{itemize}
+  \item Works with standard Bib\TeX\ workflow
+  \item Uses Lua script (\texttt{\tb{rsbibsplit.lua}}) to split the \texttt{.bbl} file
+  \item (Lua\LaTeX\ provides access to the \tb{Lua} programming language)
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Usage:} As usual (see end of this \texttt{.tex} file for complete example)
+  \begin{itemize}
+  \item \texttt{\textbackslash cite\{key1,key2,...\}} to specify references
+  \item \texttt{\textbackslash bibliography\{bibfile\}} to specify \texttt{bib} file
+  \item \tb{\textbf{Note:} Do \textbf{not} put \texttt{\textbackslash bibliography} command inside \texttt{frame} environment }
+  \item (Set \texttt{\textbackslash RS@bibmax} to customize max per slide; default=8).
+    
+  \end{itemize}
+
+\bigskip
+
+\item See \texttt{slide\_utils.sty} Section 2 for detailed workflow explanation.
+\end{itemize}
+\end{frame}
+
+
+\section{References}
+
+
+% ======================================================================
+% BIBLIOGRAPHY / REFERENCES SECTION
+% ======================================================================
+% The slide_utils package provides automatic multi-page bibliography support
+% References are split across multiple slides with configurable entries per slide
+%
+% WORKFLOW:
+% 1. Run LuaLaTeX to generate .aux file
+% 2. Run BibTeX to generate .bbl file: bibtex accessible_slides (or bibtex build/accessible_slides)
+% 3. Run LuaLaTeX again - Lua script splits .bbl and generates reference frames
+% 4. Run LuaLaTeX once more to resolve all citations
+%
+% Standard LaTeX bibliography workflow, exactly as for articles!
+
+\nocite{arrow1963uncertainty, akerlof1970lemons, fama1970efficient, black1973pricing, merton1974pricing}
+\nocite{lucas1976econometric, rothschild1976equilibrium, kahneman1979prospect, jensen1976agency}
+\nocite{modigliani1958cost, coase1960problem, solow1956growth, fama1993common}
+\nocite{krugman1991increasing, barro1991growth}
+
+\bibliographystyle{jfabbrev}   % Bibliography formatting style
+\bibliography{sample}             % Your .bib file (without .bib extension)
 
 \end{document}
 
