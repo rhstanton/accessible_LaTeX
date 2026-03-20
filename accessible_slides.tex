@@ -345,6 +345,16 @@
 % Keep title slide unnumbered and start content slide numbering at 1.
 \setcounter{frame}{0}
 
+% Show sections only (not subsections) in TOC
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\begin{frame}{Outline}
+\OutlineTOCStyle
+\tableofcontents
+\EndOutlineTOCStyle
+\end{frame}
+
 \section{Overview}
 
 \begin{frame}{Why this matters}

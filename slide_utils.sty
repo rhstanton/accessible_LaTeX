@@ -70,6 +70,34 @@
   }
 }
 
+% ======================================================================
+% SECTION 1B: TABLE OF CONTENTS
+% ======================================================================
+
+% ======================================================================
+% TABLE OF CONTENTS CUSTOMIZATION
+% ======================================================================
+% Custom TOC formatting for outline slides
+% Removes number column, displays inline section numbers with proper spacing
+
+\makeatletter
+\newcommand{\OutlineTOCStyle}{%
+  \vspace*{-.2in}%
+  \bgroup%
+  % Plain paragraph format (no number column)
+  % Use \raggedright to avoid underfull box warnings in TOC
+  \renewcommand*\l@section[2]{\par\noindent\raggedright{##1}\par\vspace{0.6em}}%
+  % Inline number formatting
+  \renewcommand*\numberline[1]{##1.\hspace{0.6em}}%
+  \vskip1\baselineskip%
+  \fontsize{11}{13}\selectfont%
+}
+\newcommand{\EndOutlineTOCStyle}{%
+  \vskip0pt minus 1filll%
+  \egroup%
+}
+\makeatother
+
 
 % ======================================================================
 % SECTION 2: BIBLIOGRAPHY SUPPORT
