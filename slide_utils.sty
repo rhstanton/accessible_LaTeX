@@ -1,0 +1,90 @@
+% ======================================================================
+% SLIDE_UTILS.STY - Utility package for accessible_slides.tex
+% ======================================================================
+% Purpose: Provides custom commands and utilities for accessible LaTeX slides
+% that are not strictly required for accessibility but improve usability
+%
+% Usage: \usepackage{slide_utils}
+%
+% Author: Richard Stanton
+% License: Same as accessible_slides.tex
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{slide_utils}[2026/03/19 v1.0 Utilities for accessible slides]
+
+% ======================================================================
+% SECTION 1: SECTION SLIDE SUPPORT
+% ======================================================================
+% Commands for creating dedicated section title slides
+% 
+% IMPORTANT: This redefinition happens at \begin{document} to ensure
+% it captures any earlier redefinitions (e.g., bookmark handling)
+
+\RequirePackage{xparse}
+
+% Storage for section titles
+\gdef\g@slideutils@sectitle{}
+\gdef\g@slideutils@subsectitle{}
+
+% Delay the redefinition until document begins
+\AtBeginDocument{%
+  % Save whatever \section is at this point (includes all preamble modifications)
+  \NewCommandCopy{\slideutils@origsection}{\section}
+  \NewCommandCopy{\slideutils@origsubsection}{\subsection}
+  
+  % Redefine \section to capture title and add separator frame
+  \RenewDocumentCommand{\section}{s o m}{%
+    % Store the title (prefer optional arg if given, otherwise mandatory)
+    \IfNoValueTF{#2}%
+      {\xdef\g@slideutils@sectitle{#3}}%
+      {\xdef\g@slideutils@sectitle{#2}}%
+    % Call the original (possibly bookmark-enhanced) \section
+    \IfBooleanTF{#1}%
+      {\IfNoValueTF{#2}{\slideutils@origsection*{#3}}{\slideutils@origsection*[#2]{#3}}}%
+      {\IfNoValueTF{#2}{\slideutils@origsection{#3}}{\slideutils@origsection[#2]{#3}}}%
+    % Add separator frame
+    \begin{frame}{}%
+      \centering
+      \vfill
+      \vspace*{-.3in}%
+      {\color{AccessibleRed}\LARGE\bfseries\thesection.\ \g@slideutils@sectitle\par}%
+      \vfill
+    \end{frame}%
+  }
+  
+  % Same for subsections
+  \RenewDocumentCommand{\subsection}{s o m}{%
+    \IfNoValueTF{#2}%
+      {\xdef\g@slideutils@subsectitle{#3}}%
+      {\xdef\g@slideutils@subsectitle{#2}}%
+    \IfBooleanTF{#1}%
+      {\IfNoValueTF{#2}{\slideutils@origsubsection*{#3}}{\slideutils@origsubsection*[#2]{#3}}}%
+      {\IfNoValueTF{#2}{\slideutils@origsubsection{#3}}{\slideutils@origsubsection[#2]{#3}}}%
+    \begin{frame}{}%
+      \centering
+      \vfill
+      \vspace*{-.3in}%
+      {\color{blue}\Large\g@slideutils@subsectitle\par}%
+      \vfill
+    \end{frame}%
+  }
+}
+
+
+% ======================================================================
+% SECTION 2: BIBLIOGRAPHY SUPPORT
+% ======================================================================
+% Configuration for multi-page bibliographies in slides
+% (Add your bibliography setup here)
+
+
+
+% ======================================================================
+% SECTION 3: ADDITIONAL UTILITIES
+% ======================================================================
+% Any other custom commands or configurations
+% (Add additional utilities here)
+
+
+
+\endinput
