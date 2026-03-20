@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v1.4)
+# Accessible LaTeX Templates (v1.5)
 
 ![License: CC0](https://img.shields.io/badge/license-CC0-blue)  
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)  
@@ -460,4 +460,3 @@ https://www.w3.org/WAI/standards-guidelines/wcag/
 Released under **CC0 1.0 Universal**.
 
 No restrictions. No warranty.
-
