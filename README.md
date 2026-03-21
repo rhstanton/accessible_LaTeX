@@ -13,7 +13,7 @@ https://github.com/rhstanton/accessible_LaTeX
 
 ## Overview
 
-As of **April 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
+As of **April 24, 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
 
 Many instructors write course materials in **LaTeX**, but standard LaTeX (including Beamer) does **not automatically generate accessible PDFs**.
 
