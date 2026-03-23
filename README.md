@@ -5,7 +5,7 @@
 ![Engine](https://img.shields.io/badge/engine-LuaLaTeX-blue)
 
 Richard Stanton — UC Berkeley  
-Feb 10, 2026  
+Mar 21, 2026  
 
 https://github.com/rhstanton/accessible_LaTeX
 
@@ -259,7 +259,11 @@ https://www.overleaf.com/labs/participate
 ```
 accessible_article.tex
 accessible_slides.tex
+BerkeleyHaas.png
 capybara.jpg
+rsbibsplit.lua
+sample.bib
+slide_utils.sty
 strip_af.py
 .latexmkrc
 ```
@@ -268,7 +272,11 @@ strip_af.py
 |---|---|
 | accessible_article.tex | example accessible article |
 | accessible_slides.tex | example accessible slides |
+| BerkeleyHaas.png | Berkeley Haas logo |
 | capybara.jpg | sample figure |
+| rsbibsplit.lua | LUA code to split bibliography across multiple slides |
+| sample.bib | sample bibliography file |
+| slide_utils.sty | additional slide utilities |
 | strip_af.py | optional validator cleanup script |
 | .latexmkrc | build configuration |
 
@@ -408,8 +416,8 @@ Recommended workflow:
 # Optional Validator Cleanup
 
 ```bash
-python strip_af.py build/yourfile.pdf
 pip install pikepdf
+python strip_af.py build/yourfile.pdf
 ```
 
 ---
