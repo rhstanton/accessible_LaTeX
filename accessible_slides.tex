@@ -1,5 +1,5 @@
-% ============================================================================
-% Accessible Slides in LaTeX
+%%% * ACCESSIBLE SLIDES IN LATEX
+%
 % ============================================================================
 %
 % Purpose
@@ -30,9 +30,7 @@
 % \end{frame}
 %
 
-% ============================================================================
-% PART A. REQUIRED ACCESSIBILITY METADATA
-% ============================================================================
+%%% * PART A. REQUIRED ACCESSIBILITY METADATA
 %
 % REQUIRED: this block must come before \documentclass.
 %
@@ -58,9 +56,7 @@
   }
 }
 
-% ============================================================================
-% PART B. DOCUMENT CLASS
-% ============================================================================
+%%% * PART B. DOCUMENT CLASS
 %
 % ltx-talk is an accessible presentation class from the LaTeX Project.
 %
@@ -76,9 +72,7 @@
 
 \documentclass[frame-title-arg]{ltx-talk}
 
-% ============================================================================
-% PART C. PACKAGES
-% ============================================================================
+%%% * PART C. PACKAGES
 %
 % Required or used directly in this file:
 
@@ -95,9 +89,7 @@
 % It provides section separator slides and multi-page bibliography support.
 \usepackage{slide_utils}
 
-% ============================================================================
-% PART D. CUSTOMIZE THESE DOCUMENT DETAILS
-% ============================================================================
+%%% * PART D. CUSTOMIZE THESE DOCUMENT DETAILS
 %
 % SAFE TO EDIT: put your own title, author, institution, version, URL, and email
 % here. The title slide and PDF metadata reuse these values.
@@ -114,9 +106,7 @@
 \institute{\TalkInstitution}
 \date{\today}
 
-% ============================================================================
-% PART E. COLORS AND SMALL TEACHING MACROS
-% ============================================================================
+%%% * PART E. COLORS AND SMALL TEACHING MACROS
 %
 % Accessibility rule of thumb:
 % - Normal text should have at least a 4.5:1 contrast ratio against the
@@ -137,9 +127,7 @@
   {\setlength{\fboxsep}{0pt}\colorbox{AltYellow}{\texttt{#1}}}%
 }
 
-% ============================================================================
-% PART F. LINKS
-% ============================================================================
+%%% * PART F. LINKS
 %
 % Accessibility note:
 % - Links should not rely on color alone. This template underlines links as well.
@@ -156,9 +144,7 @@
   citecolor=AccessibleGreen
 }
 
-% ============================================================================
-% PART G. PDF TAGGING AND BOOKMARKS
-% ============================================================================
+%%% * PART G. PDF TAGGING AND BOOKMARKS
 %
 % Important distinction:
 % - PDF tagging is required for accessibility and screen readers.
@@ -223,9 +209,7 @@
 }
 \ExplSyntaxOff
 
-% ============================================================================
-% PART H. SLIDE APPEARANCE
-% ============================================================================
+%%% * PART H. SLIDE APPEARANCE
 %
 % This part is visual styling, not core accessibility machinery.
 
@@ -338,9 +322,7 @@
 }
 \makeatother
 
-% ============================================================================
-% PART I. OPTIONAL FONT CONFIGURATION
-% ============================================================================
+%%% * PART I. OPTIONAL FONT CONFIGURATION
 %
 % OPTIONAL: comment out this section if you want default fonts.
 %
@@ -357,9 +339,7 @@
 ]
 \setmathfont{LeteSansMath.otf}
 
-% ============================================================================
-% PART J. SLIDE CONTENT STARTS HERE
-% ============================================================================
+%%% * PART J. SLIDE CONTENT STARTS HERE
 %
 % From this point on, most content looks like ordinary Beamer-style frame code.
 
@@ -1017,9 +997,8 @@ python strip\_af.py build/accessible\_slides.pdf
 \section{References}
 
 
-% ======================================================================
-% BIBLIOGRAPHY / REFERENCES SECTION
-% ======================================================================
+%%% * BIBLIOGRAPHY / REFERENCES
+%
 % The slide_utils package provides automatic multi-page bibliography support
 % References are split across multiple slides with configurable entries per slide
 %
@@ -1041,9 +1020,8 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \end{document}
 
-% ======================================================================
-% EMACS/AUCTEX LOCAL VARIABLES (Optional - for Emacs users only)
-% ======================================================================
+%%% * EMACS LOCAL VARIABLES (Optional: for Emacs users only)
+%
 % The section below configures Emacs/AUCTeX to use the correct LaTeX engine
 % and options when compiling this file from within Emacs.
 %
@@ -1052,7 +1030,6 @@ python strip\_af.py build/accessible\_slides.pdf
 %
 % Key settings explained:
 %   - TeX-engine: luatex           -> Forces LuaLaTeX (REQUIRED FOR THIS TEMPLATE)
-%   - TeX-command-extra-options    -> Adds -interaction=nonstopmode flag
 %   - TeX-master: t                -> This file is its own master document
 %   - eval: commands               -> Custom Emacs functions for this file
 %
@@ -1065,11 +1042,11 @@ python strip\_af.py build/accessible\_slides.pdf
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-engine: luatex
-%%% TeX-command-extra-options: "-interaction=nonstopmode"
 %%% TeX-master: t
-%%% eval: (setq-local TeX-command-list (cons '("LatexMk (build)" "latexmk -lualatex -interaction=nonstopmode -file-line-error -synctex=1 -shell-escape -outdir=build %s" TeX-run-TeX nil t :help "Run LatexMk with LuaLaTeX") (remove-if (lambda (x) (equal (car x) "LatexMk (build)")) TeX-command-list)))
 %%% eval: (setq org-format-latex-header "\\documentclass[10pt]{RSorg}\\pagestyle{empty}")
+%%% eval: (setq-local outline-regexp "\\(%%% \\*+ \\|\\\\begin{document}\\|\\\\begin{frame}\\|\\\\\\(part\\|chapter\\|section\\|subsection\\|subsubsection\\)\\b\\)")
+%%% eval: (outline-minor-mode 1)
 %%% eval: '(hide-latex-preamble)
 %%% eval: (outline-hide-body)
+%%% eval: (latex-hide-environment "comment")
 %%% End:
-
