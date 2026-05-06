@@ -5,7 +5,7 @@
 ![Engine](https://img.shields.io/badge/engine-LuaLaTeX-blue)
 
 Richard Stanton — UC Berkeley  
-Mar 21, 2026  
+Feb 10, 2026  
 
 https://github.com/rhstanton/accessible_LaTeX
 
@@ -13,7 +13,7 @@ https://github.com/rhstanton/accessible_LaTeX
 
 ## Overview
 
-As of **April 24, 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
+As of **April 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
 
 Many instructors write course materials in **LaTeX**, but standard LaTeX (including Beamer) does **not automatically generate accessible PDFs**.
 
@@ -98,10 +98,10 @@ If you're converting existing LaTeX/Beamer files, here's what to add:
 
 ### One Class-Specific Step
 
-| Document Type | Requirement |
-|---|---|
-| Articles | Keep `article`, `report`, or `book` |
-| Slides | Replace `beamer` with `ltx-talk` |
+| Document Type | Requirement                         |
+| ------------- | ----------------------------------- |
+| Articles      | Keep `article`, `report`, or `book` |
+| Slides        | Replace `beamer` with `ltx-talk`    |
 
 ---
 
@@ -170,13 +170,13 @@ This repository is intended for:
 
 # Article vs Slides
 
-| Feature | Articles | Slides |
-|---|---|---|
-| Document class | `article`, `report`, `book` | `ltx-talk` |
-| Class change needed | No | Yes |
-| Frame environment | N/A | Yes |
-| Beamer themes | N/A | Not supported |
-| Accessibility steps | Same for both | Same for both |
+| Feature             | Articles                    | Slides        |
+| ------------------- | --------------------------- | ------------- |
+| Document class      | `article`, `report`, `book` | `ltx-talk`    |
+| Class change needed | No                          | Yes           |
+| Frame environment   | N/A                         | Yes           |
+| Beamer themes       | N/A                         | Not supported |
+| Accessibility steps | Same for both               | Same for both |
 
 ---
 
@@ -259,26 +259,18 @@ https://www.overleaf.com/labs/participate
 ```
 accessible_article.tex
 accessible_slides.tex
-BerkeleyHaas.png
 capybara.jpg
-rsbibsplit.lua
-sample.bib
-slide_utils.sty
 strip_af.py
 .latexmkrc
 ```
 
-| File | Purpose |
-|---|---|
-| accessible_article.tex | example accessible article |
-| accessible_slides.tex | example accessible slides |
-| BerkeleyHaas.png | Berkeley Haas logo |
-| capybara.jpg | sample figure |
-| rsbibsplit.lua | LUA code to split bibliography across multiple slides |
-| sample.bib | sample bibliography file |
-| slide_utils.sty | additional slide utilities |
-| strip_af.py | optional validator cleanup script |
-| .latexmkrc | build configuration |
+| File                   | Purpose                           |
+| ---------------------- | --------------------------------- |
+| accessible_article.tex | example accessible article        |
+| accessible_slides.tex  | example accessible slides         |
+| capybara.jpg           | sample figure                     |
+| strip_af.py            | optional validator cleanup script |
+| .latexmkrc             | build configuration               |
 
 ---
 
@@ -416,8 +408,8 @@ Recommended workflow:
 # Optional Validator Cleanup
 
 ```bash
-pip install pikepdf
 python strip_af.py build/yourfile.pdf
+pip install pikepdf
 ```
 
 ---

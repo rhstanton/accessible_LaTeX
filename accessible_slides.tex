@@ -260,27 +260,60 @@
 % - Other slides: right-aligned frame number
 
 \makeatletter
-\renewcommand\@framenumber{%
-  \ifnum\value{page}=1\relax
-    % --- title slide footer content ---
-    \hspace*{-.2in}%
-    \raisebox{0.0in}[.25in][.0in]{\includegraphics[width=.45in,alt={Berkeley Haas logo}]{BerkeleyHaas}}
-    \hfill \hspace*{-.5in} Richard Stanton, \the\year \hfill 
-  \else
-    % Other slides: frame number only, right-aligned
-    \hfill\arabic{frame}%
-  \fi
+% Title-page footer row: logo left, copyright truly centered, (frame number right - commented out)
+\def\@RStitlefooterrow{%
+  \makebox[\dimexpr\paperwidth-0.6cm\relax][l]{%
+    \rlap{\raisebox{0.0in}[.25in][.0in]{%
+        \includegraphics[width=.45in,alt={Berkeley Haas logo}]{BerkeleyHaas}}}%
+        \hfill
+    \textcopyright\ Richard Stanton, \the\year
+    \hfill
+    % \llap{\arabic{frame}}%
+  }%
+}
+
+% Right-aligned frame number for regular slides.
+\def\@RSframenumberR{%
+  \makebox[\dimexpr\paperwidth-1.2cm\relax][r]{\arabic{frame}}%
+}
+
+% Footer-element instances -------------------------------------------------
+\DeclareInstance{footer-element}{RStitlefooterrow}{talk}{}
+\DeclareInstance{footer-element}{RSframenumberR}{talk}{}
+
+% Regular footer: frame number only, right-aligned.
+\EditInstance{footer}{std}{%
+  color         = black,%
+  font          = \tiny,%
+  left-hspace   = 0.9cm,%
+  right-hspace  = 0.3cm,%
+  element-order = {RSframenumberR},%
+}
+
+% Title-page footer: single full-row element handles the left/center/right
+% layout internally via \rlap/\hfill/\llap.
+% left-hspace and right-hspace are kept small so the logo and number reach
+% the slide edges.
+\DeclareInstanceCopy{footer}{RSfooterfirst}{std}
+\EditInstance{footer}{RSfooterfirst}{%
+  element-order = {RStitlefooterrow},%
+  left-hspace   = 0.3cm,%
+  right-hspace  = 0.3cm,%
+}
+
+% Title-page pagestyle -----------------------------------------------------
+% The idiomatic ltx-talk way to give the title slide a different footer is
+% to pass framestyle = RStitlepage to \maketitle[].  We define that style
+% here: it uses the standard header and the RSfooterfirst footer instance.
+% All other slides use the unmodified ps@talk (framenumber only).
+\makeatletter
+\def\ps@RStitlepage{%
+  \def\@oddhead{\UseInstance{header}{std}\hfil}%
+  \def\@oddfoot{\UseInstance{footer}{RSfooterfirst}}%
+  \let\@evenhead\@oddhead
+  \let\@evenfoot\@oddfoot
 }
 \makeatother
-
-\EditInstance{footer}{std}{
-  color         = black,
-  font          = \tiny,
-  left-hspace   = 0.9cm,
-  right-hspace  = 0.5cm,
-  separator     = \hfill,
-  element-order = {framenumber},
-}
 
 % ======================================================================
 % TABLE OF CONTENTS FORMATTING
@@ -362,6 +395,7 @@
 % without triggering title-structure tagging warnings.
 
 \begin{frame*}{}
+  \thispagestyle{RStitlepage}
   \centering
   {\LARGE\textcolor{blue}{Accessible Slides in LaTeX}}\\[0.5\baselineskip]
   {\normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX}}\\[1.0\baselineskip]
@@ -1063,3 +1097,4 @@ python strip\_af.py build/accessible\_slides.pdf
 %%% eval: '(hide-latex-preamble)
 %%% eval: (outline-hide-body)
 %%% End:
+
