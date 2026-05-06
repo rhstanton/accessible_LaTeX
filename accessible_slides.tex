@@ -1,413 +1,388 @@
-% ======================================================================
-% DOCUMENT METADATA - REQUIRED FOR ACCESSIBILITY
-% ======================================================================
-% This MUST be the first thing in your document, before \documentclass
-% It configures the PDF for accessibility compliance
+% ============================================================================
+% Accessible Slides in LaTeX
+% ============================================================================
+%
+% Purpose
+% -------
+% This is an educational single-file template for creating accessible slide
+% decks with LaTeX. It is intentionally verbose in places: the comments explain
+% which pieces are required, which are safe to edit, and which are optional.
+%
+% Compile with
+% ------------
+%   lualatex accessible_slides.tex
+% or
+%   latexmk -lualatex accessible_slides.tex
+%
+% Minimum requirements
+% --------------------
+% - LuaLaTeX
+% - LaTeX format date 2025-11-01 or later
+% - ltx-talk class
+%
+% Quick slide example
+% -------------------
+% \begin{frame}{Slide title}
+%   \begin{itemize}
+%   \item First point
+%   \item Second point
+%   \end{itemize}
+% \end{frame}
+%
+
+% ============================================================================
+% PART A. REQUIRED ACCESSIBILITY METADATA
+% ============================================================================
+%
+% REQUIRED: this block must come before \documentclass.
+%
+% SAFE TO EDIT:
+% - Change lang=en-US if your slides are not in U.S. English.
+%
+% USUALLY LEAVE UNCHANGED:
+% - pdfstandard, pdfversion, tagging, and tagging-setup.
+% - These settings target PDF/A-2u + PDF/UA-1 because current validators are
+%   most reliable with PDF 1.7 / UA-1 workflows.
+
 \DocumentMetadata{
-  % Request both PDF/A archival conformance and PDF/UA accessibility tagging
-  pdfstandard=a-2u,    % PDF/A-2u format (archival standard with Unicode support)
-  pdfstandard=ua-1,    % Add PDF/UA-1 accessibility conformance target
-  pdfversion=1.7,          % Explicit PDF version used for compatibility with conformance tooling
-  lang=en-US,               % Document language (required for screen readers)
-  tagging=on,                 % Enable PDF tagging (required for accessibility)
+  pdfstandard=a-2u,        % archival PDF/A standard with Unicode support
+  pdfstandard=ua-1,        % PDF/UA-1 accessibility target
+  pdfversion=1.7,          % validator-friendly PDF version
+  lang=en-US,              % document language for screen readers
+  tagging=on,              % enable tagged PDF output
   tagging-setup={
-    math/alt/use,                         % Keep math accessibility enabled (screen readers get tagged math)
-    math/mathml/AF=false,    % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
-    math/tex/AF=false,             % Do not embed TeX source as Associated Files
-    math/mathml/sources=      % Clear MathML source attachment list (avoid extra embedded helper files)
+    math/alt/use,          % keep math accessibility enabled
+    math/mathml/AF=false,  % do not embed MathML as Associated Files
+    math/tex/AF=false,     % do not embed TeX source as Associated Files
+    math/mathml/sources=   % clear MathML source attachment list
   }
 }
 
-% TEMPLATE USAGE NOTES
+% ============================================================================
+% PART B. DOCUMENT CLASS
+% ============================================================================
 %
-% 1. Copy this file as a starting point for new slide decks
-% 2. Keep the DocumentMetadata block unchanged
-% 3. Modify only the content frames and styling sections
-% 4. Compile with LuaLaTeX
-% 5. Test output with Ally or PAC
+% ltx-talk is an accessible presentation class from the LaTeX Project.
 %
-% The accessibility configuration in the preamble is intentional.
-% Removing or altering it may cause validator failures.
+% Similar to Beamer:
+% - Use \begin{frame}{Title} ... \end{frame}
+%
+% Different from Beamer:
+% - No \usetheme, \usecolortheme, \setbeamertemplate, navigation symbols, etc.
+% - Styling is done with ordinary LaTeX packages and ltx-talk template instances.
+%
+% The frame-title-arg option enables Beamer-like frame titles:
+%   \begin{frame}{My title}
 
-% ======================================================================
-% DOCUMENT CLASS
-% ======================================================================
-% ltx-talk: A presentation document class for accessible slides
-%
-% What is ltx-talk?
-% - Created by the LaTeX Project team as part of the LaTeX Tagging Project
-% - Specifically designed to generate accessible PDFs with proper tagging
-% - Purpose-built replacement for Beamer that meets WCAG 2.1 Level AA standards
-% - Included in TeX Live 2023+ (no separate installation needed)
-%
-% Migrating from Beamer:
-% ✓ SIMILAR: The \begin{frame}...\end{frame} environment syntax
-% ✗ WON'T WORK: Beamer themes, templates, and setup commands:
-%   - \usetheme{}, \usecolortheme{}, \usefonttheme{} (no theme system)
-%   - \setbeamertemplate{} commands (different template approach)
-%   - \setbeamercolor{}, \setbeamerfont{} (use standard xcolor/fontspec instead)
-%   - Navigation symbols, footline templates (ltx-talk uses different methods)
-% → You'll need to recreate your styling using standard LaTeX packages
-% ✓ GOOD NEWS: This is ONE-TIME PREAMBLE WORK. Create your styling once,
-%   then copy this preamble to all future talks. Your frames mostly work as-is!
-%
-% The [frame-title-arg] option allows frame titles to be passed as arguments
-% similar to Beamer: \begin{frame}{Title}
-%
-% CRITICAL REQUIREMENTS:
-% - LaTeX Engine: LuaLaTeX required for this template
-%   * pdfLaTeX has partial support but requires manual MathML files
-%   * XeLaTeX does NOT support accessibility tagging
-% - TeX Distribution: TeX Live 2023 or later with all packages updated
-%   * TeX Live 2022 or earlier will NOT work
-%   * Update using TeX Live Manager (Windows) or TeX Live Utility (Mac)
-% - Overleaf: YES, this works on Overleaf via Overleaf Labs program
-%   * Opt in at: https://www.overleaf.com/labs/participate
-%   * Enable "Rolling TeX Live releases"
-%   * Select "Rolling TeXLive (labs)" in project settings
-%   * Set Compiler to LuaLaTeX
 \documentclass[frame-title-arg]{ltx-talk}
 
-% ======================================================================
-% PACKAGE IMPORTS
-% ======================================================================
-\usepackage{booktabs}      % Professional-quality tables
-\usepackage{xcolor}          % Color support (needed for accessibility-friendly colors)
-\usepackage[normalem]{ulem} % Underline support (normalem prevents emphasis from being underlined)
-\usepackage{slide_utils}    % Custom utilities (section slides, bibliography, etc.)
-
-
-% ======================================================================
-% ACCESSIBILITY CONFIGURATION
-% ======================================================================
-% Configure PDF tagging and bookmark structure for accessibility compliance
+% ============================================================================
+% PART C. PACKAGES
+% ============================================================================
 %
-% IMPORTANT DISTINCTION:
-% - "tagging = on" in \DocumentMetadata enables PDF TAGGING (structure tree)
-%   * This is for screen readers and accessibility compliance
-%   * This is REQUIRED for WCAG compliance
-%   * This happens automatically once enabled
-%
-% - PDF BOOKMARKS (navigation outline in the left pane) are SEPARATE
-%   * These are for sighted users navigating the PDF
-%   * These do NOT generate automatically from "tagging = on"
-%   * The code below (Parts 1 & 2) implements CUSTOM bookmark generation
-%   * You can remove Part 2 if you don't want bookmarks
-%
-% This template includes BOTH, but only tagging is mandatory for accessibility.
+% Required or used directly in this file:
 
-% ----------------------------------------------------------------------
-% Part 1: PDF Tagging Configuration (Screen Reader Document Structure)
-% ----------------------------------------------------------------------
-% Controls how document elements are tagged in the PDF structure tree
-% This affects how screen readers interpret the document hierarchy
-% THIS PART IS REQUIRED FOR ACCESSIBILITY
+\usepackage{booktabs}       % professional tables
+\usepackage{xcolor}           % colors
+\usepackage{graphicx}       % images
+\usepackage{hyperref}       % links and basic PDF support
+\usepackage{bookmark}       % better PDF bookmark control
+\usepackage[normalem]{ulem} % underlined links; normalem preserves \emph
+\usepackage{xparse}         % readable command definitions
+
+% Optional helper package used by this example repository.
+% It is not required for PDF accessibility.
+% It provides section separator slides and multi-page bibliography support.
+\usepackage{slide_utils}
+
+% ============================================================================
+% PART D. CUSTOMIZE THESE DOCUMENT DETAILS
+% ============================================================================
+%
+% SAFE TO EDIT: put your own title, author, institution, version, URL, and email
+% here. The title slide and PDF metadata reuse these values.
+
+\newcommand{\TalkTitle}{Accessible Slides in LaTeX}
+\newcommand{\TalkVersion}{1.6}
+\newcommand{\TalkAuthor}{Richard Stanton}
+\newcommand{\TalkEmail}{richard.stanton@berkeley.edu}
+\newcommand{\TalkInstitution}{UC Berkeley}
+\newcommand{\TalkURL}{https://github.com/rhstanton/accessible_LaTeX}
+
+\title{\TalkTitle}
+\author{\TalkAuthor}
+\institute{\TalkInstitution}
+\date{\today}
+
+% ============================================================================
+% PART E. COLORS AND SMALL TEACHING MACROS
+% ============================================================================
+%
+% Accessibility rule of thumb:
+% - Normal text should have at least a 4.5:1 contrast ratio against the
+%     background under WCAG 2.1 AA.
+% - Avoid light colors for text. Yellow is especially poor as text on white.
+
+\colorlet{AccessibleRed}{red!80!black}
+\colorlet{AccessibleGreen}{green!40!black}
+\definecolor{AltYellow}{RGB}{255,245,170}
+
+% Readable teaching macros. These are optional, but they keep examples concise.
+\NewDocumentCommand{\BlueText}{m}{\textcolor{blue}{#1}}
+\NewDocumentCommand{\RedText}{m}{\textcolor{AccessibleRed}{#1}}
+\NewDocumentCommand{\GreenText}{m}{\textcolor{AccessibleGreen}{#1}}
+
+% Yellow code highlight. Use AltYellow as a background, not as text.
+\NewDocumentCommand{\AltBox}{m}{%
+  {\setlength{\fboxsep}{0pt}\colorbox{AltYellow}{\texttt{#1}}}%
+}
+
+% ============================================================================
+% PART F. LINKS
+% ============================================================================
+%
+% Accessibility note:
+% - Links should not rely on color alone. This template underlines links as well.
+
+\urlstyle{same}
+
+\NewDocumentCommand{\hrefu}{m m}{\href{#1}{\uline{#2}}}
+\NewDocumentCommand{\urlu}{m}{\uline{\url{#1}}}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=AccessibleGreen,
+  urlcolor=AccessibleGreen,
+  citecolor=AccessibleGreen
+}
+
+% ============================================================================
+% PART G. PDF TAGGING AND BOOKMARKS
+% ============================================================================
+%
+% Important distinction:
+% - PDF tagging is required for accessibility and screen readers.
+% - PDF bookmarks are optional navigation entries in the PDF side pane.
+%
+% This section does both:
+% 1. Tags frame titles as H1 headings.
+% 2. Adds section and frame titles to the PDF bookmarks.
+
+% --------------------------------------------------------------------------
+% G1. Required tagging adjustment for ltx-talk section titles
+% --------------------------------------------------------------------------
+%
+% ltx-talk uses \section for slide organization. If sections are also tagged as
+% headings, some validators report heading-order warnings. This template tags
+% frame titles as H1 headings instead.
 
 \ExplSyntaxOn
 \AtBeginDocument{
-  % Suppress automatic tagging of \section titles
-  %
-  % WHY: ltx-talk uses \section primarily for organization.
-  % Automatic tagging creates empty H1 headings that trigger validator warnings.
-  %
-  % SOLUTION: Disable section-title tagging; tag frame titles as H1 instead
   \NewTaggingSocketPlug { talk / sec / title } { none } { }
   \AssignTaggingSocketPlug { talk / sec / title } { none }
 }
 \ExplSyntaxOff
 
-% Treat frame titles as H1 headings in the document structure
 \tagpdfsetup{role / new-tag = frametitle / H1}
 
-% ----------------------------------------------------------------------
-% Part 2: PDF Bookmark Generation (Navigation Outline)
-% ----------------------------------------------------------------------
-% Creates PDF bookmarks (outline) for sections and slides
-% This affects the navigation pane in PDF readers (not screen reader structure)
+% --------------------------------------------------------------------------
+% G2. Optional PDF bookmarks
+% --------------------------------------------------------------------------
 %
-% NOTE: THIS SECTION IS OPTIONAL AND NOT REQUIRED FOR ACCESSIBILITY!
-% It's included here as a convenience feature for navigation.
-% The bookmark code below is CUSTOM - it doesn't happen automatically.
-% You can remove this entire section if you don't want bookmarks.
+% OPTIONAL: remove this subsection if you do not want PDF bookmarks.
+%
+% The code suppresses hyperref's default section bookmark and writes a cleaner
+% custom bookmark. Frame titles become level-2 bookmarks beneath sections.
 
-% Required packages for bookmark customization
-\usepackage{hyperref}   % PDF hyperlinks and bookmarks
-\usepackage{bookmark}   % Enhanced bookmark control
-\usepackage{xparse}     % Advanced command definitions
-
-% Add section titles to PDF bookmarks (level 1)
 \makeatletter
-\DeclareCommandCopy{\origsection}{\section}
+\DeclareCommandCopy{\OriginalSectionForBookmarks}{\section}
 
-\RenewDocumentCommand{\section}{s o m}
-  {%
-    % Call original \section but suppress hyperref's default bookmark
-    \begingroup
-      \let\rs@Hy@writebookmark\Hy@writebookmark
-      \def\Hy@writebookmark##1##2##3##4##5{}%
-      \IfBooleanTF{#1}
-        {%  Starred version: \section*{...}
-          \phantomsection
-          \IfNoValueTF{#2}
-            {\origsection*{#3}}
-            {\origsection*[#2]{#3}}%
-        }
-        {%  Normal version: \section{...}
-          \IfNoValueTF{#2}
-            {\origsection{#3}}
-            {\origsection[#2]{#3}}%
-        }%
-    \endgroup
-    % Add custom bookmark with desired formatting
+\RenewDocumentCommand{\section}{s o m}{%
+  \begingroup
+    \def\Hy@writebookmark##1##2##3##4##5{}%
     \IfBooleanTF{#1}
-      {%  Starred: bookmark uses title as-is
-        \IfNoValueTF{#2}
-          {\pdfbookmark[1]{#3}{section*.\thepage.\number\inputlineno}}
-          {\pdfbookmark[1]{#2}{section*.\thepage.\number\inputlineno}}%
-      }
-      {%  Normal: prefix with "Section N:"
-        \IfNoValueTF{#2}
-          {\pdfbookmark[1]{Section \thesection: #3}{section.\thesection}}
-          {\pdfbookmark[1]{Section \thesection: #2}{section.\thesection}}%
-      }%
-  }
+      {\phantomsection\IfNoValueTF{#2}{\OriginalSectionForBookmarks*{#3}}{\OriginalSectionForBookmarks*[#2]{#3}}}%
+      {\IfNoValueTF{#2}{\OriginalSectionForBookmarks{#3}}{\OriginalSectionForBookmarks[#2]{#3}}}%
+  \endgroup
+  \IfBooleanTF{#1}
+    {\IfNoValueTF{#2}{\pdfbookmark[1]{#3}{section-star.\thepage.\number\inputlineno}}{\pdfbookmark[1]{#2}{section-star.\thepage.\number\inputlineno}}}%
+    {\IfNoValueTF{#2}{\pdfbookmark[1]{Section \thesection: #3}{section.\thesection}}{\pdfbookmark[1]{Section \thesection: #2}{section.\thesection}}}%
+}
 \makeatother
 
-% Add frame titles to PDF bookmarks (level 2, under sections)
 \ExplSyntaxOn
-\int_new:N \g_rs_frame_bm_int  % Counter for unique bookmark IDs
+\int_new:N \g_accessibleslides_frame_bookmark_int
 
 \AddToHook{cmd/frametitle/after}{%
   \tl_if_empty:NF \g__talk_frame_title_tl
     {
-      \int_gincr:N \g_rs_frame_bm_int
+      \int_gincr:N \g_accessibleslides_frame_bookmark_int
       \pdfbookmark[2]{\tl_use:N \g__talk_frame_title_tl}
-        {frame-\int_use:N \g_rs_frame_bm_int}
+        {frame.\int_use:N \g_accessibleslides_frame_bookmark_int}
     }
 }
 \ExplSyntaxOff
 
+% ============================================================================
+% PART H. SLIDE APPEARANCE
+% ============================================================================
+%
+% This part is visual styling, not core accessibility machinery.
 
-
-% ======================================================================
-% COLOR DEFINITIONS
-% ======================================================================
-% Define colors with sufficient contrast for WCAG 2.1 Level AA compliance
-% All colors should have at least 4.5:1 contrast ratio with white background
-
-\colorlet{AccessibleRed}{red!80!black}      % Darker red for better contrast
-\colorlet{AccessibleGreen}{green!40!black}  % Darker green for WCAG AA compliance (4.5:1 contrast)
-\definecolor{AltYellow}{RGB}{255,245,170}   % Soft yellow for highlighting code
-
-% ======================================================================
-% CUSTOM COMMANDS FOR TEXT COLORS
-% ======================================================================
-% Shortcuts for commonly used colors in teaching materials
-% Use these to maintain consistent, accessible colors throughout your slides
-
-\newcommand\tb[1]{\textcolor{blue}{#1}}                       % Blue text
-\newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}     % Red text (accessible)
-\newcommand\tg[1]{\textcolor{AccessibleGreen}{#1}} % Green text (accessible)
-% Note: Plain yellow fails WCAG contrast requirements - use AltYellow for backgrounds only
-
-% ======================================================================
-% CUSTOM COMMANDS FOR HIGHLIGHTED CODE
-% ======================================================================
-% \AltBox highlights code snippets with yellow background
-% Useful for drawing attention to required accessibility changes in examples
-
-\newcommand{\AltBox}[1]{%
-  {\setlength{\fboxsep}{0pt}%
-   \colorbox{AltYellow}{\texttt{#1}}}%
-}
-
-% ======================================================================
-% HYPERLINK CONFIGURATION
-% ======================================================================
-% Links should be both colored AND underlined for accessibility
-% Color alone is not sufficient (fails WCAG guidelines)
-
-\urlstyle{same}  % URLs use the same font as surrounding text
-
-% Custom commands for underlined hyperlinks
-\newcommand{\hrefu}[2]{\href{#1}{\uline{#2}}}  % Hyperlink with underline
-\newcommand{\urlu}[1]{\uline{\url{#1}}}        % URL with underline
-
-% Set link colors (same color for consistency)
-\hypersetup{
-  colorlinks=true,
-  linkcolor=AccessibleGreen,   % Internal links (TOC, references)
-  urlcolor=AccessibleGreen,    % External URLs
-  citecolor=AccessibleGreen    % Citations
-}
-
-% ======================================================================
-% SLIDE FORMATTING - FRAME TITLES
-% ======================================================================
-% Customize the appearance of slide titles
-% Left-justified, large font, blue color for visual emphasis
+% --------------------------------------------------------------------------
+% H1. Frame titles
+% --------------------------------------------------------------------------
 
 \EditInstance{frametitle}{header}{
-  font  = \LARGE\raggedright,  % Large, left-aligned
-  color = blue                  % Blue for consistency with theme
+  font  = \LARGE\raggedright,
+  color = blue
 }
 
-% ======================================================================
-% SLIDE FORMATTING - FOOTER
-% ======================================================================
-% Customize footer content:
-% - Title slide: logo + author/year
-% - Other slides: right-aligned frame number
+% --------------------------------------------------------------------------
+% H2. Footers: regular slides versus title slide
+% --------------------------------------------------------------------------
+%
+% Goal:
+% - Regular slides: frame number on the right.
+% - Title slide: Berkeley Haas logo on the left, copyright centered.
+%
+% ltx-talk styles are page styles. The only advanced part is connecting ordinary
+% macros to ltx-talk footer elements. The visible customization is concentrated
+% in \RegularSlideFooter and \TitleSlideFooter below.
 
 \makeatletter
-% Title-page footer row: logo left, copyright truly centered, (frame number right - commented out)
-\def\@RStitlefooterrow{%
-  \makebox[\dimexpr\paperwidth-0.6cm\relax][l]{%
-    \rlap{\raisebox{0.0in}[.25in][.0in]{%
-        \includegraphics[width=.45in,alt={Berkeley Haas logo}]{BerkeleyHaas}}}%
-        \hfill
-    \textcopyright\ Richard Stanton, \the\year
-    \hfill
-    % \llap{\arabic{frame}}%
-  }%
+
+% Helper: turn an ordinary macro body into an ltx-talk footer element.
+\newcommand{\DeclareTalkFooterElement}[2]{%
+  \expandafter\def\csname @#1\endcsname{#2}%
+  \DeclareInstance{footer-element}{#1}{talk}{}%
 }
 
-% Right-aligned frame number for regular slides.
-\def\@RSframenumberR{%
+% Regular slide footer: right-aligned frame number.
+\DeclareTalkFooterElement{RegularSlideFooter}{%
   \makebox[\dimexpr\paperwidth-1.2cm\relax][r]{\arabic{frame}}%
 }
 
-% Footer-element instances -------------------------------------------------
-\DeclareInstance{footer-element}{RStitlefooterrow}{talk}{}
-\DeclareInstance{footer-element}{RSframenumberR}{talk}{}
-
-% Regular footer: frame number only, right-aligned.
-\EditInstance{footer}{std}{%
-  color         = black,%
-  font          = \tiny,%
-  left-hspace   = 0.9cm,%
-  right-hspace  = 0.3cm,%
-  element-order = {RSframenumberR},%
+% Title slide footer: logo left, copyright centered.
+\DeclareTalkFooterElement{TitleSlideFooter}{%
+  \makebox[\dimexpr\paperwidth-0.6cm\relax][l]{%
+    \rlap{\raisebox{0pt}[.25in][0pt]{%
+      \includegraphics[width=.45in,alt={Berkeley Haas logo}]{BerkeleyHaas}}}%
+    \hfill
+    \textcopyright\ \TalkAuthor, \the\year
+    \hfill
+    \phantom{\arabic{frame}}%
+  }%
 }
 
-% Title-page footer: single full-row element handles the left/center/right
-% layout internally via \rlap/\hfill/\llap.
-% left-hspace and right-hspace are kept small so the logo and number reach
-% the slide edges.
-\DeclareInstanceCopy{footer}{RSfooterfirst}{std}
-\EditInstance{footer}{RSfooterfirst}{%
-  element-order = {RStitlefooterrow},%
-  left-hspace   = 0.3cm,%
-  right-hspace  = 0.3cm,%
+% Regular page style used by ordinary slides.
+\EditInstance{footer}{std}{
+  color         = black,
+  font          = \tiny,
+  left-hspace   = 0.9cm,
+  right-hspace  = 0.3cm,
+  element-order = {RegularSlideFooter},
 }
 
-% Title-page pagestyle -----------------------------------------------------
-% The idiomatic ltx-talk way to give the title slide a different footer is
-% to pass framestyle = RStitlepage to \maketitle[].  We define that style
-% here: it uses the standard header and the RSfooterfirst footer instance.
-% All other slides use the unmodified ps@talk (framenumber only).
-\makeatletter
-\def\ps@RStitlepage{%
+% Title-page-only footer style.
+\DeclareInstanceCopy{footer}{TitleSlideFooterStyle}{std}
+\EditInstance{footer}{TitleSlideFooterStyle}{
+  left-hspace   = 0.3cm,
+  right-hspace  = 0.3cm,
+  element-order = {TitleSlideFooter},
+}
+
+% Page style used only on the title slide.
+\def\ps@AccessibleTitlePage{%
   \def\@oddhead{\UseInstance{header}{std}\hfil}%
-  \def\@oddfoot{\UseInstance{footer}{RSfooterfirst}}%
+  \def\@oddfoot{\UseInstance{footer}{TitleSlideFooterStyle}}%
   \let\@evenhead\@oddhead
   \let\@evenfoot\@oddfoot
 }
+
 \makeatother
 
-% ======================================================================
-% TABLE OF CONTENTS FORMATTING
-% ======================================================================
-% Custom TOC formatting for outline/agenda slides
-% Without this, \tableofcontents produces an ugly default layout
+% --------------------------------------------------------------------------
+% H3. Title slide
+% --------------------------------------------------------------------------
+%
+% IMPORTANT: ltx-talk frame environments should be written directly in the
+% document body, not hidden inside a macro.  This keeps the title slide easy
+% to edit and avoids fragile frame-body parsing.
+%
+% SAFE TO EDIT: change the layout in the title-slide frame below.
+% The footer difference is handled by \thispagestyle{AccessibleTitlePage}.
+
+% --------------------------------------------------------------------------
+% H4. Outline / table-of-contents slide
+% --------------------------------------------------------------------------
 %
 % USAGE:
 %   \begin{frame}{Outline}
-%     \OutlineTOCStyle
+%     \begin{OutlineTOC}
 %       \tableofcontents
-%     \EndOutlineTOCStyle
+%     \end{OutlineTOC}
 %   \end{frame}
 
 \makeatletter
-\newcommand{\OutlineTOCStyle}{%
+\newenvironment{OutlineTOC}{%
   \vspace*{-.2in}%
-  \bgroup%
-  % Remove page numbers, use paragraph layout instead of two columns
-  \renewcommand*\l@section[2]{\par\noindent\raggedright{##1}\par\vspace{0.6em}}%
-  % Format section numbers inline: "1." followed by title
+  \begingroup
+  \renewcommand*\l@section[2]{\par\noindent\raggedright ##1\par\vspace{0.6em}}%
   \renewcommand*\numberline[1]{##1.\hspace{0.6em}}%
-  \vskip1\baselineskip%
-  \fontsize{11}{13}\selectfont%
-}
-\newcommand{\EndOutlineTOCStyle}{%
-  \vskip0pt minus 1filll%
-  \egroup%
+  \vskip1\baselineskip
+  \fontsize{11}{13}\selectfont
+}{%
+  \vskip0pt minus 1filll
+  \endgroup
 }
 \makeatother
 
-% ======================================================================
-% FONT CONFIGURATION (OPTIONAL)
-% ======================================================================
-% Font choices that ensure consistency between text and math mode
-% This is OPTIONAL and purely for visual consistency - not required for accessibility
+% ============================================================================
+% PART I. OPTIONAL FONT CONFIGURATION
+% ============================================================================
 %
-% These fonts (Lato and LeteSansMath.otf) are included in TeX Live 2023+
-% If you get font errors, you can comment out these lines or use different fonts
+% OPTIONAL: comment out this section if you want default fonts.
 %
-% Why these specific settings?
-% - Lining + Monospaced numbers make digits look the same in text and math
-% - LeteSansMath matches the Lato sans-serif style
-% - This creates visual consistency that improves readability
+% Lato and LeteSansMath are included in recent TeX Live distributions. The
+% number settings keep digits visually consistent in text and math.
 
 \setmainfont{Lato}[
   Ligatures=TeX,
-  Numbers={Lining,Monospaced}  % Same number style in text and math
+  Numbers={Lining,Monospaced}
 ]
 \setsansfont{Lato}[
   Ligatures=TeX,
-  Numbers={Lining,Monospaced}  % Same number style in text and math
+  Numbers={Lining,Monospaced}
 ]
+\setmathfont{LeteSansMath.otf}
 
-\setmathfont{LeteSansMath.otf}  % Sans-serif math font to match Lato
-
-% ======================================================================
-% DOCUMENT INFORMATION
-% ======================================================================
-% Define title, author, institution, and date
-% These work just like in Beamer
-
-% Keep metadata fields simple; render rich title-page content manually below.
-\title{Accessible Slides in LaTeX}
-\author{Richard Stanton}
-\institute{\small UC Berkeley}
-\date{\today}
-
-% ======================================================================
-% BEGIN DOCUMENT
-% ======================================================================
+% ============================================================================
+% PART J. SLIDE CONTENT STARTS HERE
+% ============================================================================
+%
+% From this point on, most content looks like ordinary Beamer-style frame code.
 
 \begin{document}
 
 % ======================================================================
 % TITLE SLIDE
 % ======================================================================
-% Build the title slide manually so all links/details stay on page 1
-% without triggering title-structure tagging warnings.
+% This macro creates the title slide and then resets frame numbering so the
+% first content slide is numbered 1.
 
 \begin{frame*}{}
-  \thispagestyle{RStitlepage}
-  \centering
-  {\LARGE\textcolor{blue}{Accessible Slides in LaTeX}}\\[0.5\baselineskip]
-  {\normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX}}\\[1.0\baselineskip]
-  {\large Version 1.5}\\[1.0\baselineskip]
-  {\normalsize Richard Stanton}\\[0.25\baselineskip]
-  {\normalsize \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}}\\[0.75\baselineskip]
-  {\small UC Berkeley}\\[0.25\baselineskip]
-  {\small \today}
+\thispagestyle{AccessibleTitlePage}
+\centering
+{\LARGE\textcolor{blue}{\TalkTitle}}\\[0.5\baselineskip]
+{\normalsize \urlu{\TalkURL}}\\[1.0\baselineskip]
+{\large Version \TalkVersion}\\[1.0\baselineskip]
+{\normalsize \TalkAuthor}\\[0.25\baselineskip]
+{\normalsize \hrefu{mailto:\TalkEmail}{\TalkEmail}}\\[0.75\baselineskip]
+{\small \TalkInstitution}\\[0.25\baselineskip]
+{\small \today}
 \end{frame*}
-
-% Keep title slide unnumbered and start content slide numbering at 1.
-\setcounter{frame}{0}
+\setcounter{frame}{0}% title slide is not counted
 
 % \section{Overview}
 
@@ -415,23 +390,23 @@
 
 \begin{itemize}
 
-\item From \tb{April 24, 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
+\item From \BlueText{April 24, 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
 \begin{itemize}
-\item Applies even to password-protected course sites (e.g., \tb{bCourses}).
+\item Applies even to password-protected course sites (e.g., \BlueText{bCourses}).
 %\item Campus guidance issued Jan 8, 2026.
 \end{itemize}
 
 \bigskip
 
-\item Many of us use \tb{\LaTeX} to create teaching materials, both slides and documents.
+\item Many of us use \BlueText{\LaTeX} to create teaching materials, both slides and documents.
 
 \bigskip
   
-\item \textbf{\tr{But standard \LaTeX\ (especially \tb{Beamer}) does not automatically generate accessible PDFs.}}
+\item \textbf{\RedText{But standard \LaTeX\ (especially \BlueText{Beamer}) does not automatically generate accessible PDFs.}}
   
 \bigskip  
   
-\item \tg{Good news:} The \LaTeX\ Project team has developed solutions.
+\item \GreenText{Good news:} The \LaTeX\ Project team has developed solutions.
 \end{itemize}    
   
 \end{frame}
@@ -441,19 +416,19 @@
 \begin{itemize}
 \item A practical template set for accessible \LaTeX\ using the \hrefu{https://latex3.github.io/tagging-project/}{\LaTeX\ Tagging Project}
   \begin{itemize}
-  \item \tg{Two templates:} Articles (\tr{\texttt{article}} class) and slides (\tr{\texttt{ltx-talk}})
-  \item \tg{Shows:} What is shared and what differs
-  \item \tg{Contains:} Math, text, figures, and tables
-  \item \tg{Validation status:} Slides score 100\% with \tb{Ally} and pass common validators (\tb{veraPDF}, \tb{PAC}, \tb{Acrobat}) in typical workflows (tested March 17, 2026).
+  \item \GreenText{Two templates:} Articles (\RedText{\texttt{article}} class) and slides (\RedText{\texttt{ltx-talk}})
+  \item \GreenText{Shows:} What is shared and what differs
+  \item \GreenText{Contains:} Math, text, figures, and tables
+  \item \GreenText{Validation status:} Slides score 100\% with \BlueText{Ally} and pass common validators (\BlueText{veraPDF}, \BlueText{PAC}, \BlueText{Acrobat}) in typical workflows (tested March 17, 2026).
   \end{itemize}
 
   \bigskip
 
 \item Also includes some (optional) additional slide features
   \begin{itemize}
-  \item Readable  \tb{outline slide}
-  \item Automatic \tb{section separator slides}
-  \item Multi-page \tb{bibliography support}
+  \item Readable  \BlueText{outline slide}
+  \item Automatic \BlueText{section separator slides}
+  \item Multi-page \BlueText{bibliography support}
   \end{itemize}
   
 \bigskip
@@ -465,8 +440,8 @@
 
 \begin{frame}{Converting to accessible \LaTeX: the big picture}
 \begin{itemize}
-\item \tg{Your existing \LaTeX\ skills transfer:} mainly adding a few consistent accessibility features.
-\item \tg{Most changes are local:} metadata once; then per-figure and per-table tweaks.
+\item \GreenText{Your existing \LaTeX\ skills transfer:} mainly adding a few consistent accessibility features.
+\item \GreenText{Most changes are local:} metadata once; then per-figure and per-table tweaks.
 
 \bigskip
 
@@ -483,7 +458,7 @@
 
 \item \textbf{Key difference:}
   \begin{itemize}
-  \item Articles: \tg{keep your existing class} and add tagging features
+  \item Articles: \GreenText{keep your existing class} and add tagging features
   \item Slides: switch to \texttt{ltx-talk} (frame syntax similar to Beamer), then recreate styling
   \end{itemize}
 \end{itemize}
@@ -494,9 +469,9 @@
 \setcounter{secnumdepth}{2}
 
 \begin{frame}{Outline}
-\OutlineTOCStyle
-\tableofcontents
-\EndOutlineTOCStyle
+\begin{OutlineTOC}
+  \tableofcontents
+\end{OutlineTOC}
 \end{frame}
 
 % ======================================================================
@@ -507,11 +482,11 @@
 
 \begin{frame}{Version requirements: what actually matters}
 \begin{itemize}
-\item \tg{Engine:} must compile with \tb{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
+\item \GreenText{Engine:} must compile with \BlueText{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
 
 \bigskip
 
-\item \tg{LaTeX kernel/format date:} must be \tb{2025-11-01 or later}.
+\item \GreenText{LaTeX kernel/format date:} must be \BlueText{2025-11-01 or later}.
 \item \textbf{Important:} a “TeX Live year” alone is not a reliable guarantee.
   \begin{itemize}
   \item You need a sufficiently new \LaTeX\ kernel \emph{on your install}, or use Overleaf Labs.
@@ -533,8 +508,8 @@
 
 \begin{frame}{Overleaf (works \textbf{when configured correctly})}
 \begin{itemize}
-\item \texttt{ltx-talk} requires a very recent \LaTeX\ kernel (format date \tb{2025-11-01+}).
-\item On Overleaf, this typically means using the \tb{Labs} program (\tr{not standard Overleaf}).
+\item \texttt{ltx-talk} requires a very recent \LaTeX\ kernel (format date \BlueText{2025-11-01+}).
+\item On Overleaf, this typically means using the \BlueText{Labs} program (\RedText{not standard Overleaf}).
 
 \bigskip
 
@@ -543,12 +518,12 @@
   \item Join Overleaf Labs:
     \begin{itemize}
     \item \urlu{https://www.overleaf.com/labs/participate}
-    \item Opt in and enable \tb{Rolling TeX Live releases}
+    \item Opt in and enable \BlueText{Rolling TeX Live releases}
     \end{itemize}
   \item Configure the project:
     \begin{itemize}
-    \item TeX Live version: \tg{Rolling TeXLive (labs)} (bottom of list)
-    \item Compiler: \tg{Lua\LaTeX}
+    \item TeX Live version: \GreenText{Rolling TeXLive (labs)} (bottom of list)
+    \item Compiler: \GreenText{Lua\LaTeX}
     \end{itemize}
   \end{enumerate}
 
@@ -569,12 +544,12 @@
 
 \begin{itemize}
 \small
-\item \tb{\textbf{Required for both slides and articles}}
+\item \BlueText{\textbf{Required for both slides and articles}}
 
 % \bigskip
 
-\item Every accessible document \tr{must} begin with \texttt{\textbackslash DocumentMetadata}
-\item Goes \tr{before} \texttt{\textbackslash documentclass}
+\item Every accessible document \RedText{must} begin with \texttt{\textbackslash DocumentMetadata}
+\item Goes \RedText{before} \texttt{\textbackslash documentclass}
 
 \bigskip
 
@@ -600,7 +575,7 @@
 
 \bigskip
 
-\item \tr{\textbf{Why PDF 1.7 /UA-1?}} Current checkers (PAC, Acrobat, Ally, veraPDF) are most reliable for PDF 1.7/UA-1 and may incorrectly flag valid PDF 2.0/UA-2 features
+\item \RedText{\textbf{Why PDF 1.7 /UA-1?}} Current checkers (PAC, Acrobat, Ally, veraPDF) are most reliable for PDF 1.7/UA-1 and may incorrectly flag valid PDF 2.0/UA-2 features
   \begin{itemize}
   \item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
   \end{itemize}    
@@ -611,13 +586,13 @@
 
 \begin{frame}{Core requirements 2--4: images, tables, and color contrast}
 \begin{itemize}
-\item \tb{\textbf{Required for both slides and articles.}}
+\item \BlueText{\textbf{Required for both slides and articles.}}
 
 \bigskip
 
 \item \textbf{Images:} every \texttt{\textbackslash includegraphics} needs \texttt{alt=\{...\}}.
 \item \textbf{Tables:} mark header rows using \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}.
-\item \textbf{Colors:} WCAG 2.1 AA requires \tb{4.5:1} contrast ratio for normal text.
+\item \textbf{Colors:} WCAG 2.1 AA requires \BlueText{4.5:1} contrast ratio for normal text.
 \bigskip
 
 \item \textbf{Accessible color defaults:}
@@ -636,8 +611,8 @@
 
 \begin{frame}{Core requirement 5: compile with Lua\LaTeX}
 \begin{itemize}
-\item \tb{\textbf{Required for both slides and articles.}}
-\item Compile with \tr{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
+\item \BlueText{\textbf{Required for both slides and articles.}}
+\item Compile with \RedText{Lua\LaTeX} (not pdf\LaTeX\ or Xe\LaTeX).
 
 \bigskip
 
@@ -665,7 +640,7 @@
 
 \begin{frame}{Slide content: mostly the same as Beamer}
 \begin{itemize}
-\item Slides live in \tr{\texttt{frame}} environments (similar to Beamer).
+\item Slides live in \RedText{\texttt{frame}} environments (similar to Beamer).
 \item So your content often transfers with minimal changes.
 
 \bigskip
@@ -686,10 +661,10 @@
 
 \bigskip
 
-\item \tb{Note (optional):} template fonts keep digits/percent/dollar signs consistent in math/text.
+\item \BlueText{Note (optional):} template fonts keep digits/percent/dollar signs consistent in math/text.
   \begin{itemize}
-  \item \makebox[2.75em][l]{\tg{Text:}}\ $\$1234567890\%.$
-  \item \makebox[2.75em][l]{\tg{Math:}}\ $\$1234567890\%.$
+  \item \makebox[2.75em][l]{\GreenText{Text:}}\ $\$1234567890\%.$
+  \item \makebox[2.75em][l]{\GreenText{Math:}}\ $\$1234567890\%.$
   \end{itemize}
 \end{itemize}
 
@@ -697,7 +672,7 @@
 
 \begin{frame*}{Figures: alt text}
 \begin{itemize}
-\item Figures are included as usual (e.g., \texttt{\textbackslash includegraphics}), but \tr{add alt text}.
+\item Figures are included as usual (e.g., \texttt{\textbackslash includegraphics}), but \RedText{add alt text}.
 
 \bigskip
 
@@ -728,9 +703,9 @@
 
 \small  
 \begin{itemize}
-\item Tables use \texttt{tabular} as usual, but you must  specify \tr{header rows}.  
+\item Tables use \texttt{tabular} as usual, but you must  specify \RedText{header rows}.  
 \item Use \texttt{\{1\}} for one header row, \texttt{\{1,2\}} for two header rows, etc.
-\item \textbf{Note:} \tb{PAC} may still warn about header associations in some cases; see \tb{Validator-specific notes}.
+\item \textbf{Note:} \BlueText{PAC} may still warn about header associations in some cases; see \BlueText{Validator-specific notes}.
   
 \vspace*{0.05in}
     
@@ -740,9 +715,9 @@
 \AltBox{\textbackslash tagpdfsetup\{table/header-rows=\{1,2,3\}\}} \\
 \textbackslash begin\{tabular\}\{ccccrcccr\} \\
 \textbackslash toprule \\
-\textrm{\tb{\footnotesize $\leftarrow$ 3 header rows}} \\
+\textrm{\BlueText{\footnotesize $\leftarrow$ 3 header rows}} \\
 \textbackslash midrule \\
-\textrm{\tg{\footnotesize $\leftarrow$ data rows}} \\
+\textrm{\GreenText{\footnotesize $\leftarrow$ data rows}} \\
 \textbackslash bottomrule \\
 \textbackslash end\{tabular\}
 \end{minipage}
@@ -756,14 +731,14 @@
 \tagpdfsetup{table/header-rows={1,2,3}}
   \begin{tabular}{ccccrcccr}
   \toprule
-   &  & & & \multicolumn{1}{c}{\tb{Days}} & \tb{Days in} & & & \\
-\tb{Payment} & \tb{Caplet} & & \tb{Forward} & \multicolumn{1}{c}{\tb{to}} & \tb{accrual} & & \\
-  \tb{date} & \tb{expiry date} & \tb{$DF_\text{pay}$} & \tb{rate} & \multicolumn{1}{c}{\tb{expiry}} & \tb{period} & \tb{$T_\text{expiry}$} & \tb{$\Delta$} & \multicolumn{1}{c}{\tb{Caplet}} \\
+   &  & & & \multicolumn{1}{c}{\BlueText{Days}} & \BlueText{Days in} & & & \\
+\BlueText{Payment} & \BlueText{Caplet} & & \BlueText{Forward} & \multicolumn{1}{c}{\BlueText{to}} & \BlueText{accrual} & & \\
+  \BlueText{date} & \BlueText{expiry date} & \BlueText{$DF_\text{pay}$} & \BlueText{rate} & \multicolumn{1}{c}{\BlueText{expiry}} & \BlueText{period} & \BlueText{$T_\text{expiry}$} & \BlueText{$\Delta$} & \multicolumn{1}{c}{\BlueText{Caplet}} \\
 \midrule
-  \tg{2004/12/01} & \tg{--- } & \tg{0.99550} & \tg{0.01790} & \tg{0} & \tg{91} & \tg{0.00000} & \tg{0.25278} & \tg{---} \hspace*{0.15in}\\
-  \tg{2005/03/01} & \tg{2004/11/29} & \tg{0.99008} & \tg{0.02188} & \tg{89} & \tg{90} & \tg{0.24384} & \tg{0.25000} & \tg{1,178.77} \\
-  \tg{2005/06/01} & \tg{2005/02/25} & \tg{0.98401} & \tg{0.02413} & \tg{177} & \tg{92} & \tg{0.48493} & \tg{0.25556} & \tg{4,844.73} \\
-  \tg{2005/09/01} & \tg{2005/05/27} & \tg{0.97733} & \tg{0.02675} & \tg{268} & \tg{92} & \tg{0.73425} & \tg{0.25556} & \tg{10,016.71} \\
+  \GreenText{2004/12/01} & \GreenText{--- } & \GreenText{0.99550} & \GreenText{0.01790} & \GreenText{0} & \GreenText{91} & \GreenText{0.00000} & \GreenText{0.25278} & \GreenText{---} \hspace*{0.15in}\\
+  \GreenText{2005/03/01} & \GreenText{2004/11/29} & \GreenText{0.99008} & \GreenText{0.02188} & \GreenText{89} & \GreenText{90} & \GreenText{0.24384} & \GreenText{0.25000} & \GreenText{1,178.77} \\
+  \GreenText{2005/06/01} & \GreenText{2005/02/25} & \GreenText{0.98401} & \GreenText{0.02413} & \GreenText{177} & \GreenText{92} & \GreenText{0.48493} & \GreenText{0.25556} & \GreenText{4,844.73} \\
+  \GreenText{2005/09/01} & \GreenText{2005/05/27} & \GreenText{0.97733} & \GreenText{0.02675} & \GreenText{268} & \GreenText{92} & \GreenText{0.73425} & \GreenText{0.25556} & \GreenText{10,016.71} \\
   \bottomrule
 \end{tabular}  
 \end{center}
@@ -777,7 +752,7 @@
 
 \begin{frame}{Articles vs.\ slides}
 \begin{itemize}
-\item \textbf{Articles:} \tg{keep your existing class} (e.g., \texttt{article}) and add the checklist items.
+\item \textbf{Articles:} \GreenText{keep your existing class} (e.g., \texttt{article}) and add the checklist items.
 \item \textbf{Slides:} switch to \texttt{ltx-talk}.
   \begin{itemize}
   \item Your \texttt{\textbackslash begin\{frame\}} content often stays the same.
@@ -827,29 +802,29 @@
 \begin{frame}{Common pitfalls}
 
 \begin{itemize}
-\item \tr{Confusing PDF tagging with PDF bookmarks}
+\item \RedText{Confusing PDF tagging with PDF bookmarks}
   \begin{itemize}
-  \item \texttt{tagging=on} creates the structure tree for \tg{screen readers} (required).
+  \item \texttt{tagging=on} creates the structure tree for \GreenText{screen readers} (required).
   \item PDF bookmarks (navigation pane) are separate and optional.
   \end{itemize}
 
-\item \tr{Forgetting alt text}
+\item \RedText{Forgetting alt text}
   \begin{itemize}
   \item Every \texttt{\textbackslash includegraphics} needs \texttt{alt=\{...\}} (or \texttt{alt=\{\}} if decorative).
   \end{itemize}
 
-\item \tr{Not tagging table header rows}
+\item \RedText{Not tagging table header rows}
   \begin{itemize}
   \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table.
   \end{itemize}
 
-\item \tr{Low contrast colors}
+\item \RedText{Low contrast colors}
   \begin{itemize}
   \item Avoid light colors (e.g., plain yellow/cyan).
   \item Use darker variants for red/green (defined in this template).
   \end{itemize}
 
-\item \tr{Wrong engine or old kernel}
+\item \RedText{Wrong engine or old kernel}
   \begin{itemize}
   \item Use Lua\LaTeX\ and ensure format date \texttt{2025-11-01} or later.
   \end{itemize}
@@ -860,16 +835,16 @@
 \begin{itemize}
 \item No single checker catches everything.
 \item Accessibility usability checks and strict PDF conformance checks are not identical.
-\item Practical workflow: run \tb{2+} tools and compare findings.
+\item Practical workflow: run \BlueText{2+} tools and compare findings.
 
 \bigskip
 
 \item \textbf{Common tools:}
   \begin{itemize}
-  \item \tb{Ally} (bCourses)
-  \item \tb{veraPDF} (PDF/A conformance): \urlu{https://verapdf.org/}
-  \item \tb{PAC} (PDF accessibility): \urlu{https://pac.pdf-accessibility.org/}
-  \item \tb{Adobe Acrobat} (useful but has known quirks)
+  \item \BlueText{Ally} (bCourses)
+  \item \BlueText{veraPDF} (PDF/A conformance): \urlu{https://verapdf.org/}
+  \item \BlueText{PAC} (PDF accessibility): \urlu{https://pac.pdf-accessibility.org/}
+  \item \BlueText{Adobe Acrobat} (useful but has known quirks)
   \end{itemize}
 \end{itemize}
 \end{frame}
@@ -877,7 +852,7 @@
 \begin{frame}{Optional cleanup for strict validators: \texttt{strip\_af.py}}
 \begin{itemize}
 \item The metadata settings alone can be enough for a 100\% score in Ally.
-\item Some strict tools (e.g., \tb{veraPDF}) may still complain about \texttt{/AF} or embedded-file structures.
+\item Some strict tools (e.g., \BlueText{veraPDF}) may still complain about \texttt{/AF} or embedded-file structures.
 \item To remove these, run:
 
 \bigskip
@@ -891,7 +866,7 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item Prerequisite: install the Python package \tg{pikepdf} first: \texttt{python -m pip install pikepdf}.
+\item Prerequisite: install the Python package \GreenText{pikepdf} first: \texttt{python -m pip install pikepdf}.
 \item Then validate again with veraPDF.
 \end{itemize}
 \end{frame}
@@ -902,7 +877,7 @@ python strip\_af.py build/accessible\_slides.pdf
 \item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
   \begin{itemize}
   \item Often appears around figure captions, section numbers, table captions.
-  \item \tg{This is an Acrobat bug} in common setups; typically safe to ignore if source tagging is correct.
+  \item \GreenText{This is an Acrobat bug} in common setups; typically safe to ignore if source tagging is correct.
   \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
   \end{itemize}
 
@@ -931,7 +906,7 @@ python strip\_af.py build/accessible\_slides.pdf
 \item \textbf{To make an accessible \LaTeX\ PDF:}
   \begin{enumerate}
   \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
-  \item Compile with \tb{Lua\LaTeX}
+  \item Compile with \BlueText{Lua\LaTeX}
   \item Every figure: \texttt{\textbackslash includegraphics[alt=\{...\}]\{...\}}
   \item Every table: \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}
   \item Use high-contrast colors (4.5:1) and validate with 2+ tools
@@ -952,9 +927,9 @@ python strip\_af.py build/accessible\_slides.pdf
 \begin{frame}{Optional presentation utilities}
 
 \begin{itemize}
-\item This template includes \tg{optional utilities} in \texttt{slide\_utils.sty}
+\item This template includes \GreenText{optional utilities} in \texttt{slide\_utils.sty}
   \begin{itemize}
-  \item \tr{Not required for accessibility}
+  \item \RedText{Not required for accessibility}
   \item Useful for common presentation tasks
   \item Easy to customize or remove
   \end{itemize}
@@ -1005,7 +980,7 @@ python strip\_af.py build/accessible\_slides.pdf
   \medskip
   
 \begin{itemize}
-\item \textbf{\tr{Problem:}} \texttt{\textbackslash bibliography} inside \texttt{frame} environment puts all references on one slide.
+\item \textbf{\RedText{Problem:}} \texttt{\textbackslash bibliography} inside \texttt{frame} environment puts all references on one slide.
   \begin{itemize}
   \item For large bibliographies, this can be unreadable.
   \item This was easy with Beamer, using the \texttt{allowframebreaks} option.
@@ -1014,11 +989,11 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item \textbf{\tg{Solution:}} Write code to split bibliography automatically across multiple slides
+\item \textbf{\GreenText{Solution:}} Write code to split bibliography automatically across multiple slides
   \begin{itemize}
   \item Works with standard Bib\TeX\ workflow
-  \item Uses Lua script (\texttt{\tb{rsbibsplit.lua}}) to split the \texttt{.bbl} file
-  \item (Lua\LaTeX\ provides access to the \tb{Lua} programming language)
+  \item Uses Lua script (\texttt{\BlueText{rsbibsplit.lua}}) to split the \texttt{.bbl} file
+  \item (Lua\LaTeX\ provides access to the \BlueText{Lua} programming language)
   \end{itemize}
 
 \bigskip
@@ -1028,7 +1003,7 @@ python strip\_af.py build/accessible\_slides.pdf
   \item \texttt{\textbackslash cite\{key1,key2,...\}} to specify references
   \item \texttt{\textbackslash bibliography\{bibfile\}} to specify \texttt{bib} file
   \item (Set \texttt{\textbackslash RS@bibmax} to customize max per slide; default=8).
-  \item \tb{\textbf{Note:} Do \textbf{not} put \texttt{\textbackslash bibliography} command inside \texttt{frame} environment }
+  \item \BlueText{\textbf{Note:} Do \textbf{not} put \texttt{\textbackslash bibliography} command inside \texttt{frame} environment }
     
   \end{itemize}
 

@@ -1,11 +1,11 @@
-# Accessible LaTeX Templates (v1.5)
+# Accessible LaTeX Templates (v1.6)
 
 ![License: CC0](https://img.shields.io/badge/license-CC0-blue)  
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)  
 ![Engine](https://img.shields.io/badge/engine-LuaLaTeX-blue)
 
 Richard Stanton — UC Berkeley  
-Feb 10, 2026  
+May 6, 2026  
 
 https://github.com/rhstanton/accessible_LaTeX
 
