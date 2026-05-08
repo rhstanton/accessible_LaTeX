@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v1.6)
+# Accessible LaTeX Templates (v2.0)
 
 ![License: CC0](https://img.shields.io/badge/license-CC0-blue)  
 ![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)  
@@ -13,7 +13,7 @@ https://github.com/rhstanton/accessible_LaTeX
 
 ## Overview
 
-As of **April 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
+As of **May 11, 2026**, updated ADA rules require digital course materials—including materials on password-protected course sites—to meet accessibility standards (**WCAG 2.1 Level AA**).
 
 Many instructors write course materials in **LaTeX**, but standard LaTeX (including Beamer) does **not automatically generate accessible PDFs**.
 
@@ -50,19 +50,17 @@ If you're converting existing LaTeX/Beamer files, here's what to add:
 1. **At the very top** (before `\documentclass`):
    ```latex
    \DocumentMetadata{
-     pdfstandard=a-2u,
-     pdfstandard=ua-1,
-     pdfversion=1.7,
+     pdfstandard=a-4,
+     pdfstandard=ua-2,
      lang=en-US,
      tagging=on,
      tagging-setup={
-       math/alt/use,
-       math/mathml/AF=false,
-       math/tex/AF=false,
-       math/mathml/sources=
+       math/setup=mathml-SE
      }
    }
    ```
+
+  The snippets in this README use the current PDF/A-4 + PDF/UA-2 profile.
 
 2. **In every `\includegraphics`**:
    ```latex
@@ -109,16 +107,12 @@ If you're converting existing LaTeX/Beamer files, here's what to add:
 
 ```latex
 \DocumentMetadata{
-  pdfstandard=a-2u,   % PDF/A archival standard
-  pdfstandard=ua-1,   % PDF/UA accessibility standard
-  pdfversion=1.7,
+  pdfstandard=a-4,    % PDF/A-4 archival standard
+  pdfstandard=ua-2,   % PDF/UA-2 accessibility standard
   lang=en-US,
   tagging=on,
   tagging-setup={
-    math/alt/use,
-    math/mathml/AF=false,
-    math/tex/AF=false,
-    math/mathml/sources=
+    math/setup=mathml-SE
   }
 }
 
@@ -293,16 +287,12 @@ Every accessible document must begin with a `\DocumentMetadata{...}` block befor
 
 ```latex
 \DocumentMetadata{
-  pdfstandard=a-2u,
-  pdfstandard=ua-1,
-  pdfversion=1.7,
+  pdfstandard=a-4,
+  pdfstandard=ua-2,
   lang=en-US,
   tagging=on,
   tagging-setup={
-    math/alt/use,
-    math/mathml/AF=false,
-    math/tex/AF=false,
-    math/mathml/sources=
+    math/setup=mathml-SE
   }
 }
 ```

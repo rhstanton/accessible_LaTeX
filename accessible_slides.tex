@@ -39,21 +39,15 @@
 %
 % USUALLY LEAVE UNCHANGED:
 % - pdfstandard, pdfversion, tagging, and tagging-setup.
-% - These settings target PDF/A-2u + PDF/UA-1 because current validators are
-%   most reliable with PDF 1.7 / UA-1 workflows.
+% - These settings target PDF/UA-2 + PDF/A-4.
+% - Use a-4f only when you intentionally need embedded associated files.
 
 \DocumentMetadata{
-  pdfstandard=a-2u,        % archival PDF/A standard with Unicode support
-  pdfstandard=ua-1,        % PDF/UA-1 accessibility target
-  pdfversion=1.7,          % validator-friendly PDF version
-  lang=en-US,              % document language for screen readers
-  tagging=on,              % enable tagged PDF output
-  tagging-setup={
-    math/alt/use,          % keep math accessibility enabled
-    math/mathml/AF=false,  % do not embed MathML as Associated Files
-    math/tex/AF=false,     % do not embed TeX source as Associated Files
-    math/mathml/sources=   % clear MathML source attachment list
-  }
+  lang        = en-US,
+  pdfstandard = ua-2,
+  pdfstandard = a-4f, %or a-4
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE} 
 }
 
 %%% * PART B. DOCUMENT CLASS
@@ -95,7 +89,7 @@
 % here. The title slide and PDF metadata reuse these values.
 
 \newcommand{\TalkTitle}{Accessible Slides in LaTeX}
-\newcommand{\TalkVersion}{1.6}
+\newcommand{\TalkVersion}{2.0}
 \newcommand{\TalkAuthor}{Richard Stanton}
 \newcommand{\TalkEmail}{richard.stanton@berkeley.edu}
 \newcommand{\TalkInstitution}{UC Berkeley}
@@ -370,7 +364,7 @@
 
 \begin{itemize}
 
-\item From \BlueText{April 24, 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
+\item From \BlueText{May 11, 2026}, course materials must meet \hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG} 2.1 Level AA accessibility standards
 \begin{itemize}
 \item Applies even to password-protected course sites (e.g., \BlueText{bCourses}).
 %\item Campus guidance issued Jan 8, 2026.
@@ -538,16 +532,12 @@
 \ttfamily\scriptsize
 \textbackslash DocumentMetadata\{\\[0.5ex]
 \hspace*{0.2in}\% Request both PDF/A archival conformance and PDF/UA accessibility tagging\\[0.5ex]
-\hspace*{0.2in}pdfstandard=a-2u,\hspace*{0.425in}\% PDF/A-2u format\\[0.5ex]
-\hspace*{0.2in}pdfstandard=ua-1,\hspace*{0.42in}\% Add PDF/UA-1 conformance target\\[0.5ex]
-\hspace*{0.2in}pdfversion=1.7,\hspace*{0.55in}\% Explicit PDF version\\[0.5ex]
+\hspace*{0.2in}pdfstandard=a-4,\hspace*{0.49in}\% PDF/A-4 format (use a-4f only if embedding files)\\[0.5ex]
+\hspace*{0.2in}pdfstandard=ua-2,\hspace*{0.42in}\% Add PDF/UA-2 conformance target\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.78in}\% Language for screen readers\\[0.5ex]
 \hspace*{0.2in}tagging=on,\hspace*{0.78in}\% Enable PDF tagging\\[0.5ex]
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
-\hspace*{0.4in}math/alt/use,\hspace*{0.5in}\% Keep math accessibility enabled\\[0.5ex]
-\hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
-\hspace*{0.4in}math/tex/AF=false,\hspace*{0.2in}\% Do not embed TeX source as Associated Files\\[0.5ex]
-\hspace*{0.4in}math/mathml/sources=\hspace*{0.08in}\% Clear MathML source attachment list\\[0.5ex]
+\hspace*{0.4in}math/setup=mathml-SE\hspace*{0.22in}\% Enable semantic MathML generation\\[0.5ex]
 \hspace*{0.2in}\}\\[0.5ex]
 \}
 \end{minipage}
@@ -555,10 +545,10 @@
 
 \bigskip
 
-\item \RedText{\textbf{Why PDF 1.7 /UA-1?}} Current checkers (PAC, Acrobat, Ally, veraPDF) are most reliable for PDF 1.7/UA-1 and may incorrectly flag valid PDF 2.0/UA-2 features
-  \begin{itemize}
-  \item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
-  \end{itemize}    
+\item \RedText{\textbf{Why PDF/UA-2 + PDF/A-4?}} This aligns with current ISO standards and modern tagging output.
+  % \begin{itemize}
+  % \item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
+  % \end{itemize}    
   % \item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
   
 \end{itemize}

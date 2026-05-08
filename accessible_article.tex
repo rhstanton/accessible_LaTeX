@@ -2,19 +2,13 @@
 % DOCUMENT METADATA - REQUIRED FOR ACCESSIBILITY
 % ======================================================================
 % This MUST be the first thing in your document, before \documentclass
-% It configures the PDF for accessibility compliance
+% This article template uses the current metadata profile (PDF/A-4f + PDF/UA-2).
 \DocumentMetadata{
-  pdfstandard=a-2u,    % PDF/A-2u format (archival standard with Unicode support)
-  pdfstandard=ua-1,    % Add PDF/UA-1 accessibility conformance target
-  pdfversion=1.7,          % Explicit PDF version used for compatibility with conformance tooling
-  lang=en-US,               % Document language (required for screen readers)
-  tagging=on,                 % Enable PDF tagging (required for accessibility)
-  tagging-setup={
-    math/alt/use,                        % Keep math accessibility enabled (screen readers get tagged math)
-    math/mathml/AF=false,   % Do not embed MathML as PDF Associated Files (helps some strict conformance checkers)
-    math/tex/AF=false,            % Do not embed TeX source as Associated Files
-    math/mathml/sources=     % Clear MathML source attachment list (avoid extra embedded helper files)
-  }
+  lang        = en-US,
+  pdfstandard = ua-2,
+  pdfstandard = a-4f, %or a-4
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE} 
 }
 
 % CRITICAL REQUIREMENTS:
@@ -117,7 +111,7 @@
 % ======================================================================
 % Define title, author, and date for article class
 
-\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 1.6}
+\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 2.0}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu} \\ UC Berkeley}
 \date{\today}
 
@@ -131,7 +125,7 @@
 
 \section{Introduction}
 
-On January 8, 2026, we were notified by campus that, beginning in April 2026:
+On January 8, 2026, we were notified by campus that, beginning in April 2026 (now May 11):
 \begin{quotation}
   \color{blue}
   ``The updated requirements of the ADA require that digital course materials provided to students, even materials inside password-protected course sites like bCourses, will need to comply with accessibility standards (Web Content Accessibility Guidelines (\hrefu{https://www.w3.org/WAI/standards-guidelines/wcag/}{WCAG}) 2.1 Level AA).''
@@ -239,7 +233,7 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 
 \section{Common requirements for ALL documents}
 
-Whether you're creating slides or articles, these requirements are \tb{the same}:
+Whether you're creating slides or articles, these requirements are \tb{mostly the same}:
 
 \subsection{Document Metadata}
 
@@ -254,16 +248,12 @@ Whether you're creating slides or articles, these requirements are \tb{the same}
 \begin{minipage}{0.9\linewidth}
 {\ttfamily\small
 \textbackslash DocumentMetadata\{\\[0.5ex]
-\hspace*{0.2in}pdfstandard=a-2u,\hspace*{0.3in}\% PDF/A-2u format\\[0.5ex]
-\hspace*{0.2in}pdfstandard=ua-1,\hspace*{0.26in}\% Add PDF/UA-1 conformance target\\[0.5ex]
-\hspace*{0.2in}pdfversion=1.7,\hspace*{0.31in}\% Explicit PDF version\\[0.5ex]
-\hspace*{0.2in}lang=en-US,\hspace*{0.69in}\% Language for screen readers\\[0.5ex]
+\hspace*{0.2in}pdfstandard=a-4f,\hspace*{0.27in}\% PDF/A-4f format (use a-4 for no embedded files)\\[0.5ex]
+\hspace*{0.2in}pdfstandard=ua-2,\hspace*{0.26in}\% Add PDF/UA-2 conformance target\\[0.5ex]
+\hspace*{0.2in}lang=en-US,\hspace*{0.98in}\% Language for screen readers\\[0.5ex]
 \hspace*{0.2in}tagging=on,\hspace*{0.73in}\% Enable PDF tagging\\[0.5ex]
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
-\hspace*{0.4in}math/alt/use,\hspace*{0.2in}\% Keep math accessibility enabled (screen readers get tagged math)\\[0.5ex]
-\hspace*{0.4in}math/mathml/AF=false,\hspace*{0.03in}\% Do not embed MathML as PDF Associated Files\\[0.5ex]
-\hspace*{0.4in}math/tex/AF=false,\hspace*{0.2in}\% Do not embed TeX source as Associated Files\\[0.5ex]
-\hspace*{0.4in}math/mathml/sources=\hspace*{0.06in}\% Clear MathML source attachment list\\[0.5ex]
+\hspace*{0.4in}math/setup=mathml-SE\hspace*{0.08in}\% Keep math accessibility enabled (semantic MathML)\\[0.5ex]
 \hspace*{0.2in}\}\\[0.5ex]
 \}
 }
@@ -273,6 +263,8 @@ Whether you're creating slides or articles, these requirements are \tb{the same}
 \bigskip
 
 \noindent This configures accessibility, math tagging, and validator-compatibility behavior in one place.
+
+\noindent This boxed example shows the current metadata profile used in this article template.
 
 \noindent The \texttt{tagging-setup} entries keep math accessible while reducing helper attachments that can trigger warnings in some strict conformance validators.
 
@@ -468,6 +460,8 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 
 When converting existing LaTeX files to be accessible, here's what you need to add:
 
+\noindent \textbf{Note:} This section shows the current profile used by this article template.
+
 \subsection{Required additions for ALL documents}
 
 \begin{enumerate}
@@ -479,9 +473,8 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \begin{minipage}{0.9\linewidth}
 {\ttfamily\small
 \AltBox{\textbackslash DocumentMetadata\{} \\
-\hspace*{0.2in}pdfstandard=a-2u,\\
-\hspace*{0.2in}pdfstandard=ua-1,\\
-\hspace*{0.2in}pdfversion=1.7,\\
+\hspace*{0.2in}pdfstandard=a-4f,\\
+\hspace*{0.2in}pdfstandard=ua-2,\\
 \hspace*{0.2in}lang=en-US,\\
 \hspace*{0.2in}tagging=on,\\
 \hspace*{0.2in}tagging-setup=\{...see template...\}\\

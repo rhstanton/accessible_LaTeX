@@ -29,7 +29,7 @@
 - [ ] All images have meaningful alt text (not just "image" or "figure")
 - [ ] All tables have `\tagpdfsetup{table/header-rows={...}}` specified
 - [ ] Colors meet WCAG 2.1 contrast requirements (4.5:1 for text, 3:1 for large text)
-- [ ] PDF maintains PDF/A-2u compliance
+- [ ] PDF maintains configured metadata profile compliance (default slides profile: PDF/UA-2 + PDF/A-4)
 - [ ] Tested accessibility score (if possible): ____%
 
 ### Code Quality

@@ -32,7 +32,7 @@ Please check existing issues first to avoid duplicates.
 2. **Test your changes** thoroughly:
    - Compile with LuaLaTeX
    - Verify 100% Ally accessibility score (if possible)
-   - Check PDF/A-2u compliance
+  - Check PDF metadata profile compliance (current slide default: PDF/UA-2 + PDF/A-4)
 3. **Document your changes** with clear comments explaining *why* accessibility features are needed
 4. **Submit a pull request** with a clear description
 
@@ -44,7 +44,7 @@ Please check existing issues first to avoid duplicates.
 
 - ✅ WCAG 2.1 Level AA compliance
 - ✅ 100% Ally accessibility score
-- ✅ PDF/A-2u standard compliance
+- ✅ Configured PDF metadata profile compliance
 - ✅ LuaLaTeX compilation
 
 ### Code Style
