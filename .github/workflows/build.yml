@@ -24,8 +24,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install pikepdf (for strip_af.py post-processing)
+        # texlive/texlive ships Debian without pip, so use apt's
+        # packaged pikepdf rather than pulling pip in just for this.
         run: |
-          python3 -m pip install --no-cache-dir --break-system-packages pikepdf
+          apt-get update
+          apt-get install -y --no-install-recommends python3-pikepdf
 
       - name: Make wrapper scripts executable
         run: chmod +x tools/*.sh
