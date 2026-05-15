@@ -5,9 +5,7 @@
 % NOT required for accessibility.
 %
 % Usage: \usepackage{slide_bib}
-%
-% Author: Richard Stanton
-% License: Same as accessible_slides.tex
+%        \usepackage[outdir=out]{slide_bib}   % if your latexmk -outdir is "out"
 %
 % PROBLEM: Standard bibliography environments put all citations on one slide,
 % which becomes unreadable with many references.
@@ -31,13 +29,28 @@
 %   \bibliographystyle{jfabbrev}      % Your preferred bib style
 %   \bibliography{mybib}              % Your .bib file - auto-splits!
 %
+% PACKAGE OPTIONS:
+%   outdir=<dir>                      % Where to look for the .bbl and write
+%                                     % chunk files. Default: build
+%
 % REQUIREMENTS:
 %   - rsbibsplit.lua file in working directory or TeX search path
 %   - LuaLaTeX compiler (for \directlua calls)
 %   - natbib and bibentry packages (loaded below)
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{slide_bib}[2026/05/15 v2.0 Multi-page bibliography for accessible slides]
+\ProvidesPackage{slide_bib}[2026/05/15 v2.1 Multi-page bibliography for accessible slides]
+
+% ----------------------------------------------------------------------
+% Package options
+% ----------------------------------------------------------------------
+% outdir=<dir>  search location for the generated .bbl file and where
+%               chunk files / the driver are written. Default: build.
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=RSslideBib, prefix=RSslideBib@}
+\DeclareStringOption[build]{outdir}
+\ProcessKeyvalOptions*
 
 % Stub so natbib can \renewenvironment it
 \newenvironment{thebibliography}[1]{}{}
@@ -51,6 +64,10 @@
 \newcount\RS@bibmax
 \RS@bibmax=8\relax   % entries per slide; adjust to taste
 
+% Compare \@currenvir to "frame" so we can raise a clear error when
+% the user accidentally puts \bibliography inside a frame environment.
+\def\RS@frameenvname{frame}
+
 \directlua{ dofile(kpse.find_file("rsbibsplit.lua") or "rsbibsplit.lua") }
 
 % Redefine \bibliography to automatically split across frames.
@@ -60,20 +77,40 @@
   % Save original \bibliography before redefining
   \let\RS@orig@bibliography\bibliography
   % Redefine \bibliography:
-  %   1. writes \bibdata to .aux (so bibtex can regenerate .bbl)
-  %   2. Lua splits the .bbl into chunk files and writes a driver .tex
-  %   3. \input the driver, which contains one frame per chunk
+  %   1. error out early if user put us inside a frame
+  %   2. writes \bibdata to .aux (so bibtex can regenerate .bbl)
+  %   3. Lua splits the .bbl into chunk files and writes a driver .tex
+  %   4. \input the driver, which contains one frame per chunk
   \renewcommand{\bibliography}[1]{%
+    \ifx\@currenvir\RS@frameenvname
+      \PackageError{slide_bib}{%
+        \string\bibliography\space called inside a frame environment%
+        \MessageBreak
+        slide_bib auto-splits references across multiple frames and%
+        \MessageBreak
+        emits its own \string\begin{frame}\space wrappers}{%
+        Move \string\bibliography{...} to the top level of the document,%
+        \MessageBreak outside of any \string\begin{frame}...\string\end{frame}.}%
+    \fi
     \let\bibsection\relax
     \if@filesw\immediate\write\@auxout{\string\bibdata{#1}}\fi
     \directlua{
-      local bbl = tex.jobname .. ".bbl"
-      local f = io.open(bbl)
-      if not f then bbl = "build/" .. tex.jobname .. ".bbl" f = io.open(bbl) end
-      if f then f:close() rs_split_bbl(bbl, tex.count['RS@bibmax'])
-      else texio.write_nl("RS BIB: .bbl not found") end
+      local outdir  = "\RSslideBib@outdir"
+      local jobname = tex.jobname
+      local bbl     = jobname .. ".bbl"
+      local f       = io.open(bbl)
+      if not f then
+        bbl = outdir .. "/" .. jobname .. ".bbl"
+        f   = io.open(bbl)
+      end
+      if f then
+        f:close()
+        rs_split_bbl(bbl, tex.count['RS@bibmax'])
+      else
+        texio.write_nl("RS BIB: .bbl not found (searched ./ and " .. outdir .. "/)")
+      end
     }%
-    \InputIfFileExists{build/\jobname-bibdriver.tex}{}{%
+    \InputIfFileExists{\RSslideBib@outdir/\jobname-bibdriver.tex}{}{%
       \InputIfFileExists{\jobname-bibdriver.tex}{}{%
         \typeout{RS BIB: driver file not found, no reference frames produced}}}%
   }%

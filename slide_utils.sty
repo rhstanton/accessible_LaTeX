@@ -12,17 +12,48 @@
 % License: Same as accessible_slides.tex
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{slide_utils}[2026/05/15 v2.1 Section separators + bookmarks for accessible slides]
+\ProvidesPackage{slide_utils}[2026/05/15 v2.2 Section separators + bookmarks for accessible slides]
+
+% ----------------------------------------------------------------------
+% Dependency guards
+% ----------------------------------------------------------------------
+% Section 2 wraps \section to emit \pdfbookmark, and uses the bookmark
+% package's \pdfbookmark. Section 1 uses the AccessibleRed color. We
+% don't \RequirePackage hyperref/bookmark ourselves (loading order with
+% the host document matters), but we do raise clear errors if a caller
+% forgets, and we provide a fallback color so the separator slides
+% don't fail with an undefined-color error.
+
+\RequirePackage{xparse}
+
+\AtBeginDocument{%
+  \@ifpackageloaded{hyperref}{}{%
+    \PackageError{slide_utils}{%
+      slide_utils requires hyperref to be loaded\MessageBreak
+      before \string\usepackage{slide_utils}}{%
+      Add \string\usepackage{hyperref} (and \string\usepackage{bookmark})%
+      \MessageBreak before \string\usepackage{slide_utils}.}%
+  }%
+  \@ifpackageloaded{bookmark}{}{%
+    \PackageError{slide_utils}{%
+      slide_utils requires the bookmark package\MessageBreak
+      to be loaded before \string\usepackage{slide_utils}}{%
+      Add \string\usepackage{bookmark} after \string\usepackage{hyperref}.}%
+  }%
+}
+
+% Fallback color. Defined with \providecolor so the host document can
+% override (and the templates do).
+\RequirePackage{xcolor}
+\providecolor{AccessibleRed}{rgb}{0.6,0,0}
 
 % ======================================================================
 % SECTION 1: SECTION SLIDE SUPPORT
 % ======================================================================
 % Commands for creating dedicated section title slides
-% 
+%
 % IMPORTANT: This redefinition happens at \begin{document} to ensure
 % it captures any earlier redefinitions (e.g., bookmark handling)
-
-\RequirePackage{xparse}
 
 % Storage for section titles
 \gdef\g@slideutils@sectitle{}

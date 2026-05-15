@@ -28,13 +28,13 @@
             "-interaction=nonstopmode -file-line-error -synctex=1 -shell-escape")
 
           ;; latexmk default
+          ;; .latexmkrc already runs strip_af.py after each successful build
+          ;; using a python-with-pikepdf discovery helper; don't duplicate that here.
           (add-to-list 'TeX-command-list
                        `("LatexMk (build)"
-                         ,(concat
-                           "latexmk -lualatex " my/tex-flags " -outdir=build %s"
-                           " && python3 strip_af.py build/%b.pdf")
+                         ,(concat "latexmk -lualatex " my/tex-flags " -outdir=build %s")
                          TeX-run-TeX nil t
-                         :help "latexmk (lualatex) + strip_af.py -> build/"))
+                         :help "latexmk (lualatex) -> build/ (strip_af runs from .latexmkrc)"))
 
           ;; manual lualatex
           (add-to-list 'TeX-command-list

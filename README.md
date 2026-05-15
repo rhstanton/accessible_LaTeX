@@ -1,13 +1,20 @@
 # Accessible LaTeX Templates (v2.0)
 
-![License: CC0](https://img.shields.io/badge/license-CC0-blue)  
-![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)  
+![Build](https://github.com/rhstanton/accessible_LaTeX/actions/workflows/build.yml/badge.svg)
+![License: CC0](https://img.shields.io/badge/license-CC0-blue)
+![TeX Live](https://img.shields.io/badge/TeX%20Live-2023%2B-green)
 ![Engine](https://img.shields.io/badge/engine-LuaLaTeX-blue)
 
-Richard Stanton — UC Berkeley  
-May 6, 2026  
+Richard Stanton — UC Berkeley
 
 https://github.com/rhstanton/accessible_LaTeX
+
+---
+
+> [!IMPORTANT]
+> **If you run the example PDFs through Blackboard Ally and see ~9 "errors," don't worry — and don't click Ally's "fix."**
+>
+> v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Most validators (Ally, Acrobat, PAC) haven't caught up: they misread the new MathML tags as "images without descriptions" and they check a legacy PDF-1.x `/Title` key that PDF 2.0 deprecated. The PDFs pass **veraPDF** (the strict PDF/A conformance checker) cleanly. **Don't accept any of Ally's offered "fixes" for these findings — they may downgrade the file to PDF 1.7 and destroy both PDF/UA-2 and PDF/A-4 conformance.** Full details in [VALIDATION.md](VALIDATION.md).
 
 ---
 
@@ -18,6 +25,19 @@ As of **May 11, 2026**, updated ADA rules require digital course materials—inc
 Many instructors write course materials in **LaTeX**, but standard LaTeX (including Beamer) does **not automatically generate accessible PDFs**.
 
 This repository provides **working templates and migration guidance** for creating accessible LaTeX documents that meet those requirements.
+
+## Glossary
+
+A few terms used throughout this README and in the templates:
+
+- **WCAG 2.1 AA** — Web Content Accessibility Guidelines, level AA. The legal target for digital course materials.
+- **PDF tagging** — invisible structure tree embedded in the PDF that tells screen readers what's a heading, list, paragraph, table, etc. Enabled by `tagging=on` in `\DocumentMetadata`.
+- **PDF/UA-2** — ISO standard for tagged-PDF accessibility. The tagging output targets this.
+- **PDF/A-4** — ISO standard for archival PDFs (long-term readable, no external dependencies). The templates target this profile.
+- **MathML** — XML representation of math equations that screen readers can read. LuaLaTeX generates this automatically when the metadata is set up.
+- **Alt text** — short text description on an image, read instead of the image by screen readers (`alt={...}` on `\includegraphics`).
+- **Ally** — bCourses' built-in accessibility checker. Other LMSs use the same tool.
+- **veraPDF / PAC** — third-party PDF conformance validators (open-source and free, respectively).
 
 📊 **Example output**
 
@@ -218,6 +238,15 @@ or
 lualatex accessible_article.tex
 ```
 
+If you cloned and aren't sure your local LaTeX is recent enough, run:
+
+```bash
+tools/check_env.sh
+```
+
+It checks LuaLaTeX, the kernel date, `ltx-talk.cls`, and whether
+`pikepdf` is available for `strip_af.py`.
+
 ---
 
 # Requirements
@@ -233,6 +262,39 @@ Update packages if necessary:
 ```bash
 tlmgr update --all
 ```
+
+### Platform-specific setup
+
+**macOS (MacTeX):**
+
+```bash
+sudo tlmgr update --self --all   # update everything
+```
+
+In TeXShop, set `Typeset > LaTeX` to **LuaLaTeX**.
+
+**Linux (TeX Live):**
+
+```bash
+sudo tlmgr update --self --all
+```
+
+If `tlmgr` is missing on Debian/Ubuntu, install upstream TeX Live
+directly from <https://tug.org/texlive/> — the apt-packaged TeX Live
+typically lags behind the kernel date required here.
+
+**Windows (MiKTeX or TeX Live):**
+
+- MiKTeX: open MiKTeX Console > **Updates** > **Check for updates**.
+- TeX Live: open the **TeX Live Manager** GUI and apply all updates.
+
+In TeXstudio / TeXworks, set **Options > Configure > Build** (or
+**Edit > Preferences > Typesetting**) to use the LuaLaTeX command.
+In VS Code with LaTeX Workshop, set
+`"latex-workshop.latex.tools"` to invoke `lualatex` and pick that
+tool in your recipe.
+
+**Overleaf** (any OS): see the dedicated section below.
 
 ---
 
@@ -254,8 +316,10 @@ https://www.overleaf.com/labs/participate
 
 | File / directory       | Purpose                                                |
 | ---------------------- | ------------------------------------------------------ |
-| accessible_article.tex | example accessible article                             |
-| accessible_slides.tex  | example accessible slides (most complete example)      |
+| accessible_article.tex | full annotated accessible article                      |
+| accessible_slides.tex  | full annotated accessible slide deck (most complete example) |
+| minimal_article.tex    | smallest runnable article example (~40 lines)          |
+| minimal_slides.tex     | smallest runnable slides example (~40 lines)           |
 | slide_utils.sty        | optional: section-separator slides + PDF bookmarks      |
 | slide_bib.sty          | optional: multi-page bibliography (auto-splits .bbl)   |
 | rsbibsplit.lua         | Lua script that splits .bbl into per-frame chunks      |
@@ -263,8 +327,12 @@ https://www.overleaf.com/labs/participate
 | capybara.jpg           | sample figure                                          |
 | BerkeleyHaas.png       | logo used on the slides title page                     |
 | strip_af.py            | post-build cleanup for strict PDF/A validators (needs `pikepdf`) |
+| tools/run_strip_af.sh  | wrapper that finds a Python with `pikepdf` and runs strip_af.py |
+| tools/check_env.sh     | preflight check for LuaLaTeX, kernel date, ltx-talk, pikepdf |
+| VALIDATION.md          | current validator status and known false positives     |
 | .latexmkrc             | build configuration (forces LuaLaTeX, runs strip_af.py) |
 | .dir-locals.el         | Emacs/AUCTeX project-local commands                    |
+| .github/workflows/     | CI: builds all four templates on every push            |
 | build/                 | latexmk output directory (gitignored)                  |
 
 ---
@@ -299,6 +367,26 @@ Every accessible document must begin with a `\DocumentMetadata{...}` block befor
 ```
 
 For a complete working example in context, see `accessible_slides.tex`.
+
+## Documents in other languages
+
+`lang=` is the document's primary language. Use a BCP-47 tag — e.g.,
+`lang=es-ES` for Spanish (Spain), `lang=fr-FR` for French, `lang=de`
+for German, `lang=zh-CN` for simplified Chinese. Screen readers use
+this to pick a voice and pronunciation.
+
+For passages in a different language inside an otherwise-English
+document, load `babel` with both languages and wrap the passage with
+`\foreignlanguage`:
+
+```latex
+\usepackage[english,french]{babel}
+...
+\foreignlanguage{french}{Bonjour le monde.}
+```
+
+The tagged PDF then carries the inner language attribute, so screen
+readers switch voices at the boundary.
 
 ---
 
@@ -361,38 +449,12 @@ Beamer themes and templates do not transfer directly.
 
 # Validator Notes
 
-Different accessibility tools check different aspects of a PDF.
+Different accessibility checkers test different things; no single tool catches everything. The practical workflow is to run more than one and compare findings.
 
-### Ally vs archival validators
+- **veraPDF** is the meaningful PDF/UA-2 + PDF/A-4 conformance check; both example PDFs pass it cleanly (after `strip_af.py` runs).
+- **Ally, PAC, and Adobe Acrobat** have not fully caught up to PDF/UA-2 and produce a predictable set of false positives on these files.
 
-Ally checks usability and accessibility structure.  
-veraPDF checks strict PDF/A archival conformance.
-
-### Acrobat `<Lbl>` errors
-
-```
-Lbl and LBody – Failed
-```
-
-This is a known issue with Acrobat’s accessibility checker and can generally be ignored.
-
-### PAC table-header warnings
-
-PAC may report:
-
-```
-Table header cell has no associated subcells
-```
-
-even when header rows are tagged correctly.
-
-### Validator disagreements
-
-Recommended workflow:
-
-1. Run multiple validators.
-2. Compare findings.
-3. Investigate structural issues but treat isolated warnings cautiously.
+See [VALIDATION.md](VALIDATION.md) for the per-tool status, the full list of known false positives, and the **important warning about not accepting Ally's offered "fix"** for the missing-title finding (which would silently downgrade the PDF to PDF 1.7 and destroy UA-2 / PDF/A-4 conformance).
 
 ---
 

@@ -30,10 +30,10 @@ are not.
 
 This script removes those embedded file structures from the PDF so that:
 
-    • the PDF passes veraPDF PDF/A validation
-    • accessibility tagging (used by tools like Blackboard Ally)
+    * the PDF passes veraPDF PDF/A validation
+    * accessibility tagging (used by tools like Blackboard Ally)
       remains intact
-    • no manual editing of the LaTeX tagging internals is required
+    * no manual editing of the LaTeX tagging internals is required
 
 Importantly, this script **does NOT remove any actual document content**.
 It only removes metadata structures used to attach supplemental files.
@@ -57,139 +57,154 @@ The script cleans several PDF structures:
            /EF
            /AFRelationship
 
-5. Embedded file streams
-       /Type /EmbeddedFile objects
-
-After removal, the PDF is rewritten cleanly so that cross-reference
-tables remain valid.
-
 
 Dependencies
 ------------
-This script requires the Python package:
-
-    pikepdf
-
-Install it with:
+This script requires the Python package `pikepdf`:
 
     pip install pikepdf
-
-`pikepdf` is a lightweight wrapper around the QPDF library and is
-commonly used for safe structural edits to PDFs.
 
 
 Usage
 -----
-Basic usage (in-place overwrite):
+    strip_af.py INPUT [OUTPUT]
+    strip_af.py --help
 
-    python strip_af.py input.pdf
-
-Alternatively specify an explicit output filename:
-
-    python strip_af.py input.pdf output.pdf
-
-
-Typical LaTeX workflow
-----------------------
-
-Compile the document:
-
-    lualatex accessible_slides.tex
-    lualatex accessible_slides.tex
-
-Then clean the PDF:
-
-    python strip_af.py accessible_slides.pdf
-
-Validate:
-
-    veraPDF accessible_slides.pdf
-
-
-Verification
-------------
-You can verify that no embedded files remain using:
-
-    strings file.pdf | egrep 'EmbeddedFile|Filespec|AFRelationship|\\.html'
-
-Expected output: nothing.
+If OUTPUT is omitted, INPUT is rewritten in place. If nothing needs
+removing, the script exits without rewriting the PDF.
 
 
 Notes
 -----
-This script exists as a **temporary workaround** for a mismatch between:
-
-    • LaTeX accessibility tooling (which embeds helper files)
-    • strict PDF/A archival requirements
-
-If future LaTeX releases provide a configuration option to disable
-these helper attachments directly, this script may become unnecessary.
-
-For now it provides a safe and reproducible way to ensure PDF/A
-compliance while keeping accessible tagging enabled.
+This is a **temporary workaround** for a mismatch between LaTeX
+accessibility tooling (which embeds helper files) and strict PDF/A
+archival requirements. If future LaTeX releases provide a way to
+suppress these helper attachments directly, this script may become
+unnecessary.
 """
 
+from __future__ import annotations
+
+import argparse
 import os
 import sys
 import tempfile
+
 import pikepdf
 
 
-def strip_associated_files(input_pdf, output_pdf):
+def _strip(pdf: pikepdf.Pdf) -> dict[str, int]:
+    """Strip associated files in place. Returns a counts dict."""
+    counts = {
+        "root_af": 0,
+        "page_af": 0,
+        "embeddedfiles_tree": 0,
+        "filespec_ef": 0,
+        "filespec_afrel": 0,
+    }
+    root = pdf.Root
+
+    if "/AF" in root:
+        del root["/AF"]
+        counts["root_af"] = 1
+
+    for page in pdf.pages:
+        if "/AF" in page.obj:
+            del page.obj["/AF"]
+            counts["page_af"] += 1
+
+    if "/Names" in root and "/EmbeddedFiles" in root.Names:
+        del root.Names["/EmbeddedFiles"]
+        counts["embeddedfiles_tree"] = 1
+        if len(root.Names.keys()) == 0:
+            del root["/Names"]
+
+    for obj in pdf.objects:
+        if isinstance(obj, pikepdf.Dictionary) and obj.get("/Type") == "/Filespec":
+            if "/EF" in obj:
+                del obj["/EF"]
+                counts["filespec_ef"] += 1
+            if "/AFRelationship" in obj:
+                del obj["/AFRelationship"]
+                counts["filespec_afrel"] += 1
+
+    return counts
+
+
+def _summary(counts: dict[str, int]) -> str:
+    parts = []
+    if counts["root_af"]:
+        parts.append("root /AF")
+    if counts["page_af"]:
+        parts.append(f"{counts['page_af']} page /AF")
+    if counts["embeddedfiles_tree"]:
+        parts.append("/EmbeddedFiles tree")
+    if counts["filespec_ef"]:
+        parts.append(f"{counts['filespec_ef']} /Filespec /EF")
+    if counts["filespec_afrel"]:
+        parts.append(f"{counts['filespec_afrel']} /Filespec /AFRelationship")
+    return ", ".join(parts) if parts else "nothing"
+
+
+def strip_associated_files(input_pdf: str, output_pdf: str) -> bool:
+    """Strip AF structures from input_pdf, write to output_pdf.
+
+    Returns True if the PDF was rewritten, False if nothing needed
+    stripping and the input was left untouched (in-place mode only).
+    """
+    in_place = os.path.abspath(input_pdf) == os.path.abspath(output_pdf)
+
     with pikepdf.open(input_pdf) as pdf:
-        root = pdf.Root
+        counts = _strip(pdf)
+        total = sum(counts.values())
+        summary = _summary(counts)
 
-        # Remove document-level Associated Files
-        if "/AF" in root:
-            del root["/AF"]
+        if total == 0 and in_place:
+            print(f"strip_af: {input_pdf}: nothing to strip; left untouched")
+            return False
 
-        # Remove page-level Associated Files
-        for page in pdf.pages:
-            if "/AF" in page.obj:
-                del page.obj["/AF"]
-
-        # Remove EmbeddedFiles name tree (classic attachments)
-        if "/Names" in root and "/EmbeddedFiles" in root.Names:
-            del root.Names["/EmbeddedFiles"]
-            if len(root.Names.keys()) == 0:
-                del root["/Names"]
-
-        # Clean remaining FileSpec objects
-        for obj in pdf.objects:
-            if isinstance(obj, pikepdf.Dictionary) and obj.get("/Type") == "/Filespec":
-                if "/EF" in obj:
-                    del obj["/EF"]
-                if "/AFRelationship" in obj:
-                    del obj["/AFRelationship"]
-
-        if os.path.abspath(input_pdf) == os.path.abspath(output_pdf):
-            temp_file = None
+        if in_place:
+            tmp = None
             try:
                 with tempfile.NamedTemporaryFile(
-                    suffix=".pdf", delete=False, dir=os.path.dirname(input_pdf) or "."
-                ) as tmp:
-                    temp_file = tmp.name
-                pdf.save(temp_file, linearize=True)
-                os.replace(temp_file, input_pdf)
+                    suffix=".pdf",
+                    delete=False,
+                    dir=os.path.dirname(input_pdf) or ".",
+                ) as fh:
+                    tmp = fh.name
+                pdf.save(tmp, linearize=True)
+                os.replace(tmp, input_pdf)
             finally:
-                if temp_file and os.path.exists(temp_file):
-                    os.remove(temp_file)
+                if tmp and os.path.exists(tmp):
+                    os.remove(tmp)
         else:
             pdf.save(output_pdf, linearize=True)
 
+    print(f"strip_af: {output_pdf}: removed {summary}")
+    return True
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: strip_af.py input.pdf [output.pdf]")
-        sys.exit(1)
 
-    input_pdf = sys.argv[1]
-    output_pdf = sys.argv[2] if len(sys.argv) > 2 else input_pdf
+def main() -> int:
+    p = argparse.ArgumentParser(
+        prog="strip_af.py",
+        description=(
+            "Remove PDF Associated Files (/AF, /EmbeddedFile, /Filespec) "
+            "to satisfy strict PDF/A validators. Document content is not "
+            "touched."
+        ),
+    )
+    p.add_argument("input", help="input PDF (rewritten in place if no output)")
+    p.add_argument(
+        "output",
+        nargs="?",
+        help="output PDF (defaults to overwriting the input)",
+    )
+    args = p.parse_args()
 
-    strip_associated_files(input_pdf, output_pdf)
-
-    print(f"Clean PDF written to: {output_pdf}")
+    output = args.output if args.output is not None else args.input
+    strip_associated_files(args.input, output)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

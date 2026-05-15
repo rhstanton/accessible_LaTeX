@@ -1,0 +1,53 @@
+name: Build templates
+
+# Verify that all four .tex examples in this repo still compile cleanly
+# on a recent TeX Live, and upload the resulting PDFs as artifacts so
+# they can be downloaded without cloning.
+#
+# The templates require LaTeX kernel >= 2025-11-01 and the ltx-talk
+# class. The texlive/texlive:latest image tracks the current release;
+# if a job here starts failing because the image lags behind the kernel
+# requirement, pin a TL_VERSION below.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pikepdf (for strip_af.py post-processing)
+        run: |
+          python3 -m pip install --no-cache-dir --break-system-packages pikepdf
+
+      - name: Make wrapper scripts executable
+        run: chmod +x tools/*.sh
+
+      - name: Run environment check
+        run: tools/check_env.sh
+
+      - name: Build accessible_slides.tex
+        run: latexmk accessible_slides.tex
+
+      - name: Build accessible_article.tex
+        run: latexmk accessible_article.tex
+
+      - name: Build minimal_slides.tex
+        run: latexmk minimal_slides.tex
+
+      - name: Build minimal_article.tex
+        run: latexmk minimal_article.tex
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessible-pdfs
+          path: build/*.pdf
+          if-no-files-found: error

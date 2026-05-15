@@ -80,6 +80,10 @@
 \usepackage{bookmark}       % better PDF bookmark control
 \usepackage[normalem]{ulem} % underlined links; normalem preserves \emph
 \usepackage{xparse}         % readable command definitions
+\usepackage{fancyvrb}       % code blocks; the LaTeX Tagging Project's
+                            % currently-recommended verbatim mechanism.
+                            % `listings` and `minted` are not yet
+                            % compatible with tagging (see code slide).
 
 % Optional helper packages used by this example repository.
 % Neither is required for PDF accessibility.
@@ -124,6 +128,20 @@
   {\setlength{\fboxsep}{0pt}\colorbox{AltYellow}{\texttt{#1}}}%
 }
 
+% fancyvrb's \VerbatimInput is used on the code-block slide. We keep
+% defaults; the visible accessibility properties (monospaced font,
+% box frame, line numbers) are passed at use-site.
+%
+% NOTE: when `listings`/`minted` become tagging-compatible upstream
+% (tracked at https://github.com/latex3/tagging-project/issues/70
+% and https://github.com/latex3/tagging-project/issues/1060), the
+% following palette is the one to use -- it meets WCAG AA 4.5:1:
+%   keywords    = AccessibleRed  (red!80!black)
+%   comments    = AccessibleGreen (green!40!black)
+%   strings     = blue
+% For now, fancyvrb gives us a tagged but monochrome listing, which
+% is the accessibility-first tradeoff.
+
 %%% * PART F. LINKS
 %
 % Accessibility note:
@@ -134,11 +152,26 @@
 \NewDocumentCommand{\hrefu}{m m}{\href{#1}{\uline{#2}}}
 \NewDocumentCommand{\urlu}{m}{\uline{\url{#1}}}
 
+% Set PDF Title / Author / Subject explicitly. Under PDF 2.0
+% (which \DocumentMetadata{pdfstandard=a-4,pdfstandard=ua-2}
+% targets) the legacy Document Information Dictionary `/Title`
+% key is deprecated -- only XMP `dc:title` is required, and the
+% kernel writes that automatically from \title{...}. We set the
+% hyperref keys anyway so that any reader still consulting the
+% legacy keys finds them.
+%
+% NOTE: even with this in place, Blackboard Ally (as of May 2026)
+% still reports "The PDF does not have a title" because it checks
+% the legacy /Title in a way that's incompatible with how the
+% LaTeX kernel writes metadata under PDF 2.0. See VALIDATION.md.
 \hypersetup{
   colorlinks=true,
   linkcolor=AccessibleGreen,
   urlcolor=AccessibleGreen,
-  citecolor=AccessibleGreen
+  citecolor=AccessibleGreen,
+  pdftitle={\TalkTitle},
+  pdfauthor={\TalkAuthor},
+  pdfsubject={Accessible LaTeX slide template},
 }
 
 %%% * PART G. PDF TAGGING (REQUIRED FOR ACCESSIBILITY)
@@ -318,7 +351,56 @@
 \end{frame*}
 \setcounter{frame}{0}% start regular slide numbering at 1
 
-% \section{Overview}
+% ======================================================================
+% EARLY VALIDATOR-NOISE WARNING (slides 2 & 3)
+% ======================================================================
+% Placed immediately after the title slide so that anyone who downloads
+% the PDF, runs it through Ally or PAC, and sees scary-looking errors
+% can find the explanation before flipping past two intro slides.
+
+\begin{frame}{Don't worry about validator error reports}
+
+\begin{itemize}
+\item Since v2.0, this template targets the \BlueText{modern PDF/UA-2 + PDF/A-4} accessibility standards.
+\item Both example PDFs pass \BlueText{veraPDF} (strict UA-2 / PDF/A-4 conformance) cleanly.
+\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't caught up with PDF/UA-2 yet. They will report ``errors'' that are \GreenText{false positives}, not bugs in the templates.
+\item The next slide explains why the upgrade is worth doing. Per-tool symptoms and details are near the end of this deck and in \texttt{VALIDATION.md}.
+\end{itemize}
+
+\bigskip
+
+\begin{center}
+\setlength{\fboxsep}{6pt}%
+\fcolorbox{AccessibleRed}{red!8!white}{%
+  \begin{minipage}{0.92\linewidth}\centering
+    \RedText{\large\textbf{Do NOT accept Ally's offered ``fixes'' for these findings.}}\\[2pt]
+    \RedText{\textbf{They may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance. (Verified for the title fix; other fixes are untested.)}}
+  \end{minipage}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Why v2.0 upgraded to PDF/UA-2 + PDF/A-4}
+
+\textbf{What changed.} v2.0 updates the \texttt{\textbackslash DocumentMetadata\{\ldots\}} target from the old \BlueText{PDF/UA-1 + PDF/A-2} (PDF~1.7) to \BlueText{PDF/UA-2 + PDF/A-4} (PDF~2.0).
+
+\bigskip
+
+\textbf{Why this is worth doing:}
+\begin{itemize}
+\item \BlueText{PDF/UA-2} (ISO 14289-2, 2024) is the current accessibility standard. It improves tagging for math (MathML), tables, and lists over UA-1, and is the long-term direction for accessible PDF.
+\item \BlueText{PDF/A-4} (ISO 19005-4) is the current archival standard, layered on PDF~2.0 instead of PDF~1.7. It's cleaner about deprecating legacy metadata and aligns with UA-2.
+\item Net effect: \GreenText{better screen-reader support, future-proof, and matches what modern LaTeX tagging actually produces}.
+\end{itemize}
+
+\bigskip
+
+\textbf{The tradeoff:} most accessibility checkers were written for UA-1 / PDF~1.7.
+\begin{itemize}
+\item  Haven't fully caught up with new standard.
+\item The fix is on the checker side, not the document side.
+\end{itemize}  
+
+\end{frame}
 
 \begin{frame}{\LaTeX\ and accessibility: new requirements}
 
@@ -350,10 +432,9 @@
 \begin{itemize}
 \item A practical template set for accessible \LaTeX\ using the \hrefu{https://latex3.github.io/tagging-project/}{\LaTeX\ Tagging Project}
   \begin{itemize}
-  \item \GreenText{Two templates:} Articles (\RedText{\texttt{article}} class) and slides (\RedText{\texttt{ltx-talk}})
-  \item \GreenText{Shows:} What is shared and what differs
-  \item \GreenText{Contains:} Math, text, figures, and tables
-  \item \GreenText{Validation status:} Slides score 100\% with \BlueText{Ally} and pass common validators (\BlueText{veraPDF}, \BlueText{PAC}, \BlueText{Acrobat}) in typical workflows (tested March 17, 2026).
+  \item \GreenText{Two document classes:} articles (\RedText{\texttt{article}}) and slides (\RedText{\texttt{ltx-talk}})
+  \item \GreenText{Two flavors of each:} a \BlueText{minimal} template (\texttt{minimal\_slides.tex}, \texttt{minimal\_article.tex}, $\sim$40 lines, runnable in a minute) plus a \BlueText{fully annotated} template (\texttt{accessible\_slides.tex}, \texttt{accessible\_article.tex}) that doubles as documentation
+  \item \GreenText{Contains:} math, text, figures, and tables
   \end{itemize}
 
   \bigskip
@@ -629,6 +710,36 @@
 \includegraphics[height=.42\textheight, alt={A capybara's head facing left}]{capybara.jpg}
 \end{frame*}
 
+\begin{frame}{Caption vs.\ alt text: they describe different things}
+\begin{itemize}
+\item A common mistake: putting the same words in \texttt{\textbackslash caption\{...\}} and \texttt{alt=\{...\}}.
+\item Different audiences, different jobs:
+  \begin{itemize}
+  \item \GreenText{Caption}: visible to \emph{everyone}; an editorial label saying \emph{why} this figure is here.
+  \item \GreenText{Alt text}: read \emph{instead of} the image by screen readers; a literal description of \emph{what is depicted}.
+  \end{itemize}
+
+\bigskip
+
+\item \textbf{Example:}
+
+\medskip
+
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\ttfamily\footnotesize
+\textbackslash includegraphics[\\
+\hspace*{0.2in}\AltBox{alt=\{A capybara's head facing left\}}\\
+]\{capybara.jpg\}\\
+\textbackslash caption\{\AltBox{A capybara, used as a non-decorative illustration.}\}
+\end{minipage}}
+
+\bigskip
+
+\item Decorative image $\Rightarrow$ \texttt{alt=\{\}} so screen readers skip it.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Tables: header rows}
 
 \small  
@@ -670,10 +781,25 @@
   \GreenText{2005/06/01} & \GreenText{2005/02/25} & \GreenText{0.98401} & \GreenText{0.02413} & \GreenText{177} & \GreenText{92} & \GreenText{0.48493} & \GreenText{0.25556} & \GreenText{4,844.73} \\
   \GreenText{2005/09/01} & \GreenText{2005/05/27} & \GreenText{0.97733} & \GreenText{0.02675} & \GreenText{268} & \GreenText{92} & \GreenText{0.73425} & \GreenText{0.25556} & \GreenText{10,016.71} \\
   \bottomrule
-\end{tabular}  
+\end{tabular}
 \end{center}
 
 \end{frame}
+
+% Use frame* (not frame): ltx-talk's starred form is the one designed
+% to host verbatim content. \VerbatimInput reads the file in a
+% catcode-changing context, which a plain `frame` won't allow.
+\begin{frame*}{Code listings: contrast and tagging}
+\begin{itemize}
+\item For code, use a real verbatim environment, not \texttt{\textbackslash texttt} inside boxes -- screen readers then see the code as text.
+\item \RedText{Heads up:} as of TeX Live 2026, the popular syntax-highlighting packages \BlueText{\texttt{listings}} and \BlueText{\texttt{minted}} are \RedText{not yet compatible} with the LaTeX tagging engine; they emit untagged graphical blocks. Tracked at \urlu{https://github.com/latex3/tagging-project/issues/70} and \urlu{https://github.com/latex3/tagging-project/issues/1060}.
+\item The temporary working path is \BlueText{\texttt{fancyvrb}}'s \texttt{\textbackslash VerbatimInput} (used below). Monochrome, but tagged -- which is what accessibility needs.
+\end{itemize}
+
+\medskip
+
+\VerbatimInput[fontsize=\small, frame=single, numbers=left]{examples/log_returns.py}
+\end{frame*}
 
 % ======================================================================
 % SECTION: SLIDES VERSUS ARTICLES
@@ -706,8 +832,8 @@
 \begin{itemize}
 \item \textbf{New documents:}
   \begin{itemize}
-  \item copy \texttt{accessible\_slides.tex} or \texttt{accessible\_article.tex}
-  \item replace content; keep the metadata/preamble structure
+  \item \GreenText{Try first:} \texttt{minimal\_slides.tex} or \texttt{minimal\_article.tex} ($\sim$40 lines each) --- the bare-minimum runnable example.
+  \item \GreenText{Then copy:} \texttt{accessible\_slides.tex} or \texttt{accessible\_article.tex} for the fully featured template, replace content, keep the preamble structure.
   \end{itemize}
 
 \bigskip
@@ -781,7 +907,7 @@
 
 \begin{frame}{Optional cleanup for strict validators: \texttt{strip\_af.py}}
 \begin{itemize}
-\item The metadata settings alone can be enough for a 100\% score in Ally.
+\item The metadata settings produce a fully tagged PDF. Note: \BlueText{Ally} reports some \emph{false} errors under PDF/UA-2 -- see ``Validator-specific notes'' for what they are and why to ignore them.
 \item Some strict tools (e.g., \BlueText{veraPDF}) may still complain about \texttt{/AF} or embedded-file structures.
 \item To remove these, run:
 
@@ -801,28 +927,27 @@ python strip\_af.py build/accessible\_slides.pdf
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Validator-specific notes (common false positives)}
+\begin{frame}{Validator-specific notes (reference)}
 
+\textbf{New under PDF/UA-2 (already covered earlier):}
 \begin{itemize}
-\item \textbf{Acrobat: ``Lbl and LBody -- Failed'' (validator bug)}
-  \begin{itemize}
-  \item Often appears around figure captions, section numbers, table captions.
-  \item \GreenText{This is an Acrobat bug} in common setups; typically safe to ignore if source tagging is correct.
-  \item Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}
-  \end{itemize}
-
-\bigskip
-
-\item \textbf{PAC table warning (known behavior)}
-  \begin{itemize}
-  \item PAC can report: \texttt{Table header cell has no associated subcells} even when \texttt{table/header-rows} is correct.
-  \item Documented by the Tagging Project: \urlu{https://github.com/latex3/tagging-project/issues/1056}
-  \end{itemize}
-
-\bigskip
-
-\item \textbf{Bottom line:} treat one-tool warnings as investigation prompts, not definitive errors.
+\item Ally reports every inline equation as ``image without a description'' --- it doesn't yet parse UA-2 MathML.
+\item Ally reports ``The PDF does not have a title'' --- it reads the legacy PDF-1.x \texttt{/Title} key; \RedText{do not accept its offered ``fix''}.
+\item PAC 26.1.0 has no UA-2 checker; it silently validates against PDF/UA-1. Failure counts are UA-1 vs UA-2 differences, not real bugs.
 \end{itemize}
+
+\bigskip
+
+\textbf{Older false positives (also present under UA-1):}
+\begin{itemize}
+\item \textbf{Acrobat: ``Lbl and LBody -- Failed.''} Known Acrobat checker bug on tagged lists, captions, and section numbers. Reference: \urlu{https://tex.stackexchange.com/a/709655/2388}.
+\item \textbf{PAC: ``Table header cell has no associated subcells.''} Reported even when \texttt{table/header-rows} is set correctly. Still present in PAC 26.1.0. Release notes: \urlu{https://pac.pdf-accessibility.org/en/resources/release-notes}.
+\end{itemize}
+
+\bigskip
+
+Full status and per-tool details: \texttt{VALIDATION.md} in the repo.
+
 \end{frame}
 
 
