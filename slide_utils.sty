@@ -1,16 +1,18 @@
 % ======================================================================
 % SLIDE_UTILS.STY - Utility package for accessible_slides.tex
 % ======================================================================
-% Purpose: Provides custom commands and utilities for accessible LaTeX slides
-% that are not strictly required for accessibility but improve usability
+% Purpose: Section-separator slides plus optional PDF bookmarks for
+% accessible LaTeX slide decks. Not required for accessibility.
 %
 % Usage: \usepackage{slide_utils}
+%
+% For multi-page bibliography splitting, see slide_bib.sty (separate file).
 %
 % Author: Richard Stanton
 % License: Same as accessible_slides.tex
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{slide_utils}[2026/05/08 v2.0 Utilities for accessible slides]
+\ProvidesPackage{slide_utils}[2026/05/15 v2.1 Section separators + bookmarks for accessible slides]
 
 % ======================================================================
 % SECTION 1: SECTION SLIDE SUPPORT
@@ -71,87 +73,49 @@
 }
 
 % ======================================================================
-% SECTION 2: BIBLIOGRAPHY SUPPORT
+% SECTION 2: OPTIONAL PDF BOOKMARKS
 % ======================================================================
-% Automatic multi-page bibliography for presentation slides
-%
-% PROBLEM: Standard bibliography environments put all citations on one slide,
-% which becomes unreadable with many references.
-%
-% SOLUTION: This code automatically splits the bibliography across multiple
-% slides, with a configurable maximum number of citations per slide.
-%
-% HOW IT WORKS:
-% 1. \nocite{...} in your document marks which citations to include
-% 2. BibTeX generates a .bbl file with all formatted citations
-% 3. A Lua script (rsbibsplit.lua) reads the .bbl file and:
-%    a) Splits it into chunks of N citations each (N = \RS@bibmax)
-%    b) Creates a separate frame for each chunk
-%    c) Writes a driver .tex file that inputs all the frames
-% 4. \bibliography{bibfile} command automatically runs the Lua script
-%    and includes the generated frames
-%
-% USAGE IN YOUR DOCUMENT:
-%   \nocite{key1,key2,key3}           % Specify which refs to include
-%   \RS@bibmax=3\relax                % Max 3 citations per slide (default: 8)
-%   \bibliographystyle{jfabbrev}      % Your preferred bib style
-%   \bibliography{RHSbib}             % Your .bib file - auto-splits!
+% NOT required for accessibility (PDF tagging handles screen readers).
+% Adds a left-pane navigation outline: \section titles at level 1,
+% frame titles at level 2 beneath them.
 %
 % REQUIREMENTS:
-%   - rsbibsplit.lua file in working directory or TeX search path
-%   - LuaLaTeX compiler (for \directlua calls)
-%   - natbib and bibentry packages (loaded below)
-
-% Stub so natbib can \renewenvironment it
-\newenvironment{thebibliography}[1]{}{}
-\providecommand\newblock{\hskip .11em\@plus.33em\@minus.07em}
-
-\usepackage{natbib}
-\usepackage{bibentry}
+%   - hyperref and bookmark packages loaded BEFORE this package
+%     (so \Hy@writebookmark and \pdfbookmark exist).
+%
+% INTERACTION WITH SECTION 1:
+%   The bookmark code wraps \section at preamble time. Section 1's
+%   \AtBeginDocument hook captures that wrapped \section, so separator
+%   slides and bookmarks compose correctly.
 
 \makeatletter
+\DeclareCommandCopy{\OriginalSectionForBookmarks}{\section}
 
-\newcount\RS@bibmax
-\RS@bibmax=8\relax   % entries per slide; adjust to taste
-
-\directlua{ dofile(kpse.find_file("rsbibsplit.lua") or "rsbibsplit.lua") }
-
-% Redefine \bibliography to automatically split across frames.
-% Done at \begin{document} so other preamble bibliography hooks have settled.
-\AtBeginDocument{%
-  \makeatletter
-  % Save original \bibliography before redefining
-  \let\RS@orig@bibliography\bibliography
-  % Redefine \bibliography:
-  %   1. writes \bibdata to .aux (so bibtex can regenerate .bbl)
-  %   2. Lua splits the .bbl into chunk files and writes a driver .tex
-  %   3. \input the driver, which contains one frame per chunk
-  \renewcommand{\bibliography}[1]{%
-    \let\bibsection\relax
-    \if@filesw\immediate\write\@auxout{\string\bibdata{#1}}\fi
-    \directlua{
-      local bbl = tex.jobname .. ".bbl"
-      local f = io.open(bbl)
-      if not f then bbl = "build//" .. tex.jobname .. ".bbl" f = io.open(bbl) end
-      if f then f:close() rs_split_bbl(bbl, tex.count['RS@bibmax'])
-      else texio.write_nl("RS BIB: .bbl not found") end
-    }%
-    \InputIfFileExists{build//\jobname-bibdriver.tex}{}{%
-      \InputIfFileExists{\jobname-bibdriver.tex}{}{%
-        \typeout{RS BIB: driver file not found, no reference frames produced}}}%
-  }%
-  \makeatother
+\RenewDocumentCommand{\section}{s o m}{%
+  \begingroup
+    \def\Hy@writebookmark##1##2##3##4##5{}%
+    \IfBooleanTF{#1}
+      {\phantomsection\IfNoValueTF{#2}{\OriginalSectionForBookmarks*{#3}}{\OriginalSectionForBookmarks*[#2]{#3}}}%
+      {\IfNoValueTF{#2}{\OriginalSectionForBookmarks{#3}}{\OriginalSectionForBookmarks[#2]{#3}}}%
+  \endgroup
+  \IfBooleanTF{#1}
+    {\IfNoValueTF{#2}{\pdfbookmark[1]{#3}{section-star.\thepage.\number\inputlineno}}{\pdfbookmark[1]{#2}{section-star.\thepage.\number\inputlineno}}}%
+    {\IfNoValueTF{#2}{\pdfbookmark[1]{Section \thesection: #3}{section.\thesection}}{\pdfbookmark[1]{Section \thesection: #2}{section.\thesection}}}%
 }
-
 \makeatother
 
+\ExplSyntaxOn
+\int_new:N \g_slideutils_frame_bookmark_int
 
-% ======================================================================
-% SECTION 3: ADDITIONAL UTILITIES
-% ======================================================================
-% Any other custom commands or configurations
-% (Add additional utilities here)
-
+\AddToHook{cmd/frametitle/after}{%
+  \tl_if_empty:NF \g__talk_frame_title_tl
+    {
+      \int_gincr:N \g_slideutils_frame_bookmark_int
+      \pdfbookmark[2]{\tl_use:N \g__talk_frame_title_tl}
+        {frame.\int_use:N \g_slideutils_frame_bookmark_int}
+    }
+}
+\ExplSyntaxOff
 
 
 \endinput

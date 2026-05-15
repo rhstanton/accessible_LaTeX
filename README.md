@@ -72,11 +72,13 @@ If you're converting existing LaTeX/Beamer files, here's what to add:
    \tagpdfsetup{table/header-rows={1}}
    ```
 
-4. **Change compiler to LuaLaTeX**
+4. **Use accessible color contrast** — WCAG 2.1 AA requires ≥4.5:1 contrast for normal text. Avoid plain `yellow`/`cyan` for text; use darkened variants such as `red!80!black`, `green!40!black`.
+
+5. **Change compiler to LuaLaTeX**
 
 ### Additional for Beamer slides
 
-5. **Change document class**:
+6. **Change document class**:
    ```latex
    \documentclass[frame-title-arg]{ltx-talk}  % was \documentclass{beamer}
    ```
@@ -250,21 +252,20 @@ https://www.overleaf.com/labs/participate
 
 # Repository Layout
 
-```
-accessible_article.tex
-accessible_slides.tex
-capybara.jpg
-strip_af.py
-.latexmkrc
-```
-
-| File                   | Purpose                           |
-| ---------------------- | --------------------------------- |
-| accessible_article.tex | example accessible article        |
-| accessible_slides.tex  | example accessible slides         |
-| capybara.jpg           | sample figure                     |
-| strip_af.py            | optional validator cleanup script |
-| .latexmkrc             | build configuration               |
+| File / directory       | Purpose                                                |
+| ---------------------- | ------------------------------------------------------ |
+| accessible_article.tex | example accessible article                             |
+| accessible_slides.tex  | example accessible slides (most complete example)      |
+| slide_utils.sty        | optional: section-separator slides + PDF bookmarks      |
+| slide_bib.sty          | optional: multi-page bibliography (auto-splits .bbl)   |
+| rsbibsplit.lua         | Lua script that splits .bbl into per-frame chunks      |
+| sample.bib             | sample BibTeX entries used by the slides example       |
+| capybara.jpg           | sample figure                                          |
+| BerkeleyHaas.png       | logo used on the slides title page                     |
+| strip_af.py            | post-build cleanup for strict PDF/A validators (needs `pikepdf`) |
+| .latexmkrc             | build configuration (forces LuaLaTeX, runs strip_af.py) |
+| .dir-locals.el         | Emacs/AUCTeX project-local commands                    |
+| build/                 | latexmk output directory (gitignored)                  |
 
 ---
 

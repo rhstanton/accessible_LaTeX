@@ -66,13 +66,13 @@
 % ======================================================================
 % CUSTOM COMMANDS FOR TEXT COLORS
 % ======================================================================
-% Shortcuts for commonly used colors in teaching materials
-% Use these to maintain consistent, accessible colors throughout your documents
+% Shortcuts for commonly used colors in teaching materials.
+% Names match accessible_slides.tex so examples are interchangeable.
 
-\newcommand\tb[1]{\textcolor{blue}{#1}}                       % Blue text
-\newcommand\tr[1]{\textcolor{AccessibleRed}{#1}}     % Red text (accessible)
-\newcommand\tg[1]{\textcolor{AccessibleGreen}{#1}} % Green text (accessible)
-% Note: Plain yellow fails WCAG contrast requirements - use AltYellow for backgrounds only
+\newcommand\BlueText[1]{\textcolor{blue}{#1}}
+\newcommand\RedText[1]{\textcolor{AccessibleRed}{#1}}
+\newcommand\GreenText[1]{\textcolor{AccessibleGreen}{#1}}
+% Note: plain yellow fails WCAG contrast requirements; use AltYellow for backgrounds only.
 
 % ======================================================================
 % CUSTOM COMMANDS FOR HIGHLIGHTED CODE
@@ -138,10 +138,10 @@ On January 8, 2026, we were notified by campus that, beginning in April 2026 (no
 An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging Project:
 
 \begin{itemize}
-\item \tg{Two templates:} Articles (\texttt{article} class) and slides (\texttt{ltx-talk})
-\item \tg{Shows:} What's common to both, what's different
-\item \tg{Contains:} Working examples with math, text, graphics, and tables
-\item \tg{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
+\item \GreenText{Two templates:} Articles (\texttt{article} class) and slides (\texttt{ltx-talk})
+\item \GreenText{Shows:} What's common to both, what's different
+\item \GreenText{Contains:} Working examples with math, text, graphics, and tables
+\item \GreenText{Scores:} Perfect 100\% from the bCourses accessibility checker (Ally)
 \end{itemize}
 
 \subsection{How to use it}
@@ -195,20 +195,20 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 \section{TeX version requirements (both slides and articles)}
 
 \begin{itemize}
-\item \tg{Minimum:} TeX Live 2023 or later with all packages updated
-\item \tg{Critical:} Must have LaTeX kernel 2025-11-01 or later
+\item \GreenText{Minimum:} TeX Live 2023 or later with all packages updated
+\item \GreenText{Critical:} Must have LaTeX kernel 2025-11-01 or later
   \begin{itemize}
   \item Update via TeX Live Manager (Windows) or TeX Live Utility (Mac)
   \item Or use Overleaf Labs (see next section)
   \end{itemize}
-\item \tr{Will NOT work:} TeX Live 2022 or earlier
+\item \RedText{Will NOT work:} TeX Live 2022 or earlier
 \end{itemize}
 
-\section{\tb{You \textbf{CAN} use Overleaf (both slides and articles)}}
+\section{\BlueText{You \textbf{CAN} use Overleaf (both slides and articles)}}
 
 \begin{itemize}
 \item \texttt{ltx-talk} requires a very recent \textbf{LaTeX kernel} (2025-11-01 or later)
-\item This is available through Overleaf's \tb{Labs program} (not standard Overleaf)
+\item This is available through Overleaf's \BlueText{Labs program} (not standard Overleaf)
 \end{itemize}
 
 \subsection{Using Overleaf (2 steps)}
@@ -221,8 +221,8 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
   \end{itemize}
 \item \textbf{Configure project}:
   \begin{itemize}
-  \item Set TeX Live version to \tg{``Rolling TeXLive (labs)''} (bottom of list)
-  \item Set Compiler to \tg{LuaLaTeX}
+  \item Set TeX Live version to \GreenText{``Rolling TeXLive (labs)''} (bottom of list)
+  \item Set Compiler to \GreenText{LuaLaTeX}
   \end{itemize}
 \end{enumerate}
 
@@ -233,12 +233,12 @@ An experiment exploring accessible \LaTeX\ documents using the \LaTeX\ Tagging P
 
 \section{Common requirements for ALL documents}
 
-Whether you're creating slides or articles, these requirements are \tb{mostly the same}:
+Whether you're creating slides or articles, these requirements are \BlueText{mostly the same}:
 
 \subsection{Document Metadata}
 
 \begin{itemize}
-\item Every accessible document \tr{must} begin with \texttt{\textbackslash DocumentMetadata}
+\item Every accessible document \RedText{must} begin with \texttt{\textbackslash DocumentMetadata}
 \item Goes \emph{before} \texttt{\textbackslash documentclass}
 \end{itemize}
 
@@ -248,8 +248,8 @@ Whether you're creating slides or articles, these requirements are \tb{mostly th
 \begin{minipage}{0.9\linewidth}
 {\ttfamily\small
 \textbackslash DocumentMetadata\{\\[0.5ex]
-\hspace*{0.2in}pdfstandard=a-4f,\hspace*{0.27in}\% PDF/A-4f format (use a-4 for no embedded files)\\[0.5ex]
-\hspace*{0.2in}pdfstandard=ua-2,\hspace*{0.26in}\% Add PDF/UA-2 conformance target\\[0.5ex]
+\hspace*{0.2in}pdfstandard=a-4,\hspace*{0.42in}\% PDF/A-4 archival standard (no embedded files)\\[0.5ex]
+\hspace*{0.2in}pdfstandard=ua-2,\hspace*{0.36in}\% Add PDF/UA-2 conformance target\\[0.5ex]
 \hspace*{0.2in}lang=en-US,\hspace*{0.98in}\% Language for screen readers\\[0.5ex]
 \hspace*{0.2in}tagging=on,\hspace*{0.73in}\% Enable PDF tagging\\[0.5ex]
 \hspace*{0.2in}tagging-setup=\{\\[0.5ex]
@@ -313,7 +313,7 @@ Whether you're creating slides or articles, these requirements are \tb{mostly th
 \subsection{LuaLaTeX Compilation}
 
 \begin{itemize}
-\item You \tr{must} compile with LuaLaTeX (not pdfLaTeX or XeLaTeX)
+\item You \RedText{must} compile with LuaLaTeX (not pdfLaTeX or XeLaTeX)
 
 \bigskip
 
@@ -345,7 +345,7 @@ Whether you're creating slides or articles, these requirements are \tb{mostly th
 
 \section{Figures}
 
-When including a figure, you \tr{must provide alt text} describing the image for screen readers. This is \emph{required} for accessibility compliance.\\
+When including a figure, you \RedText{must provide alt text} describing the image for screen readers. This is \emph{required} for accessibility compliance.\\
 
 \noindent \fbox{%
   \ttfamily\small
@@ -364,7 +364,7 @@ When including a figure, you \tr{must provide alt text} describing the image for
 
 \section{Tables}
 
-When including a table, you \tr{must specify which rows are headers}. Screen readers use this information to help users navigate table content.
+When including a table, you \RedText{must specify which rows are headers}. Screen readers use this information to help users navigate table content.
 Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{before} the \texttt{tabular} environment:
 \begin{itemize}
 \item Use \texttt{\{1\}} for 1 header row
@@ -412,28 +412,28 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
 
 \section{Common pitfalls}
   \begin{itemize}
-  \item \tr{Confusing PDF tagging with PDF bookmarks}
+  \item \RedText{Confusing PDF tagging with PDF bookmarks}
     \begin{itemize}
-    \item \texttt{tagging=on} creates structure tree for \tg{screen readers} (required for accessibility!)
-    \item PDF bookmarks (navigation outline in left pane) are \tg{separate and optional}
+    \item \texttt{tagging=on} creates structure tree for \GreenText{screen readers} (required for accessibility!)
+    \item PDF bookmarks (navigation outline in left pane) are \GreenText{separate and optional}
     \item Bookmarks do NOT generate automatically from \texttt{tagging=on}
     \item For articles: use \texttt{\textbackslash tableofcontents} or the \texttt{bookmark} package
     \item For slides: See custom bookmark code in \texttt{accessible\_slides.tex} preamble (Part 2)
     \end{itemize}
     
-  \item \tr{Forgetting alt text for images}
+  \item \RedText{Forgetting alt text for images}
     \begin{itemize}
     \item Every \texttt{\textbackslash includegraphics} needs an \texttt{alt=\{...\}} parameter
     \item For purely decorative images, use empty alt text: \texttt{alt=\{\}}
     \end{itemize}
     
-  \item \tr{Not specifying table header rows}
+  \item \RedText{Not specifying table header rows}
     \begin{itemize}
     \item Add \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} before each table
     \item Use \texttt{\{1\}} for 1 header row, \texttt{\{1,2\}} for 2 header rows, etc.
     \end{itemize}
     
-  \item \tr{Insufficient color contrast}
+  \item \RedText{Insufficient color contrast}
     \begin{itemize}
     \item WCAG 2.1 requires 4.5:1 contrast ratio for normal text
     \item Avoid light colors: \texttt{yellow}, \texttt{cyan} fail contrast requirements
@@ -442,12 +442,12 @@ Use \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}} \emph{befor
     \item Test with a contrast checker: \urlu{https://webaim.org/resources/contrastchecker/}
     \end{itemize}
 
-  \item \tr{Using the wrong compiler}
+  \item \RedText{Using the wrong compiler}
     \begin{itemize}
-    \item Make sure your editor is set to use \tg{LuaLaTeX}, not \tr{pdfLaTeX}
+    \item Make sure your editor is set to use \GreenText{LuaLaTeX}, not \RedText{pdfLaTeX}
     \end{itemize}
     
-  \item \tr{Old TeX distribution}
+  \item \RedText{Old TeX distribution}
     \begin{itemize}
     \item TeX Live 2022 or earlier won't work
     \item Update packages using TeX Live Manager (Windows) or TeX Live Utility (Mac)
@@ -473,7 +473,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \begin{minipage}{0.9\linewidth}
 {\ttfamily\small
 \AltBox{\textbackslash DocumentMetadata\{} \\
-\hspace*{0.2in}pdfstandard=a-4f,\\
+\hspace*{0.2in}pdfstandard=a-4,\\
 \hspace*{0.2in}pdfstandard=ua-2,\\
 \hspace*{0.2in}lang=en-US,\\
 \hspace*{0.2in}tagging=on,\\
@@ -525,7 +525,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \item Remove all Beamer themes, color schemes, and template commands
 \item Keep your \texttt{\textbackslash begin\{frame\}} environments as-is
 \item Recreate styling using standard LaTeX packages (xcolor, fontspec, etc.)
-\item This is \tg{one-time preamble work}---then reuse for all future talks!
+\item This is \GreenText{one-time preamble work}---then reuse for all future talks!
 \end{itemize}
 
 \section{Getting started: Common steps for both}
@@ -543,10 +543,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
   \item Add \texttt{table/header-rows} to tables
   \end{itemize}
 \item \textbf{Set compiler to LuaLaTeX}
-\item \textbf{Compile:}
-  \begin{itemize}
-  \item Compile with LuaLaTeX
-  \end{itemize}
+\item \textbf{Compile with LuaLaTeX}
 \end{enumerate}
 
 \section{Getting started: What's different by document type}
@@ -557,7 +554,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \item Add \texttt{\textbackslash DocumentMetadata} before \texttt{\textbackslash documentclass}
 \item Include the \texttt{tagging-setup} block in \texttt{\textbackslash DocumentMetadata} (as shown in this template)
 \item Switch to \texttt{fontspec} and \texttt{unicode-math} packages
-\item \tg{Keep your existing documentclass!}
+\item \GreenText{Keep your existing documentclass!}
 \end{itemize}
 
 \subsection{For Slides (migrating from Beamer)}
@@ -565,9 +562,9 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \begin{itemize}
 \item Copy preamble from \texttt{accessible\_slides.tex}
 \item Change \texttt{\textbackslash documentclass\{beamer\}} to \texttt{\textbackslash documentclass[frame-title-arg]\{ltx-talk\}}
-\item \tr{Remove Beamer themes/templates/colors}
-\item \tg{Recreate styling} using standard LaTeX/xcolor
-\item \tg{One-time preamble work}---then reuse for all future talks!
+\item \RedText{Remove Beamer themes/templates/colors}
+\item \GreenText{Recreate styling} using standard LaTeX/xcolor
+\item \GreenText{One-time preamble work}---then reuse for all future talks!
 \end{itemize}
 
 \section{Validation workflow: use multiple checkers}
@@ -584,7 +581,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 
 \begin{itemize}
 \item The metadata settings alone are enough to generate a 100\% score on Ally.
-\item Stricter checkers (e.g., \tr{veraPDF}) may still complain about /AF or embedded-file structures.
+\item Stricter checkers (e.g., \RedText{veraPDF}) may still complain about /AF or embedded-file structures.
 \item Optional strict-archival cleanup command:
 \end{itemize}
 

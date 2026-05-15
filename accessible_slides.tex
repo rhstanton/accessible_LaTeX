@@ -74,17 +74,17 @@
 % Required or used directly in this file:
 
 \usepackage{booktabs}       % professional tables
-\usepackage{xcolor}           % colors
+\usepackage{xcolor}         % colors
 \usepackage{graphicx}       % images
 \usepackage{hyperref}       % links and basic PDF support
 \usepackage{bookmark}       % better PDF bookmark control
 \usepackage[normalem]{ulem} % underlined links; normalem preserves \emph
 \usepackage{xparse}         % readable command definitions
 
-% Optional helper package used by this example repository.
-% It is not required for PDF accessibility.
-% It provides section separator slides and multi-page bibliography support.
-\usepackage{slide_utils}
+% Optional helper packages used by this example repository.
+% Neither is required for PDF accessibility.
+\usepackage{slide_utils} % section separator slides + optional PDF bookmarks
+\usepackage{slide_bib}   % multi-page bibliography (auto-splits .bbl across frames)
 
 %%% * PART D. CUSTOMIZE THESE DOCUMENT DETAILS
 %
@@ -141,19 +141,13 @@
   citecolor=AccessibleGreen
 }
 
-%%% * PART G. PDF TAGGING AND BOOKMARKS
+%%% * PART G. PDF TAGGING (REQUIRED FOR ACCESSIBILITY)
 %
-% Important distinction:
-% - PDF tagging is required for accessibility and screen readers.
-% - PDF bookmarks are optional navigation entries in the PDF side pane.
-%
-% This section does both:
-% 1. Tags frame titles as H1 headings.
-% 2. Adds section and frame titles to the PDF bookmarks.
-
-% --------------------------------------------------------------------------
-% G1. Required tagging adjustment for ltx-talk section titles
-% --------------------------------------------------------------------------
+% Note on PDF tagging vs. PDF bookmarks:
+% - PDF tagging (configured below) builds the structure tree for screen readers
+%   and is REQUIRED for accessibility.
+% - PDF bookmarks (the left-pane navigation outline) are OPTIONAL and are
+%   handled by slide_utils.sty Section 3.
 %
 % ltx-talk uses \section for slide organization. If sections are also tagged as
 % headings, some validators report heading-order warnings. This template tags
@@ -167,44 +161,6 @@
 \ExplSyntaxOff
 
 \tagpdfsetup{role / new-tag = frametitle / H1}
-
-% --------------------------------------------------------------------------
-% G2. Optional PDF bookmarks
-% --------------------------------------------------------------------------
-%
-% OPTIONAL: remove this subsection if you do not want PDF bookmarks.
-%
-% The code suppresses hyperref's default section bookmark and writes a cleaner
-% custom bookmark. Frame titles become level-2 bookmarks beneath sections.
-
-\makeatletter
-\DeclareCommandCopy{\OriginalSectionForBookmarks}{\section}
-
-\RenewDocumentCommand{\section}{s o m}{%
-  \begingroup
-    \def\Hy@writebookmark##1##2##3##4##5{}%
-    \IfBooleanTF{#1}
-      {\phantomsection\IfNoValueTF{#2}{\OriginalSectionForBookmarks*{#3}}{\OriginalSectionForBookmarks*[#2]{#3}}}%
-      {\IfNoValueTF{#2}{\OriginalSectionForBookmarks{#3}}{\OriginalSectionForBookmarks[#2]{#3}}}%
-  \endgroup
-  \IfBooleanTF{#1}
-    {\IfNoValueTF{#2}{\pdfbookmark[1]{#3}{section-star.\thepage.\number\inputlineno}}{\pdfbookmark[1]{#2}{section-star.\thepage.\number\inputlineno}}}%
-    {\IfNoValueTF{#2}{\pdfbookmark[1]{Section \thesection: #3}{section.\thesection}}{\pdfbookmark[1]{Section \thesection: #2}{section.\thesection}}}%
-}
-\makeatother
-
-\ExplSyntaxOn
-\int_new:N \g_accessibleslides_frame_bookmark_int
-
-\AddToHook{cmd/frametitle/after}{%
-  \tl_if_empty:NF \g__talk_frame_title_tl
-    {
-      \int_gincr:N \g_accessibleslides_frame_bookmark_int
-      \pdfbookmark[2]{\tl_use:N \g__talk_frame_title_tl}
-        {frame.\int_use:N \g_accessibleslides_frame_bookmark_int}
-    }
-}
-\ExplSyntaxOff
 
 %%% * PART H. SLIDE APPEARANCE
 %
@@ -338,7 +294,8 @@
 
 %%% * PART J. SLIDE CONTENT STARTS HERE
 %
-% From this point on, most content looks like ordinary Beamer-style frame code.
+% From this point on, frame BODIES often look much like Beamer.
+% The Beamer-to-ltx-talk work was the preamble above; slide content mostly transfers.
 
 \begin{document}
 
@@ -359,7 +316,7 @@
 {\small \TalkInstitution}\\[0.25\baselineskip]
 {\small \today}
 \end{frame*}
-\setcounter{frame}{0}% title slide is not counted
+\setcounter{frame}{0}% start regular slide numbering at 1
 
 % \section{Overview}
 
@@ -870,54 +827,33 @@ python strip\_af.py build/accessible\_slides.pdf
 
 
 % ======================================================================
-% FINAL: QUICK START
+% SECTION: (OPTIONAL) ADDITIONAL UTILITIES (slide_utils.sty)
 % ======================================================================
-\section{Quick start}
-
-\begin{frame}{Quick start: accessible \LaTeX\ on one slide}
-\begin{itemize}
-\item \textbf{To make an accessible \LaTeX\ PDF:}
-  \begin{enumerate}
-  \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
-  \item Compile with \BlueText{Lua\LaTeX}
-  \item Every figure: \texttt{\textbackslash includegraphics[alt=\{...\}]\{...\}}
-  \item Every table: \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}
-  \item Use high-contrast colors (4.5:1) and validate with 2+ tools
-  \end{enumerate}
-
-\bigskip
-
-\item Template repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
-\item Questions: \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
-\end{itemize}
-\end{frame}
-
-% ======================================================================
-% SECTION: (OPTIONAL) ADDITIONAL  UTILITIES (slide_utils.sty)
-% ======================================================================
+% Placed before "Quick start" so the deck ends with the summary slide
+% rather than an "Optional" separator immediately before References.
 \section{(Optional) additional utilities}
 
 \begin{frame}{Optional presentation utilities}
 
 \begin{itemize}
-\item This template includes \GreenText{optional utilities} in \texttt{slide\_utils.sty}
+\item This template includes \GreenText{optional helpers} split across two packages
   \begin{itemize}
   \item \RedText{Not required for accessibility}
   \item Useful for common presentation tasks
-  \item Easy to customize or remove
+  \item Easy to customize or remove (each package is independent)
   \end{itemize}
 
 \bigskip
 
 \item \textbf{Two optional features:}
   \begin{enumerate}
-  \item Automatic section separator slides
-  \item Multi-page bibliography support
+  \item Automatic section separator slides (in \texttt{slide\_utils.sty})
+  \item Multi-page bibliography support (in \texttt{slide\_bib.sty})
   \end{enumerate}
 
 \bigskip
 
-\item See \texttt{slide\_utils.sty} for implementation details and customization options.
+\item See those \texttt{.sty} files for implementation details and customization options.
 \item \textbf{Note:} There's additional code in the main preamble to get readable table of contents.
   \end{itemize}
 \end{frame}
@@ -943,7 +879,7 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item \textbf{To disable:} Comment out or remove the redefinition code in \texttt{slide\_utils.sty} Section 1
+\item \textbf{To disable:} remove \texttt{\textbackslash usepackage\{slide\_utils\}} or comment out Section 1 of \texttt{slide\_utils.sty}
 \item \textbf{To customize:} Edit colors, fonts, or spacing in the frame template
 \end{itemize}
 \end{frame}
@@ -982,7 +918,31 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \bigskip
 
-\item See \texttt{slide\_utils.sty} Section 2 for detailed workflow explanation.
+\item See \texttt{slide\_bib.sty} for detailed workflow explanation.
+\end{itemize}
+\end{frame}
+
+
+% ======================================================================
+% FINAL: QUICK START
+% ======================================================================
+\section{Quick start}
+
+\begin{frame}{Quick start: accessible \LaTeX\ on one slide}
+\begin{itemize}
+\item \textbf{To make an accessible \LaTeX\ PDF:}
+  \begin{enumerate}
+  \item Add \texttt{\textbackslash DocumentMetadata\{...\}} (before \texttt{\textbackslash documentclass})
+  \item Compile with \BlueText{Lua\LaTeX}
+  \item Every figure: \texttt{\textbackslash includegraphics[alt=\{...\}]\{...\}}
+  \item Every table: \texttt{\textbackslash tagpdfsetup\{table/header-rows=\{...\}\}}
+  \item Use high-contrast colors (4.5:1) and validate with 2+ tools
+  \end{enumerate}
+
+\bigskip
+
+\item Template repo: \urlu{https://github.com/rhstanton/accessible_LaTeX}
+\item Questions: \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu}
 \end{itemize}
 \end{frame}
 

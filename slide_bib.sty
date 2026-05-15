@@ -1,0 +1,85 @@
+% ======================================================================
+% SLIDE_BIB.STY - Multi-page bibliography support for ltx-talk decks
+% ======================================================================
+% Splits a long bibliography across multiple slides automatically.
+% NOT required for accessibility.
+%
+% Usage: \usepackage{slide_bib}
+%
+% Author: Richard Stanton
+% License: Same as accessible_slides.tex
+%
+% PROBLEM: Standard bibliography environments put all citations on one slide,
+% which becomes unreadable with many references.
+%
+% SOLUTION: This code automatically splits the bibliography across multiple
+% slides, with a configurable maximum number of citations per slide.
+%
+% HOW IT WORKS:
+% 1. \nocite{...} in your document marks which citations to include
+% 2. BibTeX generates a .bbl file with all formatted citations
+% 3. A Lua script (rsbibsplit.lua) reads the .bbl file and:
+%    a) Splits it into chunks of N citations each (N = \RS@bibmax)
+%    b) Creates a separate frame for each chunk
+%    c) Writes a driver .tex file that inputs all the frames
+% 4. \bibliography{bibfile} command automatically runs the Lua script
+%    and includes the generated frames
+%
+% USAGE IN YOUR DOCUMENT:
+%   \nocite{key1,key2,key3}           % Specify which refs to include
+%   \RS@bibmax=3\relax                % Max 3 citations per slide (default: 8)
+%   \bibliographystyle{jfabbrev}      % Your preferred bib style
+%   \bibliography{mybib}              % Your .bib file - auto-splits!
+%
+% REQUIREMENTS:
+%   - rsbibsplit.lua file in working directory or TeX search path
+%   - LuaLaTeX compiler (for \directlua calls)
+%   - natbib and bibentry packages (loaded below)
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{slide_bib}[2026/05/15 v2.0 Multi-page bibliography for accessible slides]
+
+% Stub so natbib can \renewenvironment it
+\newenvironment{thebibliography}[1]{}{}
+\providecommand\newblock{\hskip .11em\@plus.33em\@minus.07em}
+
+\RequirePackage{natbib}
+\RequirePackage{bibentry}
+
+\makeatletter
+
+\newcount\RS@bibmax
+\RS@bibmax=8\relax   % entries per slide; adjust to taste
+
+\directlua{ dofile(kpse.find_file("rsbibsplit.lua") or "rsbibsplit.lua") }
+
+% Redefine \bibliography to automatically split across frames.
+% Done at \begin{document} so other preamble bibliography hooks have settled.
+\AtBeginDocument{%
+  \makeatletter
+  % Save original \bibliography before redefining
+  \let\RS@orig@bibliography\bibliography
+  % Redefine \bibliography:
+  %   1. writes \bibdata to .aux (so bibtex can regenerate .bbl)
+  %   2. Lua splits the .bbl into chunk files and writes a driver .tex
+  %   3. \input the driver, which contains one frame per chunk
+  \renewcommand{\bibliography}[1]{%
+    \let\bibsection\relax
+    \if@filesw\immediate\write\@auxout{\string\bibdata{#1}}\fi
+    \directlua{
+      local bbl = tex.jobname .. ".bbl"
+      local f = io.open(bbl)
+      if not f then bbl = "build/" .. tex.jobname .. ".bbl" f = io.open(bbl) end
+      if f then f:close() rs_split_bbl(bbl, tex.count['RS@bibmax'])
+      else texio.write_nl("RS BIB: .bbl not found") end
+    }%
+    \InputIfFileExists{build/\jobname-bibdriver.tex}{}{%
+      \InputIfFileExists{\jobname-bibdriver.tex}{}{%
+        \typeout{RS BIB: driver file not found, no reference frames produced}}}%
+  }%
+  \makeatother
+}
+
+\makeatother
+
+\endinput
