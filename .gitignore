@@ -29,9 +29,11 @@ Thumbs.db
 \#*\#
 .\#*
 
-# AI-tool scaffolding. Real files live in a separate private repo at
-# ../ai/ and are symlinked in here. No-trailing-slash patterns so they
-# match the symlinks too (a trailing slash limits the match to real dirs).
+# AI-tool scaffolding. Real files live in the nested private repo
+# `ai/` (a separate git repo, gitignored here). The names below are
+# symlinks pointing into ai/. No trailing slashes so patterns match
+# symlinks as well as real files/dirs.
+ai
 CLAUDE.md
 .claude
 .github/copilot-instructions.md
