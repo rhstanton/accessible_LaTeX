@@ -1,0 +1,55 @@
+% minimal_slides.tex
+%
+% Smallest runnable accessible-slides example. Compile with:
+%
+%   lualatex minimal_slides.tex
+%
+% Once this works, see accessible_slides.tex for the fully commented
+% teaching version with section separators, custom footers, bibliography
+% splitting, and validator notes.
+
+\DocumentMetadata{
+  lang        = en-US,
+  pdfstandard = ua-2,
+  pdfstandard = a-4,
+  tagging     = on,
+  tagging-setup = {math/setup = mathml-SE},
+}
+
+\documentclass[frame-title-arg]{ltx-talk}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Tag frame titles as H1 so screen readers see them as headings.
+\tagpdfsetup{role/new-tag = frametitle/H1}
+
+\title{A minimal accessible slide deck}
+\author{Your name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Hello, accessible world}
+  \begin{itemize}
+    \item Compiled with LuaLaTeX.
+    \item Tagging is on; math becomes MathML automatically: \(E = mc^2\).
+    \item Every image needs an alt description:
+  \end{itemize}
+  \begin{center}
+    \includegraphics[height=2cm, alt={A capybara's head facing left}]{capybara.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}{One accessible table}
+  \tagpdfsetup{table/header-rows = {1}}
+  \begin{tabular}{lr}
+    \textbf{Item} & \textbf{Count} \\
+    Apples        & 3              \\
+    Oranges       & 5              \\
+  \end{tabular}
+\end{frame}
+
+\end{document}
