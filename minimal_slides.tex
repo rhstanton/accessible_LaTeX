@@ -24,13 +24,23 @@
 % Tag frame titles as H1 so screen readers see them as headings.
 \tagpdfsetup{role/new-tag = frametitle/H1}
 
+% Note: ltx-talk's \maketitle currently interacts badly with the
+% frame-title tagging machinery in the default TeX Live 2026
+% configuration, so we build a tiny title slide manually instead
+% (matching the pattern used in accessible_slides.tex).
+
 \title{A minimal accessible slide deck}
 \author{Your name}
-\date{\today}
 
 \begin{document}
 
-\maketitle
+\begin{frame*}{}
+  \centering
+  \Large A minimal accessible slide deck\par
+  \vspace{1em}
+  \normalsize Your name\par
+  \today
+\end{frame*}
 
 \begin{frame}{Hello, accessible world}
   \begin{itemize}
