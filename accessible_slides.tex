@@ -40,14 +40,17 @@
 % USUALLY LEAVE UNCHANGED:
 % - pdfstandard, pdfversion, tagging, and tagging-setup.
 % - These settings target PDF/UA-2 + PDF/A-4.
-% - Use a-4f only when you intentionally need embedded associated files.
+% - a-4f is only useful if you intentionally embed associated files AND those
+%   files are themselves PDF/A compliant. The helper files the LaTeX tagging
+%   tooling embeds are HTML and are stripped post-build by strip_af.py, so a-4
+%   (no embedded files) is the right default here.
 
 \DocumentMetadata{
   lang        = en-US,
   pdfstandard = ua-2,
-  pdfstandard = a-4f, %or a-4
+  pdfstandard = a-4,
   tagging=on,
-  tagging-setup={math/setup=mathml-SE} 
+  tagging-setup={math/setup=mathml-SE}
 }
 
 %%% * PART B. DOCUMENT CLASS

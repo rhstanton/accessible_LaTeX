@@ -116,15 +116,8 @@
 
 \directlua{ dofile(kpse.find_file("rsbibsplit.lua") or "rsbibsplit.lua") }
 
-\AtEndPreamble{%
-  \begingroup
-    \let\@filesw\@gobble  % prevent \nobibliography writing \bibdata
-    \nobibliography{RHSbib}%
-  \endgroup
-}
-
-% Redefine \bibliography to automatically split across frames
-% This happens at \begin{document} to avoid interfering with \nobibliography above
+% Redefine \bibliography to automatically split across frames.
+% Done at \begin{document} so other preamble bibliography hooks have settled.
 \AtBeginDocument{%
   \makeatletter
   % Save original \bibliography before redefining

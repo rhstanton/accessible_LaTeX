@@ -18,7 +18,6 @@ build/
 
 # Auto-generated files
 auto/
-*.el
 *-luamml-mathml.html
 
 # OS files
@@ -26,7 +25,6 @@ auto/
 Thumbs.db
 
 # Editor/IDE files
-.dir-locals.el
 *~
 \#*\#
 .\#*
@@ -34,6 +32,4 @@ Thumbs.db
 # GitHub Copilot instructions (keep local only)
 .github/copilot-instructions.md
 
-# But DO keep the main PDF in the root for easy viewing
-!accessible.pdf
 .aider*

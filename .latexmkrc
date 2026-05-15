@@ -7,7 +7,7 @@ $out_dir = "build";
 # Post-processing command used after successful LaTeX runs.
 # It first scans python executables on PATH, then probes common install paths,
 # and uses the first interpreter that can import pikepdf.
-$strip_af_post = '( PY=""; CANDS=$( (which -a python3 2>/dev/null; which -a python 2>/dev/null) | awk "!seen[$0]++" ); for CAND in $CANDS; do if "$CAND" -c "import pikepdf" >/dev/null 2>&1; then PY="$CAND"; break; fi; done; if [ -z "$PY" ]; then for CAND in /opt/anaconda3/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3; do if [ -x "$CAND" ] && "$CAND" -c "import pikepdf" >/dev/null 2>&1; then PY="$CAND"; break; fi; done; fi; if [ -n "$PY" ]; then echo "Latexmk: strip_af python: $PY"; "$PY" strip_af.py build/%B.pdf && /bin/rm -f build/%B.noaf.pdf || true; else echo "Latexmk: strip_af skipped (no python with pikepdf found)"; fi )';
+$strip_af_post = '( PY=""; CANDS=$( (which -a python3 2>/dev/null; which -a python 2>/dev/null) | awk \'!seen[$0]++\' ); for CAND in $CANDS; do if "$CAND" -c "import pikepdf" >/dev/null 2>&1; then PY="$CAND"; break; fi; done; if [ -z "$PY" ]; then for CAND in /opt/anaconda3/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3; do if [ -x "$CAND" ] && "$CAND" -c "import pikepdf" >/dev/null 2>&1; then PY="$CAND"; break; fi; done; fi; if [ -n "$PY" ]; then echo "Latexmk: strip_af python: $PY"; "$PY" strip_af.py build/%B.pdf && /bin/rm -f build/%B.noaf.pdf || true; else echo "Latexmk: strip_af skipped (no python with pikepdf found)"; fi )';
 
 # Use LuaLaTeX (mode 4) - REQUIRED for accessibility features
 # Mode 1 = pdfLaTeX, Mode 4 = LuaLaTeX
