@@ -58,6 +58,12 @@
 %   \bookmarksetup{startatroot}
 % in your preamble. But this is OPTIONAL - not required for accessibility.
 
+% Under PDF/UA-2, the LaTeX kernel does not auto-attach /Alt to math
+% Formula structures (MathML is meant to suffice). Blackboard Ally still
+% checks for /Alt and reports each formula as "image without description"
+% when it is missing. Opt in explicitly:
+\tagpdfsetup{math/alt/use}
+
 % ======================================================================
 % COLOR DEFINITIONS
 % ======================================================================

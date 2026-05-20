@@ -195,6 +195,12 @@
 
 \tagpdfsetup{role / new-tag = frametitle / H1}
 
+% Under PDF/UA-2, the LaTeX kernel does not auto-attach /Alt to math
+% Formula structures (MathML is meant to suffice). Blackboard Ally still
+% checks for /Alt and reports each formula as "image without description"
+% when it is missing. Opt in explicitly:
+\tagpdfsetup{math/alt/use}
+
 %%% * PART H. SLIDE APPEARANCE
 %
 % This part is visual styling, not core accessibility machinery.
