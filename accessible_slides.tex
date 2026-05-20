@@ -96,7 +96,7 @@
 % here. The title slide and PDF metadata reuse these values.
 
 \newcommand{\TalkTitle}{Accessible Slides in LaTeX}
-\newcommand{\TalkVersion}{2.0}
+\newcommand{\TalkVersion}{2.0.1}
 \newcommand{\TalkAuthor}{Richard Stanton}
 \newcommand{\TalkEmail}{richard.stanton@berkeley.edu}
 \newcommand{\TalkInstitution}{UC Berkeley}
@@ -369,7 +369,7 @@
 \begin{itemize}
 \item Since v2.0, this template targets the \BlueText{modern PDF/UA-2 + PDF/A-4} accessibility standards.
 \item Both example PDFs pass \BlueText{veraPDF} (strict UA-2 / PDF/A-4 conformance) cleanly.
-\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't caught up with PDF/UA-2 yet. They will report ``errors'' that are \GreenText{false positives}, not bugs in the templates.
+\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't fully caught up with PDF/UA-2 yet. \BlueText{Ally} reports one false positive (``The PDF does not have a title''); \BlueText{PAC} silently falls back to UA-1 and reports a longer list. None of these are bugs in the templates.
 \item The next slide explains why the upgrade is worth doing. Per-tool symptoms and details are near the end of this deck and in \texttt{VALIDATION.md}.
 \end{itemize}
 
@@ -378,9 +378,9 @@
 \begin{center}
 \setlength{\fboxsep}{6pt}%
 \fcolorbox{AccessibleRed}{red!8!white}{%
-  \begin{minipage}{0.92\linewidth}\centering
-    \RedText{\large\textbf{Do NOT accept Ally's offered ``fixes'' for these findings.}}\\[2pt]
-    \RedText{\textbf{They may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance. (Verified for the title fix; other fixes are untested.)}}
+  \begin{minipage}{0.95\linewidth}\centering
+    \RedText{\large\textbf{Do NOT accept Ally's offered ``fix'' for the missing-title finding.}}\\[2pt]
+    \RedText{\textbf{It may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance.}}
   \end{minipage}}
 \end{center}
 \end{frame}
@@ -592,6 +592,10 @@
 
 \bigskip
 
+\item \BlueText{\textbf{Ally quirk:}} we also call \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} in the preamble. Without it, Ally reports every inline equation as ``image without description'' --- under PDF/UA-2 the kernel doesn't auto-attach \texttt{/Alt} to math \texttt{Formula} tags (the MathML is meant to suffice), but Ally still checks for it.
+
+\bigskip
+
 \item \RedText{\textbf{Why PDF/UA-2 + PDF/A-4?}} This aligns with current ISO standards and modern tagging output.
   % \begin{itemize}
   % \item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
@@ -680,7 +684,7 @@
 
 \item \BlueText{Note (optional):} template fonts keep digits/percent/dollar signs consistent in math/text.
   \begin{itemize}
-  \item \makebox[2.75em][l]{\GreenText{Text:}}\ $\$1234567890\%.$
+  \item \makebox[2.75em][l]{\GreenText{Text:}}\ \$1234567890\%.
   \item \makebox[2.75em][l]{\GreenText{Math:}}\ $\$1234567890\%.$
   \end{itemize}
 \end{itemize}
@@ -913,7 +917,7 @@
 
 \begin{frame}{Optional cleanup for strict validators: \texttt{strip\_af.py}}
 \begin{itemize}
-\item The metadata settings produce a fully tagged PDF. Note: \BlueText{Ally} reports some \emph{false} errors under PDF/UA-2 -- see ``Validator-specific notes'' for what they are and why to ignore them.
+\item The metadata settings produce a fully tagged PDF. Note: \BlueText{Ally} reports one false ``missing title'' error under PDF/UA-2 -- see ``Validator-specific notes'' for why to ignore it.
 \item Some strict tools (e.g., \BlueText{veraPDF}) may still complain about \texttt{/AF} or embedded-file structures.
 \item To remove these, run:
 
@@ -937,7 +941,6 @@ python strip\_af.py build/accessible\_slides.pdf
 
 \textbf{New under PDF/UA-2 (already covered earlier):}
 \begin{itemize}
-\item Ally reports every inline equation as ``image without a description'' --- it doesn't yet parse UA-2 MathML.
 \item Ally reports ``The PDF does not have a title'' --- it reads the legacy PDF-1.x \texttt{/Title} key; \RedText{do not accept its offered ``fix''}.
 \item PAC 26.1.0 has no UA-2 checker; it silently validates against PDF/UA-1. Failure counts are UA-1 vs UA-2 differences, not real bugs.
 \end{itemize}

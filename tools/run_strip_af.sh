@@ -27,8 +27,19 @@ find_python() {
     { command -v -a python3 2>/dev/null; command -v -a python 2>/dev/null; } \
       | awk '!seen[$0]++'
   )
-  # 2. Common install paths as a fallback.
-  local fallback="/opt/anaconda3/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3"
+  # 2. Common install paths as a fallback. Covers system Python, Homebrew,
+  #    and Anaconda/Miniconda installed either system-wide (/opt) or in
+  #    the user's home directory (the Anaconda installer's default). The
+  #    home-directory paths matter when latexmk is invoked from GUI Emacs
+  #    on macOS, where PATH typically doesn't inherit the user's shell.
+  local fallback="\
+$HOME/anaconda3/bin/python3 \
+$HOME/miniconda3/bin/python3 \
+/opt/anaconda3/bin/python3 \
+/opt/miniconda3/bin/python3 \
+/opt/homebrew/bin/python3 \
+/usr/local/bin/python3 \
+/usr/bin/python3"
 
   for c in $candidates $fallback; do
     if [ -x "$c" ] && "$c" -c "import pikepdf" >/dev/null 2>&1; then

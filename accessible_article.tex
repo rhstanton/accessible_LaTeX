@@ -138,7 +138,7 @@
 % ======================================================================
 % Define title, author, and date for article class
 
-\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 2.0}
+\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 2.0.1}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu} \\ UC Berkeley}
 \date{\today}
 
@@ -166,11 +166,11 @@
 
 \smallskip
 
-\noindent Template v2.0 targets the newer \BlueText{PDF/UA-2 + PDF/A-4} (PDF~2.0) profile. Most accessibility validators were calibrated for the older \BlueText{UA-1 / PDF~1.7} profile and haven't fully caught up. Ally will report \emph{false} errors --- every inline equation as ``image without description'' (Ally doesn't yet read UA-2 MathML), and ``The PDF does not have a title'' (Ally checks a PDF-1.x key that PDF~2.0 deprecates). The PDF passes \BlueText{veraPDF} cleanly; see ``Validator-specific notes'' below and \texttt{VALIDATION.md}.
+\noindent Template v2.0 targets the newer \BlueText{PDF/UA-2 + PDF/A-4} (PDF~2.0) profile. Most accessibility validators were calibrated for the older \BlueText{UA-1 / PDF~1.7} profile and haven't fully caught up. Ally will report one \emph{false} error: ``The PDF does not have a title'' --- Ally checks a PDF-1.x key that PDF~2.0 deprecates, even though the title is correctly present in XMP. The PDF passes \BlueText{veraPDF} cleanly; see ``Validator-specific notes'' below and \texttt{VALIDATION.md}.
 
 \smallskip
 
-\noindent\RedText{\textbf{Do not accept Ally's offered ``fixes'' for these findings.} They may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance. (Verified for the title fix; other fixes are untested.)}
+\noindent\RedText{\textbf{Do not accept Ally's offered ``fix'' for this finding.} It may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance.}
 \end{minipage}}
 \end{center}
 
@@ -319,6 +319,10 @@ Whether you're creating slides or articles, these requirements are \BlueText{mos
 \noindent This boxed example shows the current metadata profile used in this article template.
 
 \noindent The \texttt{tagging-setup} entries keep math accessible while reducing helper attachments that can trigger warnings in some strict conformance validators.
+
+\medskip
+
+\noindent \textbf{One Ally-quirk workaround.} The preamble also calls \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} (separately from \texttt{\textbackslash DocumentMetadata}). Under PDF/UA-2 the kernel does not auto-attach \texttt{/Alt} to math \texttt{Formula} tags --- the embedded MathML is meant to suffice --- but Blackboard Ally still checks for \texttt{/Alt} and reports every inline equation as ``image without description'' when it is missing. Opting in silences that false positive.
 
 \subsection{Images, Tables, and Colors}
 
@@ -656,7 +660,7 @@ When converting existing LaTeX files to be accessible, here's what you need to a
 \section{Optional validator cleanup step: \texttt{strip\_af.py}}
 
 \begin{itemize}
-\item The metadata settings produce a fully tagged PDF that passes veraPDF (PDF/A-4 + UA-2). \textbf{Heads up:} Ally and some other validators currently report false errors under PDF/UA-2 (math read as ``images''; legacy PDF-1.x title check). See ``Validator-specific notes'' below for the full list.
+\item The metadata settings produce a fully tagged PDF that passes veraPDF (PDF/A-4 + UA-2). \textbf{Heads up:} Ally currently reports one false error under PDF/UA-2 (legacy PDF-1.x title check). See ``Validator-specific notes'' below.
 \item Stricter checkers (e.g., \RedText{veraPDF}) may still complain about /AF or embedded-file structures.
 \item Optional strict-archival cleanup command:
 \end{itemize}
@@ -687,7 +691,6 @@ No single accessibility checker catches everything. Treat one-tool warnings as s
 
 \begin{itemize}
 \item \textbf{PAC validates against PDF/UA-1, not UA-2.} At open, PAC warns it ``currently fully supports documents up to and including PDF~1.7.'' The test report itself shows \texttt{Standard: PDF/UA-1} --- PAC has no UA-2 checker and silently falls back. Expect a non-trivial failure count on the test report because UA-2 introduces structure elements and role names the UA-1 checker doesn't recognize. These are not real conformance bugs.
-\item \textbf{Ally: ``Image without a description'' on every inline equation.} Ally doesn't yet parse UA-2 MathML content tags, so it reports the rendered math as an untagged image. In this article: the \texttt{\$\textbackslash mathit\{math\}\$} example and the column-header math (\texttt{\$DF\_\{pay\}\$}, \texttt{\$T\_\{expiry\}\$}, \texttt{\$\textbackslash Delta\$}) in the example table. The math \emph{is} tagged as MathML; Ally hasn't learned to read it.
 \item \textbf{Ally: ``The PDF does not have a title.''} Ally checks the legacy PDF~1.x \texttt{/Title} key, which PDF~2.0 deprecates in favor of XMP \texttt{dc:title}. \LaTeX\ writes XMP; veraPDF accepts it; Ally has not caught up.
 \end{itemize}
 
@@ -697,8 +700,8 @@ No single accessibility checker catches everything. Treat one-tool warnings as s
 \setlength{\fboxsep}{8pt}%
 \fcolorbox{AccessibleRed}{red!8!white}{%
   \begin{minipage}{0.85\linewidth}\centering
-    \RedText{\large\textbf{Do NOT accept Ally's offered ``fixes'' for these findings.}}\\[2pt]
-    \RedText{\textbf{They may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance. (Verified for the title fix; other fixes are untested.)}}
+    \RedText{\large\textbf{Do NOT accept Ally's offered ``fix'' for this finding.}}\\[2pt]
+    \RedText{\textbf{It may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance.}}
   \end{minipage}}
 \end{center}
 

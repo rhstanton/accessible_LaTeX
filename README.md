@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v2.0)
+# Accessible LaTeX Templates (v2.0.1)
 
 ![Build](https://github.com/rhstanton/accessible_LaTeX/actions/workflows/build.yml/badge.svg)
 ![License: CC0](https://img.shields.io/badge/license-CC0-blue)
@@ -12,9 +12,9 @@ https://github.com/rhstanton/accessible_LaTeX
 ---
 
 > [!IMPORTANT]
-> **If you run the example PDFs through Blackboard Ally and see ~9 "errors," don't worry — and don't click Ally's "fix."**
+> **If you run the example PDFs through Blackboard Ally and see a "missing title" error, don't worry — and don't click Ally's "fix."**
 >
-> v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Most validators (Ally, Acrobat, PAC) haven't caught up: they misread the new MathML tags as "images without descriptions" and they check a legacy PDF-1.x `/Title` key that PDF 2.0 deprecated. The PDFs pass **veraPDF** (the strict PDF/A conformance checker) cleanly. **Don't accept any of Ally's offered "fixes" for these findings — they may downgrade the file to PDF 1.7 and destroy both PDF/UA-2 and PDF/A-4 conformance.** Full details in [VALIDATION.md](VALIDATION.md).
+> v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Ally still checks a legacy PDF-1.x `/Title` key that PDF 2.0 deprecated, so it reports the file as untitled even though the title is correctly present in XMP. The PDFs pass **veraPDF** (the strict PDF/A conformance checker) cleanly. **Don't accept Ally's offered "fix" — it may downgrade the file to PDF 1.7 and destroy both PDF/UA-2 and PDF/A-4 conformance.** Full details in [VALIDATION.md](VALIDATION.md).
 
 ---
 
@@ -452,7 +452,7 @@ Beamer themes and templates do not transfer directly.
 Different accessibility checkers test different things; no single tool catches everything. The practical workflow is to run more than one and compare findings.
 
 - **veraPDF** is the meaningful PDF/UA-2 + PDF/A-4 conformance check; both example PDFs pass it cleanly (after `strip_af.py` runs).
-- **Ally, PAC, and Adobe Acrobat** have not fully caught up to PDF/UA-2 and produce a predictable set of false positives on these files.
+- **Ally** reports a single false positive ("missing title") under PDF/UA-2; **PAC and Adobe Acrobat** have not fully caught up to PDF/UA-2 either and produce a small predictable set of false positives on these files.
 
 See [VALIDATION.md](VALIDATION.md) for the per-tool status, the full list of known false positives, and the **important warning about not accepting Ally's offered "fix"** for the missing-title finding (which would silently downgrade the PDF to PDF 1.7 and destroy UA-2 / PDF/A-4 conformance).
 

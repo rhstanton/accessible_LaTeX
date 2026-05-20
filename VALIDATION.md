@@ -44,7 +44,7 @@ accessibility improvements of UA-2 in exchange for cleaner reports.
 | Validator       | Last checked | Result                                                           |
 | --------------- | ------------ | ---------------------------------------------------------------- |
 | veraPDF         | 2026-05-15   | **pass** (both PDFs, PDF/A-4 + UA-2) after `strip_af.py` runs.   |
-| Blackboard Ally | 2026-05-15   | reports ~9 false positives per PDF; all documented below.        |
+| Blackboard Ally | 2026-05-19   | reports a single false positive ("missing title"); documented below. |
 | PAC 26.1.0      | 2026-05-15   | non-trivial failure count; PAC has no UA-2 checker — see below.  |
 | Adobe Acrobat   | 2026-05-15   | pass with one persistent false positive on `<Lbl>`/`<LBody>`.    |
 
@@ -83,34 +83,25 @@ standards, not bugs in the templates.
   against a deliberately UA-2 file. For a real UA-2 conformance
   check, use veraPDF.
 
-- **Ally: "Image without a description" on every inline equation.**
-  Ally doesn't yet parse UA-2 MathML content tags, so it reports
-  every rendered inline equation as an untagged image. In
-  `accessible_slides.pdf`, this surfaces on ~8 items, including
-  the `\$1234567890\%.$` font-comparison lines on "Slide content:
-  mostly the same as Beamer", the `$\Rightarrow$` on the
-  caption-vs-alt slide, the `$\leftarrow$` arrows annotating the
-  table example, and the math in the "Tables: header rows" headers
-  (`$DF_\text{pay}$`, `$T_\text{expiry}$`, `$\Delta$`). In
-  `accessible_article.pdf` the same issue affects the
-  `$\mathit{math}$` example in "The basics" and the column-header
-  math in the example table. The math *is* tagged as MathML; Ally
-  hasn't learned to read it.
-
 - **Ally: "The PDF does not have a title."** Ally checks the legacy
   Document Information Dictionary `/Title` key, which PDF 2.0
   deprecates in favor of XMP `dc:title`. The LaTeX kernel writes
   XMP correctly under `\DocumentMetadata`; veraPDF accepts it; Ally
   has not caught up.
 
-  > **Do not accept any of Ally's offered "fixes" for these
-  > findings.** Accepting the title fix has been observed to rewrite
-  > the file as **PDF 1.7**, destroying both PDF/UA-2 and PDF/A-4
-  > conformance. Other fixes (e.g., the math-as-image findings) are
-  > untested but plausibly behave the same way. The correct title
-  > metadata is already present in XMP, and the math is already
-  > tagged as MathML — leave the source PDF alone and treat the
-  > Ally findings as false positives.
+  > **Do not accept Ally's offered "fix" for this finding.**
+  > Accepting the title fix has been observed to rewrite the file
+  > as **PDF 1.7**, destroying both PDF/UA-2 and PDF/A-4
+  > conformance. The correct title metadata is already present in
+  > XMP — leave the source PDF alone and treat the Ally finding as
+  > a false positive.
+
+  > Historical note: until template v2.0.1, Ally also reported
+  > "Image without a description" on every inline equation, because
+  > Ally checks for `/Alt` on `Formula` structure elements and the
+  > LaTeX kernel does not attach one by default under UA-2 (MathML
+  > is supposed to suffice). The templates now opt in to
+  > `\tagpdfsetup{math/alt/use}`, which silences that finding.
 
 ## Known limitations (real, not false positives)
 
