@@ -369,7 +369,11 @@
 \begin{itemize}
 \item Since v2.0, this template targets the \BlueText{modern PDF/UA-2 + PDF/A-4} accessibility standards.
 \item Both example PDFs pass \BlueText{veraPDF} (strict UA-2 / PDF/A-4 conformance) cleanly.
-\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't fully caught up with PDF/UA-2 yet. \BlueText{Ally} reports one false positive (``The PDF does not have a title''); \BlueText{PAC} silently falls back to UA-1 and reports a longer list. None of these are bugs in the templates.
+\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't fully caught up with PDF/UA-2 yet.
+  \begin{itemize}
+  \item \BlueText{Ally} reports one false positive (``The PDF does not have a title'').
+  \item  \BlueText{PAC} silently falls back to UA-1 and reports a longer list. These are not bugs in the templates.
+  \end{itemize}
 \item The next slide explains why the upgrade is worth doing. Per-tool symptoms and details are near the end of this deck and in \texttt{VALIDATION.md}.
 \end{itemize}
 
@@ -590,15 +594,25 @@
 \end{minipage}
 }
 
-\bigskip
-
-\item \BlueText{\textbf{Ally quirk:}} we also call \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} in the preamble. Without it, Ally reports every inline equation as ``image without description'' --- under PDF/UA-2 the kernel doesn't auto-attach \texttt{/Alt} to math \texttt{Formula} tags (the MathML is meant to suffice), but Ally still checks for it.
 
 \bigskip
 
 \item \RedText{\textbf{Why PDF/UA-2 + PDF/A-4?}} This aligns with current ISO standards and modern tagging output.
   % \begin{itemize}
-  % \item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
+
+  \bigskip
+  
+\item \BlueText{\textbf{Ally quirk:}} we also separately call \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} in the preamble.
+  \begin{itemize}
+  \item Under PDF/UA-2 the kernel does not attach \texttt{/Alt} to math \texttt{Formula} tags by default.
+%    \begin{itemize}
+    \item The embedded MathML should suffice.
+    \item But Ally reports every inline equation as ``image without description'' when \texttt{/Alt} is missing.
+  %  \end{itemize}      
+  \item Opting in silences that false positive.
+  \end{itemize}
+  %
+%\item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}
   % \end{itemize}    
   % \item Configures accessibility, math tagging, and validator-compatibility behavior in one place.
   

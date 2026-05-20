@@ -322,7 +322,7 @@ Whether you're creating slides or articles, these requirements are \BlueText{mos
 
 \medskip
 
-\noindent \textbf{One Ally-quirk workaround.} The preamble also calls \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} (separately from \texttt{\textbackslash DocumentMetadata}). Under PDF/UA-2 the kernel does not auto-attach \texttt{/Alt} to math \texttt{Formula} tags --- the embedded MathML is meant to suffice --- but Blackboard Ally still checks for \texttt{/Alt} and reports every inline equation as ``image without description'' when it is missing. Opting in silences that false positive.
+\noindent \textbf{One Ally-quirk workaround.} The preamble also calls \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} (separately from \texttt{\textbackslash DocumentMetadata}). Under PDF/UA-2 the kernel does not attach \texttt{/Alt} to math \texttt{Formula} tags by default --- the embedded MathML is meant to suffice --- but Blackboard Ally still checks for \texttt{/Alt} and reports every inline equation as ``image without description'' when it is missing. Opting in silences that false positive.
 
 \subsection{Images, Tables, and Colors}
 

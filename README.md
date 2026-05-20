@@ -16,6 +16,9 @@ https://github.com/rhstanton/accessible_LaTeX
 >
 > v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Ally still checks a legacy PDF-1.x `/Title` key that PDF 2.0 deprecated, so it reports the file as untitled even though the title is correctly present in XMP. The PDFs pass **veraPDF** (the strict PDF/A conformance checker) cleanly. **Don't accept Ally's offered "fix" — it may downgrade the file to PDF 1.7 and destroy both PDF/UA-2 and PDF/A-4 conformance.** Full details in [VALIDATION.md](VALIDATION.md).
 
+> [!IMPORTANT]
+> **If you adapt these templates, keep the `\tagpdfsetup{math/alt/use}` line in the preamble.** Without it, Ally reports every inline equation as "image without description." Under PDF/UA-2 the LaTeX kernel does not attach `/Alt` to math `Formula` tags by default (the embedded MathML is meant to suffice), but Ally still checks for `/Alt`. Opting in silences that false positive.
+
 ---
 
 ## Overview
@@ -36,7 +39,7 @@ A few terms used throughout this README and in the templates:
 - **PDF/A-4** — ISO standard for archival PDFs (long-term readable, no external dependencies). The templates target this profile.
 - **MathML** — XML representation of math equations that screen readers can read. LuaLaTeX generates this automatically when the metadata is set up.
 - **Alt text** — short text description on an image, read instead of the image by screen readers (`alt={...}` on `\includegraphics`).
-- **Ally** — bCourses' built-in accessibility checker. Other LMSs use the same tool.
+- **Ally** — Anthology's accessibility checker, integrated into bCourses (Canvas) and several other LMSs.
 - **veraPDF / PAC** — third-party PDF conformance validators (open-source and free, respectively).
 
 📊 **Example output**
