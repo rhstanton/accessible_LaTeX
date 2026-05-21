@@ -103,6 +103,12 @@ standards, not bugs in the templates.
   > is supposed to suffice). The templates now opt in to
   > `\tagpdfsetup{math/alt/use}`, which silences that finding.
 
+  > Status: Ally staff have acknowledged the PDF 2.0 / UA-2 gap
+  > (covering both the `/Title` finding and the math-formula
+  > finding) as a roadmap priority on the Ally user forum:
+  > <https://usergroup.ally.ac/s/discussion/post/post/view?id=2362>.
+  > Until that ships, treat these findings as false positives.
+
 ## Known limitations (real, not false positives)
 
 - **Syntax-highlighted code listings aren't tagging-compatible yet.**
