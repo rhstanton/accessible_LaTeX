@@ -36,6 +36,7 @@ Thumbs.db
 # into `private/ai/`. No trailing slashes so patterns match symlinks
 # as well as real files/dirs.
 private
+Makefile
 CLAUDE.md
 .claude
 .github/copilot-instructions.md
