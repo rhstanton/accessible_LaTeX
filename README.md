@@ -335,7 +335,7 @@ https://www.overleaf.com/labs/participate
 | VALIDATION.md          | current validator status and known false positives     |
 | .latexmkrc             | build configuration (forces LuaLaTeX, runs strip_af.py) |
 | .dir-locals.el         | Emacs/AUCTeX project-local commands                    |
-| .github/workflows/     | CI: builds all four templates on every push            |
+| .github/workflows/     | CI: builds all four templates, then validates them with veraPDF (PDF/UA-2 + PDF/A-4) on every push |
 | build/                 | latexmk output directory (gitignored)                  |
 
 ---
@@ -454,7 +454,7 @@ Beamer themes and templates do not transfer directly.
 
 Different accessibility checkers test different things; no single tool catches everything. The practical workflow is to run more than one and compare findings.
 
-- **veraPDF** is the meaningful PDF/UA-2 + PDF/A-4 conformance check; both example PDFs pass it cleanly (after `strip_af.py` runs).
+- **veraPDF** is the meaningful PDF/UA-2 + PDF/A-4 conformance check; both example PDFs pass it cleanly (after `strip_af.py` runs). CI runs veraPDF against all four built PDFs on every push, so a green badge means the templates still produce conformant output — not merely that they compiled.
 - **Ally** reports a single false positive ("missing title") under PDF/UA-2; **PAC and Adobe Acrobat** have not fully caught up to PDF/UA-2 either and produce a small predictable set of false positives on these files.
 
 See [VALIDATION.md](VALIDATION.md) for the per-tool status, the full list of known false positives, and the **important warning about not accepting Ally's offered "fix"** for the missing-title finding (which would silently downgrade the PDF to PDF 1.7 and destroy UA-2 / PDF/A-4 conformance).

@@ -43,7 +43,7 @@ accessibility improvements of UA-2 in exchange for cleaner reports.
 
 | Validator       | Last checked | Result                                                           |
 | --------------- | ------------ | ---------------------------------------------------------------- |
-| veraPDF         | 2026-05-15   | **pass** (both PDFs, PDF/A-4 + UA-2) after `strip_af.py` runs.   |
+| veraPDF         | 2026-05-15   | **pass** (both PDFs, PDF/A-4 + UA-2) after `strip_af.py` runs. Also enforced in CI on every push — see below. |
 | Blackboard Ally | 2026-05-19   | reports a single false positive ("missing title"); documented below. |
 | PAC 26.1.0      | 2026-05-15   | non-trivial failure count; PAC has no UA-2 checker — see below.  |
 | Adobe Acrobat   | 2026-05-15   | pass with one persistent false positive on `<Lbl>`/`<LBody>`.    |
@@ -137,9 +137,20 @@ standards, not bugs in the templates.
 1. Rebuild the PDFs: `latexmk accessible_slides.tex` and
    `latexmk accessible_article.tex`.
 2. **veraPDF** — the meaningful UA-2 / PDF/A-4 check:
-   `verapdf --profile ua-2 build/accessible_slides.pdf` (and the
-   article). The `tools/run_strip_af.sh` post-processing must have
-   run; otherwise `/AF` warnings will fire.
+   `verapdf -f ua2 build/accessible_slides.pdf` and `verapdf -f 4
+   build/accessible_slides.pdf` (and likewise for the article). The
+   `tools/run_strip_af.sh` post-processing must have run; otherwise
+   `/AF` warnings will fire. veraPDF exits 0 when the file conforms
+   and 1 when it does not.
+
+   This is automated: the `validate` job in
+   `.github/workflows/build.yml` runs `verapdf/cli` against all four
+   built PDFs against both flavours (`ua2` and `4`) on every push and
+   pull request, and fails the build if any PDF stops conforming. So
+   the dated row above is re-confirmed continuously, not just at the
+   manual checks below. If you have Docker locally you can reproduce
+   the CI check with:
+   `docker run --rm -v "$PWD/build:/data" verapdf/cli -f ua2 /data/accessible_slides.pdf`
 3. **Ally** — upload each PDF to a bCourses test course (or any LMS
    with Ally enabled) and read the per-file score panel. Expect the
    false positives listed above.

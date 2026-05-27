@@ -1,8 +1,16 @@
-name: Build templates
+name: Build and validate templates
 
-# Verify that all four .tex examples in this repo still compile cleanly
-# on a recent TeX Live, and upload the resulting PDFs as artifacts so
-# they can be downloaded without cloning.
+# Two jobs:
+#
+#   build    - verify that all four .tex examples still compile cleanly
+#              on a recent TeX Live, and upload the resulting PDFs as
+#              artifacts so they can be downloaded without cloning.
+#   validate - run veraPDF against those PDFs to prove they still
+#              conform to PDF/UA-2 and PDF/A-4. This is the meaningful
+#              accessibility check (see VALIDATION.md); compiling
+#              cleanly does not by itself guarantee conformance, and a
+#              TeX Live / tagging-project update could silently break
+#              tagging. This job is the regression guard against that.
 #
 # The templates require LaTeX kernel >= 2025-11-01 and the ltx-talk
 # class. The texlive/texlive:latest image tracks the current release;
@@ -54,3 +62,52 @@ jobs:
           name: accessible-pdfs
           path: build/*.pdf
           if-no-files-found: error
+
+  validate:
+    name: veraPDF (PDF/UA-2 + PDF/A-4)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built PDFs
+        uses: actions/download-artifact@v4
+        with:
+          name: accessible-pdfs
+          path: pdfs
+
+      - name: Validate conformance with veraPDF
+        # verapdf/cli is the official veraPDF CLI image. It exits 0 when
+        # every file conforms to the selected profile and 1 when at
+        # least one does not (2+ are tooling errors), so a non-zero exit
+        # here fails the job. Each PDF is checked against both flavours
+        # the templates declare: ua2 = PDF/UA-2, 4 = PDF/A-4.
+        #
+        # The image is unpinned to track the current validator, matching
+        # this repo's "ride the latest standards" stance; if a veraPDF
+        # release ever changes results, pin a tag here (e.g.
+        # verapdf/cli:1.26).
+        run: |
+          set -u
+          shopt -s nullglob
+          pdfs=(pdfs/*.pdf)
+          if [ ${#pdfs[@]} -eq 0 ]; then
+            echo "::error::No PDFs were downloaded to validate."
+            exit 1
+          fi
+          status=0
+          for pdf in "${pdfs[@]}"; do
+            name=$(basename "$pdf")
+            for spec in "ua2:PDF/UA-2" "4:PDF/A-4"; do
+              flavour=${spec%%:*}
+              label=${spec##*:}
+              echo "::group::$name — $label"
+              if docker run --rm -v "$PWD/pdfs:/data" verapdf/cli \
+                   -f "$flavour" --format text "/data/$name"; then
+                echo "PASS: $name conforms to $label"
+              else
+                echo "::error file=$name::$name is NOT $label conformant"
+                status=1
+              fi
+              echo "::endgroup::"
+            done
+          done
+          exit $status
