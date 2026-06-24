@@ -96,7 +96,7 @@
 % here. The title slide and PDF metadata reuse these values.
 
 \newcommand{\TalkTitle}{Accessible Slides in LaTeX}
-\newcommand{\TalkVersion}{2.0.1}
+\newcommand{\TalkVersion}{2.1.0}
 \newcommand{\TalkAuthor}{Richard Stanton}
 \newcommand{\TalkEmail}{richard.stanton@berkeley.edu}
 \newcommand{\TalkInstitution}{UC Berkeley}
@@ -195,11 +195,23 @@
 
 \tagpdfsetup{role / new-tag = frametitle / H1}
 
-% Under PDF/UA-2, the LaTeX kernel does not auto-attach /Alt to math
-% Formula structures (MathML is meant to suffice). Blackboard Ally still
-% checks for /Alt and reports each formula as "image without description"
-% when it is missing. Opt in explicitly:
-\tagpdfsetup{math/alt/use}
+% DELIBERATELY NOT SET: \tagpdfsetup{math/alt/use}.
+%
+% Earlier versions of this template DID set it, to silence Blackboard
+% Ally's "image without description" finding on every inline equation
+% (under PDF/UA-2 the kernel does not auto-attach /Alt to math Formula
+% tags, because the embedded MathML is meant to carry the semantics).
+%
+% But math/alt/use is actively harmful for screen-reader users: it
+% attaches an /Alt string -- the raw LaTeX source -- to each Formula,
+% and per PDF/UA a screen reader reads an element's /Alt *instead of*
+% descending into its children. Our Formula tags carry the generated
+% MathML (math/setup=mathml-SE) as child structure, so adding /Alt
+% *hides* that MathML: instead of hearing the equation rendered, the
+% user hears the verbatim LaTeX read aloud. We removed the line so the
+% MathML reaches assistive technology. Ally's finding is a checker
+% false positive (Ally has no PDF/UA-2 coverage); we accept it rather
+% than degrade the real math experience. See VALIDATION.md.
 
 %%% * PART H. SLIDE APPEARANCE
 %
@@ -364,27 +376,27 @@
 % the PDF, runs it through Ally or PAC, and sees scary-looking errors
 % can find the explanation before flipping past two intro slides.
 
-\begin{frame}{Don't worry about validator error reports}
+\begin{frame}{Don't worry if Ally doesn't give you 100\%}
 
 \begin{itemize}
-\item Since v2.0, this template targets the \BlueText{modern PDF/UA-2 + PDF/A-4} accessibility standards.
-\item Both example PDFs pass \BlueText{veraPDF} (strict UA-2 / PDF/A-4 conformance) cleanly.
-\item Several checkers (notably \BlueText{Ally} and \BlueText{PAC}) haven't fully caught up with PDF/UA-2 yet.
+\item \RedText{\textbf{Ally will \emph{not} score these PDFs 100\%}} --- and that's expected: \BlueText{checker lag, not real accessibility problems}.
+\item Both example PDFs pass \BlueText{\hrefu{https://verapdf.org/}{veraPDF}} (strict UA-2 / PDF/A-4) cleanly. \BlueText{veraPDF is the meaningful check}, not the Ally score.
+\item \BlueText{Ally} has no PDF/UA-2 support yet, so it raises \textbf{several false positives}:
   \begin{itemize}
-  \item \BlueText{Ally} reports one false positive (``The PDF does not have a title'').
-  \item  \BlueText{PAC} silently falls back to UA-1 and reports a longer list. These are not bugs in the templates.
+  \item ``No title'' --- the title \emph{is} present, in XMP (PDF~2.0).
+  \item ``Image without a description'' on \emph{every} equation --- the math is tagged as \BlueText{MathML}, which Ally doesn't check.
   \end{itemize}
-\item The next slide explains why the upgrade is worth doing. Per-tool symptoms and details are near the end of this deck and in \texttt{VALIDATION.md}.
+\item \BlueText{PAC} falls back to UA-1 and reports a longer list. Details: end of deck + \texttt{VALIDATION.md}.
 \end{itemize}
 
 \bigskip
 
 \begin{center}
-\setlength{\fboxsep}{6pt}%
+\setlength{\fboxsep}{5pt}%
 \fcolorbox{AccessibleRed}{red!8!white}{%
   \begin{minipage}{0.95\linewidth}\centering
-    \RedText{\large\textbf{Do NOT accept Ally's offered ``fix'' for the missing-title finding.}}\\[2pt]
-    \RedText{\textbf{It may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance.}}
+    \RedText{\large\textbf{Do NOT accept Ally's offered ``fixes.''}}\\[2pt]
+    \RedText{\textbf{They raise the score but make the PDF \emph{less} accessible, not more.}}
   \end{minipage}}
 \end{center}
 \end{frame}
@@ -602,14 +614,12 @@
 
   \bigskip
   
-\item \BlueText{\textbf{Ally quirk:}} we also separately call \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} in the preamble.
+\item \BlueText{\textbf{Ally quirk (and why we do \emph{not} ``fix'' it):}} Ally flags every inline equation as ``image without description.''
   \begin{itemize}
-  \item Under PDF/UA-2 the kernel does not attach \texttt{/Alt} to math \texttt{Formula} tags by default.
-%    \begin{itemize}
-    \item The embedded MathML should suffice.
-    \item But Ally reports every inline equation as ``image without description'' when \texttt{/Alt} is missing.
-  %  \end{itemize}      
-  \item Opting in silences that false positive.
+  \item Under PDF/UA-2 the kernel attaches MathML (not \texttt{/Alt}) to each \texttt{Formula} tag --- the MathML carries the math semantics.
+    \item Ally checks for \texttt{/Alt} and reports the formula as undescribed when it is absent.
+  \item \RedText{Do not ``solve'' this with \texttt{\textbackslash tagpdfsetup\{math/alt/use\}}.} That attaches the raw \LaTeX{} source as \texttt{/Alt}, and a screen reader then reads the \texttt{/Alt} \emph{instead of} the MathML --- hiding the real math.
+  \item Treat it as a checker false positive: Ally has no PDF/UA-2 support yet.
   \end{itemize}
   %
 %\item See \hrefu{https://pdfa.org/wp-content/uploads/2025/05/PDFAdays-2025-talk-tagged.pdf}{PDF Days 2025 (LaTeX Tagged PDF talk)}

@@ -1,4 +1,4 @@
-# Accessible LaTeX Templates (v2.0.1)
+# Accessible LaTeX Templates (v2.1.0)
 
 ![Build](https://github.com/rhstanton/accessible_LaTeX/actions/workflows/build.yml/badge.svg)
 ![License: CC0](https://img.shields.io/badge/license-CC0-blue)
@@ -12,12 +12,14 @@ https://github.com/rhstanton/accessible_LaTeX
 ---
 
 > [!IMPORTANT]
-> **If you run the example PDFs through Blackboard Ally and see a "missing title" error, don't worry — and don't click Ally's "fix."**
+> **If Blackboard Ally does not score the example PDFs 100%, don't panic — that's expected, and you should _not_ click Ally's "fix" buttons to chase a higher score.**
 >
-> v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Ally still checks a legacy PDF-1.x `/Title` key that PDF 2.0 deprecated, so it reports the file as untitled even though the title is correctly present in XMP. The PDFs pass **veraPDF** (the strict PDF/A conformance checker) cleanly. **Don't accept Ally's offered "fix" — it may downgrade the file to PDF 1.7 and destroy both PDF/UA-2 and PDF/A-4 conformance.** Full details in [VALIDATION.md](VALIDATION.md).
+> v2.0 of this template upgraded from PDF/UA-1 + PDF/A-2 to **PDF/UA-2 + PDF/A-4** (PDF 2.0), the newer/stricter accessibility standard. Ally has no PDF/UA-2 support yet, so it raises **several false positives** that drag the score down: it reports "The PDF does not have a title" (the title _is_ present, in the XMP metadata PDF 2.0 uses) and "Image without a description" on _every_ equation (the math is tagged as MathML, which Ally doesn't check for). The PDFs pass **veraPDF** — the strict UA-2 / PDF/A-4 conformance checker — cleanly; a low Ally score here is checker lag, not inaccessibility. **Don't accept Ally's offered "fixes" to raise the score — they make the PDF _less_ accessible, not more.** Full details, including the specific mechanisms, in [VALIDATION.md](VALIDATION.md).
 
 > [!IMPORTANT]
-> **If you adapt these templates, keep the `\tagpdfsetup{math/alt/use}` line in the preamble.** Without it, Ally reports every inline equation as "image without description." Under PDF/UA-2 the LaTeX kernel does not attach `/Alt` to math `Formula` tags by default (the embedded MathML is meant to suffice), but Ally still checks for `/Alt`. Opting in silences that false positive.
+> **If Ally flags every equation as "image without description," that is a second false positive — leave it.** Under PDF/UA-2 the LaTeX kernel attaches **MathML** (not `/Alt`) to each math `Formula` tag, and that MathML is what carries the equation to a screen reader. Ally only checks for `/Alt` and has no PDF/UA-2 support, so it misreports the formula as undescribed.
+>
+> **Do _not_ "fix" this by adding `\tagpdfsetup{math/alt/use}`.** Earlier versions of this template did exactly that to quiet Ally — but it is actively harmful: it attaches the raw LaTeX source as `/Alt`, and per PDF/UA a screen reader reads an element's `/Alt` _instead of_ descending into its children. Since the MathML lives in those children, adding `/Alt` **hides the MathML** and the user hears verbatim LaTeX ("backslash frac…") read aloud instead of the rendered equation. We removed the line so the MathML reaches assistive technology. Details in [VALIDATION.md](VALIDATION.md).
 
 ---
 

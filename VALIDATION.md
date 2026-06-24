@@ -44,7 +44,7 @@ accessibility improvements of UA-2 in exchange for cleaner reports.
 | Validator       | Last checked | Result                                                           |
 | --------------- | ------------ | ---------------------------------------------------------------- |
 | veraPDF         | 2026-05-15   | **pass** (both PDFs, PDF/A-4 + UA-2) after `strip_af.py` runs. Also enforced in CI on every push — see below. |
-| Blackboard Ally | 2026-05-19   | reports a single false positive ("missing title"); documented below. |
+| Blackboard Ally | 2026-05-19   | reports two false positives ("missing title" and "image without description" on every equation); both documented below. |
 | PAC 26.1.0      | 2026-05-15   | non-trivial failure count; PAC has no UA-2 checker — see below.  |
 | Adobe Acrobat   | 2026-05-15   | pass with one persistent false positive on `<Lbl>`/`<LBody>`.    |
 
@@ -96,18 +96,38 @@ standards, not bugs in the templates.
   > XMP — leave the source PDF alone and treat the Ally finding as
   > a false positive.
 
-  > Historical note: until template v2.0.1, Ally also reported
-  > "Image without a description" on every inline equation, because
-  > Ally checks for `/Alt` on `Formula` structure elements and the
-  > LaTeX kernel does not attach one by default under UA-2 (MathML
-  > is supposed to suffice). The templates now opt in to
-  > `\tagpdfsetup{math/alt/use}`, which silences that finding.
+- **Ally: "Image without a description" on every inline equation.**
+  Under PDF/UA-2 the LaTeX kernel attaches **MathML** (not `/Alt`) to
+  each math `Formula` structure element via `math/setup=mathml-SE`,
+  and that MathML is what carries the equation to a screen reader.
+  Ally only checks for an `/Alt` attribute and has no PDF/UA-2
+  support, so it reports the formula as undescribed. veraPDF accepts
+  the MathML tagging; Ally has not caught up. **Treat it as a false
+  positive.**
+
+  > **Do not silence this with `\tagpdfsetup{math/alt/use}`.**
+  > Template versions through v2.0.1 set that option specifically to
+  > quiet this Ally finding — it makes the kernel attach the raw
+  > LaTeX source as `/Alt` on each `Formula`. But per PDF/UA a screen
+  > reader reads an element's `/Alt` *instead of* descending into its
+  > children, and the generated MathML lives in those children. So
+  > the option **hides the MathML**: instead of the rendered equation
+  > the user hears verbatim LaTeX ("backslash frac open brace…") read
+  > aloud. We verified this against the built PDFs — each `Formula`
+  > carried both an `/Alt` LaTeX string *and* the MathML subtree, with
+  > the `/Alt` shadowing the MathML. The templates removed the line as
+  > of v2.1.0 so the MathML reaches assistive technology. Reported by
+  > a user; the trade-off (a checker false positive, in exchange for
+  > correct screen-reader math) follows the same principle as the
+  > `/Title` finding above: don't degrade real accessibility to please
+  > a checker.
 
   > Status: Ally staff have acknowledged the PDF 2.0 / UA-2 gap
-  > (covering both the `/Title` finding and the math-formula
+  > (covering both the `/Title` finding and this math-formula
   > finding) as a roadmap priority on the Ally user forum:
   > <https://usergroup.ally.ac/s/discussion/post/post/view?id=2362>.
-  > Until that ships, treat these findings as false positives.
+  > Until Ally adds PDF/UA-2 support, treat both findings as false
+  > positives.
 
 ## Known limitations (real, not false positives)
 

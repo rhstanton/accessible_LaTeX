@@ -24,9 +24,13 @@
 % Tag frame titles as H1 so screen readers see them as headings.
 \tagpdfsetup{role/new-tag = frametitle/H1}
 
-% Opt in to /Alt on math Formula tags so Blackboard Ally stops
-% reporting every inline equation as "image without description".
-\tagpdfsetup{math/alt/use}
+% NOTE: do NOT add \tagpdfsetup{math/alt/use} here. It attaches an /Alt
+% string (the raw LaTeX source) to every math Formula tag, and a screen
+% reader reads that /Alt *instead of* descending into the generated
+% MathML -- so it silences a Blackboard Ally false positive at the cost
+% of hiding the real math semantics from screen readers. The MathML
+% (math/setup=mathml-SE, set in \DocumentMetadata) is what carries the
+% accessible math. See VALIDATION.md.
 
 % Note: ltx-talk's \maketitle currently interacts badly with the
 % frame-title tagging machinery in the default TeX Live 2026

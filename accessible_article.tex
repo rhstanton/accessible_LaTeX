@@ -58,11 +58,23 @@
 %   \bookmarksetup{startatroot}
 % in your preamble. But this is OPTIONAL - not required for accessibility.
 
-% Under PDF/UA-2, the LaTeX kernel does not auto-attach /Alt to math
-% Formula structures (MathML is meant to suffice). Blackboard Ally still
-% checks for /Alt and reports each formula as "image without description"
-% when it is missing. Opt in explicitly:
-\tagpdfsetup{math/alt/use}
+% DELIBERATELY NOT SET: \tagpdfsetup{math/alt/use}.
+%
+% Earlier versions of this template DID set it, to silence Blackboard
+% Ally's "image without description" finding on every inline equation
+% (under PDF/UA-2 the kernel does not auto-attach /Alt to math Formula
+% tags, because the embedded MathML is meant to carry the semantics).
+%
+% But math/alt/use is actively harmful for screen-reader users: it
+% attaches an /Alt string -- the raw LaTeX source -- to each Formula,
+% and per PDF/UA a screen reader reads an element's /Alt *instead of*
+% descending into its children. Our Formula tags carry the generated
+% MathML (math/setup=mathml-SE) as child structure, so adding /Alt
+% *hides* that MathML: instead of hearing the equation rendered, the
+% user hears the verbatim LaTeX read aloud. We removed the line so the
+% MathML reaches assistive technology. Ally's finding is a checker
+% false positive (Ally has no PDF/UA-2 coverage); we accept it rather
+% than degrade the real math experience. See VALIDATION.md.
 
 % ======================================================================
 % COLOR DEFINITIONS
@@ -138,7 +150,7 @@
 % ======================================================================
 % Define title, author, and date for article class
 
-\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 2.0.1}
+\title{Accessible Documents in LaTeX \\ \normalsize \urlu{https://github.com/rhstanton/accessible_LaTeX} \\ \ \\ \large Version 2.1.0}
 \author{Richard Stanton \\ \hrefu{mailto:richard.stanton@berkeley.edu}{richard.stanton@berkeley.edu} \\ UC Berkeley}
 \date{\today}
 
@@ -162,15 +174,15 @@
 \setlength{\fboxsep}{10pt}%
 \fcolorbox{AccessibleRed}{red!6!white}{%
 \begin{minipage}{0.92\linewidth}
-\noindent\textbf{\large If you run this PDF through Blackboard Ally, don't panic.}
+\noindent\textbf{\large If Ally doesn't score this PDF 100\%, don't panic --- that's expected.}
 
 \smallskip
 
-\noindent Template v2.0 targets the newer \BlueText{PDF/UA-2 + PDF/A-4} (PDF~2.0) profile. Most accessibility validators were calibrated for the older \BlueText{UA-1 / PDF~1.7} profile and haven't fully caught up. Ally will report one \emph{false} error: ``The PDF does not have a title'' --- Ally checks a PDF-1.x key that PDF~2.0 deprecates, even though the title is correctly present in XMP. The PDF passes \BlueText{veraPDF} cleanly; see ``Validator-specific notes'' below and \texttt{VALIDATION.md}.
+\noindent Template v2.0 targets the newer \BlueText{PDF/UA-2 + PDF/A-4} (PDF~2.0) profile. Most accessibility validators were calibrated for the older \BlueText{UA-1 / PDF~1.7} profile and haven't caught up, so \textbf{Ally will report a score below 100\%}. That reflects checker lag, not real accessibility problems. Ally raises \emph{several false} errors: ``The PDF does not have a title'' (the title \emph{is} present, in the XMP metadata that PDF~2.0 uses), and ``Image without a description'' on \emph{every} equation (the math is tagged as \BlueText{MathML}, which Ally doesn't check for). The PDF passes \BlueText{veraPDF} --- the meaningful UA-2 / PDF/A-4 check --- cleanly; see ``Validator-specific notes'' below and \texttt{VALIDATION.md}.
 
 \smallskip
 
-\noindent\RedText{\textbf{Do not accept Ally's offered ``fix'' for this finding.} It may downgrade the file to PDF~1.7, destroying PDF/UA-2 and PDF/A-4 conformance.}
+\noindent\RedText{\textbf{Do not accept Ally's offered ``fixes'' to raise the score} --- they make the PDF \emph{less} accessible, not more. See ``Validator-specific notes'' below and \texttt{VALIDATION.md}.}
 \end{minipage}}
 \end{center}
 
@@ -322,7 +334,7 @@ Whether you're creating slides or articles, these requirements are \BlueText{mos
 
 \medskip
 
-\noindent \textbf{One Ally-quirk workaround.} The preamble also calls \texttt{\textbackslash tagpdfsetup\{math/alt/use\}} (separately from \texttt{\textbackslash DocumentMetadata}). Under PDF/UA-2 the kernel does not attach \texttt{/Alt} to math \texttt{Formula} tags by default --- the embedded MathML is meant to suffice --- but Blackboard Ally still checks for \texttt{/Alt} and reports every inline equation as ``image without description'' when it is missing. Opting in silences that false positive.
+\noindent \textbf{An Ally finding we deliberately leave unfixed.} Blackboard Ally reports every inline equation as ``image without description.'' Under PDF/UA-2 the kernel attaches \emph{MathML} (not \texttt{/Alt}) to each \texttt{Formula} tag, and that MathML is what carries the math semantics to a screen reader; Ally simply checks for \texttt{/Alt} and has no PDF/UA-2 support yet, so it misreports the formula as undescribed. \textbf{Do not silence this with \texttt{\textbackslash tagpdfsetup\{math/alt/use\}}} (earlier versions of this template did). That attaches the raw \LaTeX{} source as \texttt{/Alt}, and per PDF/UA a screen reader reads an element's \texttt{/Alt} \emph{instead of} descending into its children --- so the \texttt{/Alt} \emph{hides} the MathML, and the user hears the verbatim \LaTeX{} read aloud instead of the rendered equation. Treat the Ally finding as a false positive. See \texttt{VALIDATION.md}.
 
 \subsection{Images, Tables, and Colors}
 
