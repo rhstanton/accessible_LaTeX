@@ -13,9 +13,16 @@ name: Build and validate templates
 #              tagging. This job is the regression guard against that.
 #
 # The templates require LaTeX kernel >= 2025-11-01 and the ltx-talk
-# class. The texlive/texlive:latest image tracks the current release;
-# if a job here starts failing because the image lags behind the kernel
-# requirement, pin a TL_VERSION below.
+# class. The texlive/texlive:latest image tracks the current release.
+#
+# The build container is currently PINNED to a digest (see below): a
+# newer texlive/texlive:latest build shipped a regression in the
+# experimental latex-lab-testphase-math tagging code that mis-parses an
+# '=' inside inline math (e.g. \(E = mc^2\)), failing every math-bearing
+# build with "Misplaced '=' in key-value input". The pinned digest is
+# the last :latest snapshot that built cleanly. Re-pin to a newer good
+# digest, or drop back to :latest, once upstream fixes it.
+# See https://github.com/latex3/tagging-project.
 
 on:
   push:
@@ -27,7 +34,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: texlive/texlive:latest
+      # Pinned (not :latest) — see the regression note above. This is the
+      # digest of the last texlive/texlive:latest snapshot that built clean.
+      image: texlive/texlive@sha256:91f9d3b4bf623022432c4838940e94bf2923e6f655575c412cd3c2df1a543777
     steps:
       - uses: actions/checkout@v6
 
