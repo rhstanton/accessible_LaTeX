@@ -18,7 +18,23 @@ $pdf_mode = 4;
 #   -file-line-error          better error messages
 #   -synctex=1                forward/inverse search in editors
 #   -shell-escape             required by some packages (use with caution)
-my $LUALATEX = "lualatex -interaction=nonstopmode -file-line-error "
+#
+# Engine: prefer the LaTeX development format where it is installed.
+# ltx-talk needs a kernel newer than the 2026-06-01 one TeX Live 2026 ships:
+# on the released kernel every colour operator is typeset as visible text
+# ("0 0 g 0 G" through the page) while the build stays clean -- no error, no
+# warning, right page count. lualatex-dev supplies the 2026-11-01 pre-release
+# kernel and is correct. Falls back to plain lualatex where the dev format is
+# absent, so this is a no-op on a machine or image without it. Set
+# RS_NO_LUALATEX_DEV=1 to force the released engine.
+my $rs_lualatex = 'lualatex';
+unless ($ENV{RS_NO_LUALATEX_DEV}) {
+  foreach my $d ('/Library/TeX/texbin', split(/:/, ($ENV{PATH} // ''))) {
+    if (-x "$d/lualatex-dev") { $rs_lualatex = "$d/lualatex-dev"; last; }
+  }
+}
+
+my $LUALATEX = "$rs_lualatex -interaction=nonstopmode -file-line-error "
              . "-synctex=1 -shell-escape %O %S "
              . "&& tools/run_strip_af.sh $out_dir/%B.pdf";
 
